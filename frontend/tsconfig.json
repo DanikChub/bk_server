@@ -22,6 +22,8 @@
     "src/app/**/*.tsx",
     "src/widgets/**/*.ts",
     "src/widgets/**/*.tsx",
+    "src/views/**/*.ts",
+    "src/views/**/*.tsx",
     "src/features/**/*.ts",
     "src/features/**/*.tsx",
     "src/entities/**/*.ts",
