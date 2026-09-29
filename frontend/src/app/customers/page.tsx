@@ -1,2 +1,2 @@
-import { CustomersPage } from "@/pages/customers/ui/customers-page";
+import { CustomersPage } from "@/views/customers/ui/customers-page";
 export default function Page() { return <CustomersPage/>; }
