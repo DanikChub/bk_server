@@ -1,2 +1,2 @@
-import { TicketsPage } from "@/pages/tickets/ui/tickets-page";
+import { TicketsPage } from "@/views/tickets/ui/tickets-page";
 export default function Page() { return <TicketsPage/>; }
