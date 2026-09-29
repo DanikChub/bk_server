@@ -1,0 +1,48 @@
+﻿@using Abp.AspNetCore.Mvc.UI.Theme.KvPublic.Themes.KvPublic.Components.Menu
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using Volo.Abp.UI.Navigation
+@inject IPageLayout PageLayout
+@model ApplicationMenu
+
+@foreach (var menuItem in Model.Items)
+{
+    var elementId = string.IsNullOrEmpty(menuItem.ElementId) ? string.Empty : $"id={menuItem.ElementId}";
+    var cssClass = string.IsNullOrEmpty(menuItem.CssClass) ? string.Empty : menuItem.CssClass;
+    var disabled = menuItem.IsDisabled ? "disabled" : string.Empty;
+    var active = PageLayout.Content.MenuItemName == menuItem.Name ? "active" : "";
+    var childActive = LeftNavbarMenuViewComponent.ChildActive(menuItem.Items, PageLayout.Content.MenuItemName) ? "active" : "";
+    var url = string.IsNullOrEmpty(menuItem.Url) ? "#" : Url.Content(menuItem.Url);
+    if (menuItem.IsLeaf)
+    {
+        if (menuItem.Url != null)
+        {
+            <li class="@active">
+                <a href="@url" class="@cssClass @disabled"  target="@menuItem.Target"  @elementId>
+                        
+                    <i class="@LeftNavbarMenuViewComponent.ReWriteIcon(menuItem.Name, menuItem.Icon)"></i>
+                        
+                    <span class="nav-label">@menuItem.DisplayName</span>
+                </a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="@childActive">
+            <a href="#" id="Menu_@(menuItem.Name)">
+                    
+                <i class="@LeftNavbarMenuViewComponent.ReWriteIcon(menuItem.Name, menuItem.Icon)"></i>
+                    
+                <span>@menuItem.DisplayName</span>
+                <span class="fa arrow"></span>
+            </a>
+
+            <ul class="nav nav-second-level">
+                @foreach (var childMenuItem in menuItem.Items)
+                {
+                    @await Html.PartialAsync("~/Themes/KvPublic/Components/Menu/_MenuItem.cshtml", childMenuItem)
+                }
+            </ul>
+        </li>
+    }
+}

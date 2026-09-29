@@ -1,0 +1,46 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.AnswerTemplates.EditModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet" asp-append-version="true">
+
+<form asp-page="/AnswerTemplates/EditModal" method="post">
+    <abp-modal size="Large">
+        <abp-modal-header title="Изменить шаблон"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"></abp-input>
+            <abp-input asp-for="AnswerTemplate.Title" label="@L["AnswerTemplate:Title"]"></abp-input>
+            <textarea asp-for="AnswerTemplate.Description"></textarea><br/>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>
+
+<script src="~/lib/summernote/plugin/jquery/jquery-3.4.1.slim.min.js" asp-append-version="true"></script>
+<script src="~/lib/summernote/summernote-lite.min.js" asp-append-version="true"></script>
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>
+<script>
+    $('#AnswerTemplate_Description').summernote({
+        placeholder: '',
+        tabsize: 2,
+        height: 200,
+        focus: true,
+        disableResizeEditor: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['view', ['codeview']],
+            ['picture', ['picture']]
+        ]
+    }).summernote('editor.pasteHTML', "");
+</script>

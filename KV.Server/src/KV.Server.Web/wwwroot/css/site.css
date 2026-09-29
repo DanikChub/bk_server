@@ -1,0 +1,244 @@
+html { font-size: 14px; }
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    display: none;
+}
+
+@media (min-width: 768px) {
+    html { font-size: 16px; }
+}
+
+html {
+    min-height: 100%;
+    position: relative;
+}
+
+body { margin-bottom: 60px; }
+
+.card {
+    border: 0;
+    border-radius: 0;
+}
+
+.card-body { padding: 1.25rem; }
+
+.main-page {
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.main-page p { margin: 0 }
+
+.main-page__img {
+    height: 26rem;
+    object-fit: cover;
+}
+
+
+.main-page__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.19rem;
+    width: 64%;
+}
+
+.main-page__extra {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 35%;
+}
+
+
+.main-page__apps {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.main-page__app {
+    align-items: center;
+    background-color: #FFF;
+    color: var(--Dark-BG, #334557);
+    display: flex;
+    font-size: 1.25rem;
+    font-weight: 600;
+
+    height: 11.375rem;
+    justify-content: center;
+    line-height: normal;
+    width: 100%;
+}
+
+.main-page__description {
+    background-color: #FFFFFF;
+    padding: 1rem;
+}
+
+.main-page__description h5 {
+    margin: 0;
+    margin-bottom: 0.75rem;
+}
+
+.main-page__description ul li {
+    color: #334557;
+    font-family: Open Sans, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    margin-bottom: 0.75rem;
+}
+
+.main-page__content h5 {
+    color: #334557;
+    font-family: Open Sans, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.main-page__description p {
+    color: var(--Muted-color, #828282);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.125rem;
+}
+
+.main-page__extra h4 { font-size: 1rem; }
+
+.main-page__wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main-page__library {
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.main-page__library h4 {
+    color: var(--Dark-BG, #334557);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+.main-page__advice {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.main-page__library span { font-weight: 600; }
+
+/* REUSED STYLE */
+
+.header {
+    background-color: white;
+    margin-bottom: 1.25rem;
+    padding: 1.25rem;
+    width: 100%;
+}
+
+.title {
+    color: #666;
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.75rem;
+    margin: 0;
+}
+
+.title_position { padding-bottom: 1.75rem; }
+
+.title_with-destination_true { padding-bottom: 0.75rem }
+
+.header__destination {
+    color: #666;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+
+/* UI-KIT */
+
+.input_small {
+    border-radius: 0.1875rem;
+    height: 1.875rem !important;
+    line-height: 24px;
+    padding: 0.4375rem 0.75rem;
+}
+
+.input_small.input_bordered {
+    border-radius: 0.1875rem 0 0 0.1875rem;
+    border-right: 0;
+}
+
+.input_small_with-icons {
+    padding-left: 0.5rem;
+    padding-right: 1.5rem;
+}
+
+.button_small {
+    border: 1px solid var(--Stroke, #DDE4E8);
+    border-left: 0;
+    border-radius: 0.1875rem;
+    color: var(--Muted-color, #828282);
+    font-size: 0.875rem;
+    font-weight: 500;
+    height: 1.875rem;
+    line-height: 1.2rem;
+    padding: 0 0.625rem;
+}
+
+.button_small_green {
+    background: var(--Accent, #1AB394);
+    border: 1px solid var(--Stroke, #1AB394);
+    color: #FFFFFF;
+}
+
+.button_small_bordered { border-radius: 0 0.1875rem 0.1875rem 0; }
+
+.button_gray {
+    background: var(--Light, #A7B1C2);
+    border-color: #A7B1C2;
+    color: white;
+    flex-basis: 5%;
+}
+
+.open-in-excel {
+    align-items: center;
+    background: #FFF;
+    border: 1px solid #DDE4E8;
+    border-radius: 0.1875rem;
+    color: #666;
+    display: flex;
+    font-size: 0.8rem;
+    font-weight: 400;
+    gap: 0.25rem;
+    height: 1.875rem;
+    line-height: 1.2rem;
+    max-width: fit-content;
+    padding: 0.25rem 0.5rem;
+}
+
+.open-in-excel::before {
+    content: url("/img/excel.svg");
+    margin-top: 5px;
+}

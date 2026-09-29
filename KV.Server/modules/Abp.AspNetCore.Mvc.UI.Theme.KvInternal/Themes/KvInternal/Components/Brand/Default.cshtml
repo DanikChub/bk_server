@@ -1,0 +1,81 @@
+﻿@using KV.Server.Interfaces
+@using Volo.Abp.Ui.Branding
+@using Localization.Resources.AbpUi
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.MultiTenancy
+@using Volo.Abp.UI.Navigation
+@using Volo.Abp.Users
+@inject ICustomerUserProfilesAppService _customerUserProfilesAppService
+@inject IEmployeeProfileAppService _employeeProfileAppService
+@inject IBrandingProvider BrandingProvider
+@inject ICurrentUser CurrentUser
+@inject ICurrentTenant CurrentTenant
+@inject IHtmlLocalizer<AbpUiResource> L
+@model ApplicationMenu
+
+<li class="nav-header">
+    @{
+        var employee = await _employeeProfileAppService.GetEmployeeByUserNameAsync(CurrentUser.UserName);
+        var customer = employee is null ? await _customerUserProfilesAppService.GetCustomerByUserNameAsync(CurrentUser.UserName) : null;
+        var fullName = employee is not null ? $"{employee?.LastName} {employee?.FirstName}" : $"{customer?.LastName} {customer?.FirstName}";
+        var userName = string.IsNullOrWhiteSpace(fullName) ? CurrentUser.SurName + " " + CurrentUser.Name : fullName;
+        var workStatus = CurrentUser.TenantId == null ? "Administrator" : "User";
+        var middleName = employee is not null ? employee?.MiddleName : customer.MiddleName;
+        var displayName = fullName ?? userName;
+        bool isSignIn = !string.IsNullOrWhiteSpace(userName);
+    }
+    <div class="dropdown profile-element" style="text-align: center">
+        <a href="#" data-bs-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user" role="button"
+            id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+            <img alt="image" class="rounded-circle"
+                style="max-width: 50px; max-height: 50px;min-width:50px;min-height:50px;"
+                src=@Url.Action("Avatar","EmployeeAvatar", new { employeeId = employee?.Id ?? new() })>
+        </a>
+        @if (isSignIn)
+        {
+            <a data-bs-toggle="dropdown" class="dropdown-toggle" href="#">
+                <span class="block m-t-xs font-bold">
+                    @displayName
+                    @if (middleName != null)
+                    {
+                        <br /> @middleName
+                    }
+                </span>
+                <span style="text-wrap: wrap;" class="text-muted text-xs block">@(employee is null ? customer.JobPost : employee.JobPost ?? "")<b
+                        class="caret"></b></span>
+            </a>
+
+            @if (Model.Items.Any())
+            {
+                <ul class="dropdown-menu animated fadeInRight m-t-xs" x-placement="bottom-start"
+                    style="position: absolute; top: 92px; left: 0px; will-change: top, left;">
+                    @foreach (var menuItem in Model.Items)
+                    {
+                        var elementId = string.IsNullOrEmpty(menuItem.ElementId) ? string.Empty : $"id={menuItem.ElementId}";
+                        var cssClass = string.IsNullOrEmpty(menuItem.CssClass) ? string.Empty : menuItem.CssClass;
+                        var disabled = menuItem.IsDisabled ? "disabled" : string.Empty;
+                        var url = string.IsNullOrEmpty(menuItem.Url) ? "#" : Url.Content(menuItem.Url);
+
+                        <li>
+                            <a class="dropdown-item" href="@url">
+                                @if (menuItem.Icon != null)
+                                {
+                                    if (menuItem.Icon.StartsWith("fa"))
+                                    {
+                                        <i class="dropdown-item @menuItem.Icon.Replace("fa ","fas ")"></i>
+                                    }
+                                }
+                                @menuItem.DisplayName
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        }
+    </div>
+    <div class="logo-element">
+        <a href="~/">
+            @BrandingProvider.AppName
+        </a>
+    </div>
+</li>

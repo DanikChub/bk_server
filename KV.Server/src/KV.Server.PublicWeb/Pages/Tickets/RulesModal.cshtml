@@ -1,0 +1,17 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.PublicWeb.Pages.Tickets.RulesModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<abp-modal>
+    <abp-modal-header title="Правила сервиса"></abp-modal-header>
+    <abp-modal-body>
+
+    </abp-modal-body>
+    <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+</abp-modal>

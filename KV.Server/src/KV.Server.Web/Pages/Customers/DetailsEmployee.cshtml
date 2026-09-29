@@ -1,0 +1,394 @@
+﻿@page "{id:Guid}"
+@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Themes.KvInternal.Components.BreadCrumb
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@using Newtonsoft.Json
+@model KV.Server.Web.Pages.Customers.DetailsEmployeeModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+     PageLayout.Content.MenuItemName = ServerMenuContributor.CUSTOMERS;
+         PageLayout.Content.BreadCrumb.Add("Клиенты", "/Customers");
+    PageLayout.Content.BreadCrumb.Add($"{Model.EditEmployee.OrganizationName}", $"/Customers/Details/{Model.EditEmployee.TenantId}");
+    PageLayout.Content.BreadCrumb.Add("Пользователи");
+        PageLayout.Content.BreadCrumb.Add($"{Model.EditEmployee.LastName}");
+    PageLayout.Content.BreadCrumb.ShowCurrent = false;
+}
+@section scripts
+{
+    <abp-script src="/Pages/Customers/EmployeeDetailsTicket.js"></abp-script>
+    <abp-script src="/Pages/Employees/PhotoInput.js" ></abp-script>
+    <abp-script src="/Pages/Customers/CreateTicketModal.js" />
+    <abp-script src="/libs/summernote/dist/summernote.min.js" />
+    <abp-script src="/js/summernote-config.js" />
+    <abp-script src="/js/generatePassword.js" />
+}
+
+@section styles
+{
+    <abp-style src="/css/table.css" />
+    <abp-style src="/css/site.css" />
+    <abp-style src="/css/common-table.css" />
+    <abp-style src="/css/bem.css" />
+    <abp-style src="/css/customers.css" />
+    <abp-style src="/libs/summernote/dist/summernote.min.css" />
+    <abp-style src="/lib/summernote/summernote-lite.min.css" />
+    <style>
+        .org-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 12px;
+            max-width: 400px;
+        }
+
+        .org-info__title {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .org-info__description {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .info img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .info__title {
+            color: #666;
+            font-family: "Open Sans";
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 16.5px;
+            margin: 0;
+        }
+
+        .info__value {
+            color: #666;
+            font-family: "Open Sans";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 16.5px;
+            margin: 0;
+        }
+
+        .wrapper {
+            padding: 0
+        }
+
+        .userinfo__avatar {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 12px 0;
+        }
+
+        .userinfo_avatar-img {
+            display: flex; 
+            justify-content: flex-end;
+            width: 170px;
+        }
+
+        .userinfo__inform-block {
+            display: flex;
+            border-top: 1px solid #DDE4E8;
+            width: 100%;
+            gap: 23px;
+            min-height: 38px;
+            align-items: center;
+        }
+
+        .userinfo__title {
+            font-size: 13px;
+            color: #A7B1C2;
+            width: 170px;
+            min-width: 170px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .userinfo__phone-item {
+            padding: 3px 8px;
+            border-radius: 3px;
+            border: 1px solid #DDE4E8;
+        }
+
+        .customers__side-block {
+            font-size: 13px;
+            line-height: 16.5px;
+            color: #666666;
+        }
+
+        .customers__side-title {
+            font-weight: 600;
+        }
+
+        .customers__side-description {
+            margin-top: 6px;
+            font-weight: 400;
+        }
+    </style>
+}
+
+<div class="wrapper">
+    <article class="content">
+        <div class="userinfo__avatar">
+            <div class="userinfo_avatar-img">
+                <img style="cursor: pointer;" id='avatar-img' src="/img/Avatar.svg" alt="avatar">
+               @*  <input type="file" id="photo-input" asp-for="ImgFile" hidden > *@
+            </div>
+            <h3 class="">@($"{Model.EditEmployee.LastName} {Model.EditEmployee.FirstName} {Model.EditEmployee.MiddleName}")</h3>
+        </div>
+        <div style="display: flex;gap: 28px;width: 100%;">
+            <div style="width: 100%;">
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Должность:</div>
+                    <div>@Model.EditEmployee.JobPost</div>
+                </div>
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Телефон:</div>
+                   @if (!string.IsNullOrWhiteSpace(Model.EditEmployee.PhoneNumber))
+                    {
+                        <div class="userinfo__phone-item">@Model.EditEmployee.PhoneNumber</div>
+                    }
+                    else
+                    {
+                        <div></div>
+                    }
+                </div>
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">E-mail:</div>
+                    <div>@Model.EditEmployee.Email</div>
+                </div>
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Дата рождения:</div>
+                    <div>
+                         @if (Model.EditEmployee.DateOfBirthDay == null)
+                        {
+                            <span>Не указано</span>
+                        }
+                        else
+                        {
+                            @Model.EditEmployee.DateOfBirthDay.Value.ToString("dd.MM.yyyy")
+                        }
+                    </div>
+                </div>
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Логин:</div>
+                    <div>@Model.EditEmployee.UserName</div>
+                </div>
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Пароль:</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <p class="additional-info__value" id="current-user-password">-</p>
+                        <img src="/img/eye-opened.svg" class="password__hide-password password__get-customer-user-password" data-id="@Model.EditEmployee.Id">
+                    </div>
+                </div>  
+            </div>
+            <div style="width: 100%;">
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Статус</div>
+                    <div>
+                        <img class="additional-info__value status" src=@( Model.EditEmployee.IsActive ? "/img/status/status-green-ok.svg" : "/img/status/status-gray-minus.svg") alt="status-icon">
+                    </div>
+                </div>
+                <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Дата создания:</div>
+                    <div>@Model.EditEmployee.CreationTime</div>
+                </div>
+                  <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Дата актуализации:</div>
+                    <div>@Model.EditEmployee.CreationTime</div>
+                </div>
+                  <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Дата настройки ЛК:</div>
+                    <div>не указана</div>
+                </div>
+                  <div class="userinfo__inform-block">
+                    <div class="userinfo__title">Примечание:</div>
+                    <div>@Model.EditEmployee.Note</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="content__buttons" style="margin-top: 32px;">
+            <button id="createTicketButton" class="button">
+                <img src="/img/pancel.svg" class="button__icon">
+                + Заявку
+            </button>
+            <button tenant-id="@Model.EditEmployee.TenantId" id="addEvent" class="button">
+                <img src="/img/buttons/envelope.svg" class="button__icon">
+                + Событие
+            </button>
+            @if (Model.EditEmployee.IsActive)
+            {
+                <button class="button" id="btn-block" onclick="openModalBlock()">
+                    <img src="/img/buttons/lock.svg" class="button__icon">
+                    Заблокировать
+                </button>
+            }
+            else
+            {
+                <button class="button" id="btn-unblock" onclick="openModalUnBlock()">
+                    <img src="/img/buttons/lock.svg" class="button__icon">
+                    Разблокировать
+                </button>
+            }
+            <button style="width: 146px;justify-content: center;" employee-id="@Model.EditEmployee.Id" id="editEmployeeButton" class="button button_green">
+                Редактировать
+            </button>
+            <button employee-id="@Model.EditEmployee.Id" id="deleteEmployeeButton" class="button"  style="background-color: #ED5565; color: white;width: 146px;justify-content: center;">
+                Удалить
+            </button>
+        </section>
+        <input hidden asp-for="EditEmployee.IdentityUserId" />
+        <input hidden asp-for="EditEmployee.Id" />
+
+        <h4 style="color:#828282;font-size:24px;font-weight:300;">Все заявки <span id="Tickets-Count"></span></h4>
+         <div class="search" style="margin: 15px 0;">
+            <input style="width: 100%;" class="search__input" placeholder="Поиск по заявкам"></input>
+            <button class="button button_gray search__button">Найти</button>
+        </div>
+        <abp-table striped-rows="true" id="TicketsTable"></abp-table>
+    </article>
+
+    <div class="customers__side-data" style="background-color: initial">
+        <a href="/Customers/UpdateCustomer/@(Model.EditEmployee.TenantId)"
+                class="open-reply-block-btn btn btn-sm btn-white">
+            <img src="/img/buttons/edit.svg" alt="edit" />
+            Редактировать
+        </a>
+         <div class="customers__side-block">
+            <div class="customers__side-title">Название организации</div>
+            <div class="customers__side-description">
+                @Model.EditEmployee.OrganizationName
+            </div>
+        </div>  
+         <div class="customers__side-block" style="display: flex;gap: 20px; align-items: center;">
+            <div class="customers__side-title">Статус</div>
+            <img src=@( Model.EditEmployee.IsActive ? "/img/status/status-green-ok.svg" : "/img/status/status-gray-minus.svg") alt="status-icon">
+        </div>  
+        @if (!string.IsNullOrEmpty(Model.EditEmployee.ContactUserFIO))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">Контактное лицо</div>
+                    <div class="customers__side-description">
+                        @Model.EditEmployee.ContactUserFIO
+                    </div>
+                </div>
+            } 
+        <div class="customers__side-block">
+            <div class="customers__side-title">Дата создания</div>
+            <div class="customers__side-description">
+                @Model.EditEmployee.CreationTime.ToString("d")
+            </div>
+        </div>  
+         @if (!string.IsNullOrEmpty(Model.EditEmployee.Responsible))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">Ответственный</div>
+                    <div class="customers__side-description">
+                         @Model.EditEmployee.Responsible
+                    </div>
+                </div>
+            } 
+        
+       @if (!string.IsNullOrEmpty(Model.EditEmployee.INN) || !string.IsNullOrEmpty(Model.EditEmployee.KPP))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">ИНН/КПП</div>
+                    <div class="customers__side-description">
+                        @Model.EditEmployee.INN / @Model.EditEmployee.KPP
+                    </div>
+                </div>
+            }
+         @if (!string.IsNullOrEmpty(Model.EditEmployee.City))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">Адрес</div>
+                    <div class="customers__side-description">
+                        @Model.EditEmployee.City
+                    </div>
+                </div>
+            } 
+        @if (!string.IsNullOrEmpty(Model.EditEmployee.Site))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">Web сайт</div>
+                    <div class="customers__side-description">
+                        @Model.EditEmployee.Site
+                    </div>
+                </div>
+            } 
+         @if (!string.IsNullOrEmpty(Model.EditEmployee.Email))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">Email</div>
+                    <div class="customers__side-description">
+                        @Model.EditEmployee.Email
+                    </div>
+                </div>
+            } 
+         @if (!string.IsNullOrEmpty(Model.EditEmployee.Note))
+            {
+                <div class="customers__side-block">
+                    <div class="customers__side-title">Примечание</div>
+                    <div class="customers__side-description">
+                        @Model.EditEmployee.Note
+                    </div>
+                </div>
+            } 
+        <div class="customers__side-block">
+            <div class="customers__side-title">Пакеты услуг</div>
+            <div class="customers__side-description">
+                <div class="customers__side-data-item-description">
+
+                @if(Model.EditEmployee.ServicePackagesData?.Count == 0)
+                {
+                    <p class="info__value">Отсутствует</p>
+                }
+                @foreach (var uniqueServicePackage in Model.EditEmployee.ServicePackagesData?.DistinctBy(x => x.Name))
+                {
+                    <div class="side-data_blue" style="background-@uniqueServicePackage.Style">@uniqueServicePackage.Name</div>
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModalBlock() {
+
+        abp.message.confirm('Вы действительно хотите заблокировать пользователя?', async function (isConfirmed) {
+            if (isConfirmed) {
+                let id = $("#EditEmployee_Id").val();
+                await kV.server.users.blockUser(id);
+                window.location.reload();
+            }
+        });
+    }
+    function openModalUnBlock() {
+
+        abp.message.confirm('Вы действительно хотите разблокировать пользователя?', async function (isConfirmed) {
+            if (isConfirmed) {
+                let id = $("#EditEmployee_Id").val();
+                await kV.server.users.unBlockUser(id);
+                 window.location.reload();
+            }
+        });
+    }
+</script/>

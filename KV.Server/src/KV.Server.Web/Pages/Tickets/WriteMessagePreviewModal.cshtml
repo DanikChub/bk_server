@@ -1,0 +1,23 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Tickets.WriteMessagePreviewModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form method="post" asp-page="/Tickets/WriteMessagePreviewModal">
+    <abp-modal>
+        <abp-modal-header title="@L["TicketMessage:New"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="WriteTicketMessage.Message" label="Сообщение"/>
+            <abp-input asp-for="WriteTicketMessage.TicketId"/>
+            <input asp-for="CurrentCustomerUserProfileId" id="CurrentCustomerUserProfileId" hidden/>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

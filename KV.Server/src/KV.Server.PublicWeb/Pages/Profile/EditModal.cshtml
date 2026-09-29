@@ -1,0 +1,22 @@
+﻿@page
+@model KV.Server.PublicWeb.Pages.Profile.EditModalModel
+@{
+    Layout = null;
+}
+
+<form asp-page="/Profile/EditModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Изменить профиль"></abp-modal-header>
+        <abp-modal-body>
+            <input asp-for="CustomerUserProfile.Id" hidden/>
+            <abp-input asp-for="CustomerUserProfile.FirstName" label="Имя"></abp-input>
+            <abp-input asp-for="CustomerUserProfile.LastName" label="Фамилия"></abp-input>
+            <abp-input asp-for="CustomerUserProfile.MiddleName" label="Отчество"></abp-input>
+            <abp-input asp-for="CustomerUserProfile.JobPost" label="Должность"></abp-input>
+            <abp-input asp-for="CustomerUserProfile.PhoneNumber" label="Телефон"></abp-input>
+            <abp-input asp-for="CustomerUserProfile.DateOfBirthDay" type="date" label="Дата рождения"></abp-input>
+            <br/>
+            <input value="Отправить" type="submit" class="btn btn-primary" onclick="setTimeout(() => window.location.reload(), 200);"/>
+        </abp-modal-body>
+    </abp-modal>
+</form>

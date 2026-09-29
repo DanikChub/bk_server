@@ -1,0 +1,151 @@
+@page
+@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Themes.KvInternal.Components.BreadCrumb
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Customers.CreateCustomerModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.MenuItemName = ServerMenuContributor.CUSTOMERS;
+    PageLayout.Content.BreadCrumb.Add("Клиенты", "/Customers");
+    PageLayout.Content.BreadCrumb.Add("Добавление сотрудника");
+    PageLayout.Content.BreadCrumb.ShowCurrent = false;
+}
+
+@section styles {
+    <abp-style src="/css/bem.css"/>
+    <abp-style src="/css/new-user.css"/>
+}
+
+@section scripts {
+    <abp-script src="/js/generatePasswordConfig.js" />
+    <abp-script src="/js/generatePassword.js" />
+}
+
+<style>
+    .input-group {
+        margin-top: 8px;
+    }
+</style>
+
+<div class="new-customers">
+    <h2 class="content__title">Добавление нового клиента</h2>
+    <form asp-page="/Customers/CreateCustomer">
+
+        <h3>Реквизиты организации</h3>
+        <div class="new-customers__custom-input">
+            <label for="full-name-of-the-organization">Полное наименование организации *</label><br>
+            <input asp-for="Customer.LongName"  type="text" id="full-name-of-the-organization"/>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="abbreviated">Сокращенное наименование организации *</label><br>
+                <input asp-for="Customer.ShortName"  type="text" id="abbreviated"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="inn">ИНН</label><br>
+                <input asp-for="Customer.INNNumber"  type="text" id="inn"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="kpp">КПП</label><br>
+                <input asp-for="Customer.KPPNumber"  type="text" id="kpp"/>
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="phone">Телефон</label><br>
+                <input asp-for="Customer.ContractPhoneNumber"  type="text" id="phone"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="email">Электронная почта</label><br>
+                <input asp-for="Customer.ContractEmail"  type="text" id="email"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="web-site">Web-сайт</label><br>
+                <input asp-for="Customer.SiteUrl"  type="text" id="web-site"/>
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-select new-customers__city-item">
+                <label for="city">Регион</label> <br>
+                <select asp-for="Customer.RegionId" asp-items="@Model.Regions" id="city">
+                    <option value="" selected>Отсутствует</option>
+                </select>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="address">Адрес *</label><br>
+                <input asp-for="Customer.Address"  type="text" id="address"/>
+            </div>
+        </div>
+        <h3>Контактное лицо</h3>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="contact-user">ФИО контактного лица *</label><br>
+                <input asp-for="Customer.AdminFullName"  type="text" id="contact-user"/>
+            </div>
+            <div class="new-customers__custom-date-picker new-customers__date-of-birthday">
+                <abp-date-picker
+                    asp-for="Customer.AdminDateOfBirthDay"
+                    id="date-of-birthday"
+                    name="date-of-birthday"
+                    value="2023-09-22"
+                    min="1900-01-01"
+                    max="2023-09-22"
+                    style="margin: 0"
+                    label="Год рождения"
+                    >
+                    </abp-date-picker>
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="user-job-title">Должность *</label><br>
+                <input asp-for="Customer.AdminJobPost"  type="text" id="user-job-title"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="user-phone">Телефон</label><br>
+                <input asp-for="Customer.AdminPhoneNumber"  type="text" id="user-phone"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="user-email">Электронная почта *</label><br>
+                <input asp-for="Customer.AdminEmailAddress"  type="text" id="user-email"/>
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <abp-input label="Логин *" asp-for="Customer.AdminLogin"  type="text" id="user-login"/>
+            </div>
+            <div class="new-customers__custom-input disable-mb-3">
+                <div class="password">
+                <abp-input label="Пароль *" asp-for="Customer.AdminPassword"  type="text" id="user-password" class="password__input" />
+                <img src="/img/eye-opened.svg" class="password__hide-password">
+                </div>
+                <p id="generate-password" class="new-customers__generate-password">Сгенерировать пароль</p>
+            </div>
+        </div>
+        <h3>Дополнительно</h3>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-select new-customers__full-name-responsible">
+                <label for="full-name-responsible">ФИО ответственного</label><br>
+                <select asp-for="Customer.ResponsibleId" asp-items="@Model.Responsibles"  type="text" id="full-name-responsible">
+                    <option value="" selected>Отсутствует</option>
+                </select>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="note">Примечание</label><br>
+                <input asp-for="Customer.CommentNotes"  type="text" id="note"/>
+            </div>
+        </div>
+        <div class="content__buttons">
+            <button type="submit" class="button button_green">
+                <img class="button__icon" src="/img/buttons/documentWhite.svg" />
+                Сохранить
+            </button>
+            <button onclick="window.open('/Customers', '_self')" type="button" class="button">
+                <img class="button__icon" src="/img/buttons/cancel.svg" />
+                Отмена
+            </button>
+        </div>
+    </form>
+</div>

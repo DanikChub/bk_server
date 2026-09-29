@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <AssemblyName>Abp.AspNetCore.Mvc.UI.Theme.KvInternal</AssemblyName>
+    <PackageId>Abp.AspNetCore.Mvc.UI.Theme.KvInternal</PackageId>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+	  <IsPackable>true</IsPackable>
+	  <OutputType>Library</OutputType>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <Title>Abp.AspNetCore.Mvc.UI.Theme.KvInternal</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Abp.AspNetCore.Mvc.UI.Theme.KvInternal.abppkg.analyze.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Abp.AspNetCore.Mvc.UI.Theme.KvInternal.abppkg.analyze.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.Account.Web" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.MultiTenancy" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared" Version="8.0.1" />
+    <PackageReference Include="Volo.Abp.Identity.Web" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\KV.Server.Application.Contracts\KV.Server.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\KV.Server.Domain.Shared\KV.Server.Domain.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

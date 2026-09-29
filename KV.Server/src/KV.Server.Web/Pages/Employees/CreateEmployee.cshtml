@@ -1,0 +1,152 @@
+﻿@page
+@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Themes.KvInternal.Components.BreadCrumb
+@using KV.Server.Localization
+@using KV.Server.Web.Menus
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Employees.CreateEmployeeModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.MenuItemName = ServerMenuContributor.EMPLOYEE;
+    PageLayout.Content.BreadCrumb.Add("Администрирование");
+    PageLayout.Content.BreadCrumb.Add("Сотрудники", "/Employees");
+    PageLayout.Content.BreadCrumb.Add("Добавление сотрудника КВ");
+    PageLayout.Content.BreadCrumb.ShowCurrent = false;
+}
+
+@section styles {
+    <abp-style src="/css/bem.css" />
+    <abp-style src="/css/new-user.css" />
+    <abp-style src="/css/site.css" />
+}
+
+@section scripts {
+    <abp-script src="/js/generatePasswordConfig.js" />
+    <abp-script src="/js/generatePassword.js" />
+    <abp-script src="/Pages/Employees/CreateEmployee.js" />
+    <abp-script src="/Pages/Employees/PhotoInput.js" />
+}
+<style>
+    .personal-info {
+        margin: 0;
+        margin-bottom: 16px;
+    }
+
+    .mb-24 {
+        margin-bottom: 24px;
+    }
+    
+    .field-type_small {
+        max-width: 325px;
+        width: 100%;
+    }
+
+    .field-type_medium {
+        max-width: 666px;
+        width: 100%;
+    }
+
+    .choose-avatar {
+        cursor: pointer;
+        color: var(--Muted-color, #828282);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 18px; 
+        margin-left: 16px;
+    }
+
+    #current-profile-photo {
+        width: 100px; /* Регулируйте размеры фото по желанию */
+        height: 100px;
+        border-radius: 50%; /* Для круглого фото */
+        object-fit: cover; /* Чтобы фотография корректно заполняла контейнер */
+    }
+
+    .mb-3 {
+        margin-bottom: 0 !important;
+    }
+</style>
+<div class="new-customers">
+    <h2 class="content__title">Добавление нового сотрудника</h2>
+    <form asp-page="/Employees/CreateEmployee" enctype="multipart/form-data" id="new-employee">
+        <h3>Личные данные</h3>
+        <div class="mb-24">
+            <img src="/img/Avatar.svg" alt="Profile photo" id="current-profile-photo">
+            <input type="file" id="photo-input" asp-for="ImgFile" style="display: none;" >
+            <span onclick="document.getElementById('photo-input').click();" class="choose-avatar">Изменить фото</span> 
+        </div>
+
+        <div class="new-customers__input-row">
+            <section class="field">
+                <label  for="abbreviated">ФИО сотрудника</label>
+                <input asp-for="EmployeeVM.Fio" class="input" type="text" id="abbreviated" />
+            </section>
+
+            <section class="field field-type_small">
+                <label for="abbreviated2">Email</label>
+                <input asp-for="EmployeeVM.Email" type="text" class="input" id="abbreviated2" />
+            </section>
+        </div>
+
+        <div class="new-customers__input-row">
+            <section class="field field-type_medium">
+                <label for="inn">Подпись</label>
+                <input asp-for="EmployeeVM.JobPost" type="text" class="input" id="inn" />
+            </section>
+
+            <section class="field" style="max-width: 318px; width: 100%">
+                <abp-date-picker placeholder="Дата рождения" label="Дата рождения" asp-for="EmployeeVM.Birthday" />
+            </section>
+        </div>
+
+        <div class="new-customers__input-row">
+            <section class="field field-type_small">
+                <label for="user-login">Логин *</label>
+                <input asp-for="EmployeeVM.Login" type="text" class="input" id="user-login" />
+            </section>
+            <section class="new-customers__custom-input field-type_small" style="margin: 0">
+                <div class="password" style="margin-bottom: 8px">
+                    <label for="user-password">Пароль *</label>
+                    <input asp-for="EmployeeVM.Password" type="text" class="input" id="user-password" class="password__input"/>
+                    <img src="/img/eye-opened.svg" class="password__hide-password">
+                </div>
+                <p id="generate-password" class="new-customers__generate-password">Сгенерировать пароль</p>
+            </section>
+            <section class="new-customers__custom-input field-type_small" style="margin: 0">
+                <div class="password" style="margin-bottom: 8px">
+                    <label for="abbreviated">Номер сотрудника *</label>
+                    <input placeholder="+7(...)" asp-for="EmployeeVM.Phone" class="input" type="text" onfocus="if(this.value=='') this.value='+7'" onblur="if(this.value=='+7') this.value=''" />
+
+                </div>
+            </section>
+
+        </div>
+
+        <h3 class="mb-24">Управление ролями</h3>
+        <h4>Выберите роль</h4>
+        <select style="width: 100%;" class="auto-complete-select select2" asp-for="EmployeeVM.RoleNames" multiple="multiple">
+            @if (Model.Roles is not null)
+            {
+                @foreach (var tag in Model.Roles.Items)
+                {
+                    <option value="@tag.Name">@tag.Name</option>
+                }
+            }
+        </select>
+        <!-- <h3 class="mb-24" style="margin-top: 32px">Главная страница</h3>
+        <select style="width: 100%;" class="auto-complete-select select2" multiple="multiple">
+
+        </select> -->
+
+        <div class="content__buttons" style="margin-top: 16px">
+            <button type="submit" class="button button_green">
+                <img class="button__icon" src="/img/buttons/documentWhite.svg" />
+                Создать пользователя
+            </button>
+            <button onclick="window.open('/Employees', '_self')" type="button" class="button">
+                <img class="button__icon" src="/img/buttons/cancel.svg" />
+                Отмена
+            </button>
+        </div>
+    </form>
+</div>

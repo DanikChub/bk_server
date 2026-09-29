@@ -1,0 +1,68 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@using KV.Server.Helpers
+@using Volo.Abp.Users
+@model KV.Server.Web.Pages.Users.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject ICurrentUser CurrentUser
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Users"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.USERS;
+}
+
+@section scripts
+{
+    <abp-script src="/js/renderTooltip.js"></abp-script>
+    <abp-script src="/js/createTableFunctions.js"></abp-script>
+    <abp-script src="/js/createTable.js"></abp-script>
+    <abp-script src="/Pages/Users/Index.js"></abp-script>
+}
+
+@section styles {
+    <abp-style src="/css/bem.css" />
+    <abp-style src="/css/table.css" />
+    <abp-style src="/css/site.css" />
+    <abp-style src="/css/common-table.css" />
+}
+
+@{
+    var currentUri =
+    $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+    var uri = new Uri(currentUri);
+}
+
+<article class="content">
+    <h3 class="content__title">Пользователи <span id="UsersTable-Count"></span></h3>
+    <div class="content__search">
+        <div class="content__buttons" style="margin: 0;">
+            <button type="button" class="button"
+                onclick="window.open('@(uri.CreateOrUpdateParameterValueUri("handler", "ExcelTable"))', '_self');">
+                <img class="button__icon" src="/img/buttons/document.svg" />
+                Открыть в Excel
+            </button>
+            <button type="button" class="button"
+                onclick="window.open('@(uri.CreateOrUpdateParameterValueUri("handler", "ExcelTable"))', '_self');">
+                <img class="button__icon" src="/img/buttons/star.svg" />
+                Дни рождения
+            </button>
+            <button type="button" style="background-color:  #1AB394;" data-responsible-id="@CurrentUser.Id"
+                class="button button_text-white" id="my-users-button">
+                Мои пользователи
+            </button>
+        </div>
+        <div class="search">
+            <span style="margin-right: 12px;" id="filter_count"></span>
+            <button id="table-filter" type="button" style="margin-right: 1rem;" class="btn btn_white">
+                <img src="/img/buttons/filter.svg" alt="filters" width="16" height="16">
+            </button>
+            <input asp-for="UserSearchViewModelData.ResponsibleManagerId" />
+            <input class="search__input" placeholder="Поиск по пользователям" />
+            <button class="button button_gray search__button">Найти</button>
+
+        </div>
+    </div>
+    <abp-table striped-rows="true" id="UsersTable"></abp-table>
+</article>

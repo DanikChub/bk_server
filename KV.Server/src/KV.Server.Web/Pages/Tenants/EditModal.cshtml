@@ -1,0 +1,24 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model Server.Web.Pages.Tenants.EditModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Tenants/EditModal">
+    <abp-modal>
+        <abp-modal-header title="@L["TenantProfile:Edit"]"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"/>
+
+            <abp-input asp-for="Profile.ShortName" label="@L["TenantProfile:ShortName"]"/>
+            <abp-input asp-for="Profile.LongName" label="@L["TenantProfile:LongName"]"/>
+            <abp-input asp-for="Profile.Address" label="@L["TenantProfile:Address"]"/>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>

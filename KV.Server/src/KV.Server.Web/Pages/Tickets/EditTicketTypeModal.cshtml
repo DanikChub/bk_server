@@ -1,0 +1,20 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Tickets.EditTicketTypeModal
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Tickets/EditTicketTypeModal">
+    <abp-modal>
+        <abp-modal-header title="@L["Ticket:CreateTicketType"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="@Model.TicketType.TicketId"/>
+            <abp-select asp-for="@Model.TicketType.TicketTypeId" asp-items="@Model.TicketTypes" label="@L["Ticket:TicketType"]"/>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>

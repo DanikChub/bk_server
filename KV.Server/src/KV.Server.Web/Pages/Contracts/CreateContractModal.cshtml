@@ -1,0 +1,197 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Contracts.CreateContractModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<style>
+    .modal-header {
+        border: 0;
+        padding: 0;
+        height: 60px;
+        border-bottom: 1px solid #DDE4E8;
+    }
+
+    .modal-title {
+        margin: 0;
+        color: var(--Muted-color, #828282);
+        text-align: right;
+        font-family: "Open Sans";
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 28px;
+    }
+
+    .modal-body {
+        padding: 0;
+        padding-bottom: 16px;
+    }
+
+    .modal-body div.mb-3,
+    .modal-body .container {
+        margin-bottom: 0 !important;
+        display: flex;
+        gap: 16px;
+        height: 70px;
+        align-items: center;
+        border-bottom: 1px solid #DDE4E8;
+    }
+
+    .modal-body .container {
+        padding: 0;
+    }
+
+    .modal-footer {
+        border: 0;
+        padding: 0;
+    }
+
+    .modal-content div.mb-3 label,
+    .modal-content .container h5 {
+        width: 30%;
+        margin: 0;
+        text-align: end;
+        font-weight: 600;
+        font-size: 14px;
+
+        color: #334557;
+        font-family: "Inter";
+    }
+
+    .modal-content div.mb-3 span {
+        display: none;
+    }
+
+    .modal-content input,
+    .modal-content select {
+        border-radius: 6px
+    }
+
+    .modal-content {
+        padding: 24px;
+    }
+
+    .edit-restrictions section {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+
+    .edit-restrictions label {
+        width: 100%;
+        margin: 0;
+        color: #666;
+        font-family: "Inter";
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .edit-restrictions input {
+        width: 50px;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #e5e6e7;
+    }
+
+    .edit-restrictions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        row-gap: 0;
+        column-gap: 0;
+    }
+
+    .form-label {
+        max-width: 167px;
+    }
+</style>
+
+<form asp-page="/Contracts/CreateContractModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="@L["Contract:New"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="Contract.Name" label="@L["Contract:Name"]"></abp-input>
+            <abp-date-picker asp-for="Contract.ContractStartDate"
+                label="@L["Contract:ContractStartDate"]"></abp-date-picker>
+            <abp-date-picker asp-for="Contract.ContractFinishDate"
+                label="@L["Contract:ContractFinishDate"]"></abp-date-picker>
+
+            <abp-select asp-for="Contract.TenantId" asp-items="@Model.Clients" label="@L["ContractClient:Label:Item"]">
+                <option value="">@L["Global:Select"]</option>
+            </abp-select>
+
+            <abp-select asp-for="Contract.StatusId" asp-items="@Model.StatusList"
+                label="@L["ContractStatus:Label:Item"]">
+                <option value="">@L["Global:Select"]</option>
+            </abp-select>
+            <abp-select asp-for="Contract.ServicePackageId" asp-items="@Model.ServicePacks"
+                label="Пакет услуг"></abp-select>
+
+            <div class="container">
+                <h5>@L["Contract:Tag"]</h5>
+                <select style="width: 100%;" class="auto-complete-select inpute-style select2"
+                    asp-for="Contract.TagNames" multiple="multiple">
+                    @if (Model.SelectedTags is not null)
+                    {
+                        @foreach (var tag in Model.SelectedTags)
+                        {
+                            <option value="@tag.Name">@tag.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="container">
+                <h5>Ограничения</h5>
+                <div class="edit-restrictions">
+                    <section>
+                        <label class=" edit-restrictions__label">НПА</label>
+                        <input type="number" min="0" asp-for="Contract.NPARange" class="input input_small"></input>
+                    </section>
+                    <section>
+                        <label class=" edit-restrictions__label">Закупки</label>
+                        <input type="number" min="0" asp-for="Contract.PurchaseRange" class="input input_small"></input>
+                    </section>
+                    <section>
+                        <label class=" edit-restrictions__label">Торги</label>
+                        <input type="number" min="0" asp-for="Contract.TradingRange" class="input input_small"></input>
+                    </section>
+                    <section>
+                        <label class=" edit-restrictions__label">Бухучет</label>
+                        <input type="number" min="0" asp-for="Contract.AccountingRange"
+                            class="input input_small"></input>
+                    </section>
+                    <section>
+                        <label class=" edit-restrictions__label">Претензия</label>
+                        <input type="number" min="0" asp-for="Contract.ClaimRange" class="input input_small"></input>
+                    </section>
+                </div>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+    <script>
+        $('#Contract_TenantId').change(async function () {
+            var tenantId = $(this).val();
+            if (tenantId) {
+                var statusDropdown = $('#Contract_StatusId');
+                statusDropdown.empty();
+
+                var data = await kV.server.crudContractStatus.getContractStatusesByTenantId(tenantId)
+
+                $.each(data, function (index, status) {
+
+                    statusDropdown.append($('<option></option>').val(status.id).html(status.title));
+                });
+
+            }
+        });
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
+</form>

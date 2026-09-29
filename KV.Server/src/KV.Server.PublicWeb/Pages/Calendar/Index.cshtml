@@ -1,0 +1,62 @@
+﻿@page
+@using Volo.Abp.Timing
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.Calendar.IndexModel
+@inject IClock Clock
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Calendar"];
+    var month = new[] { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+}
+
+@section scripts {
+    <abp-script src="/Pages/Calendar/Calendar.js"/>
+}
+
+@section styles {
+    <abp-style src="/css/calendar.css"/>
+}
+
+<div class="page">
+
+    <main class="calendar-wrapper ">
+        <header class="header">Мой календарь</header>
+        <section class="menu">
+            <input class="menu__date-picker" type="month"/>
+            <div class="menu__today">Сегодня</div>
+        </section>
+        <section class="calendar">
+            <div class="calendar__header-wrapper">
+                <div class="calendar__header">пн</div>
+                <div class="calendar__header">вт</div>
+                <div class="calendar__header">ср</div>
+                <div class="calendar__header">чт</div>
+                <div class="calendar__header">пт</div>
+                <div class="calendar__header day_weekend">сб</div>
+                <div class="calendar__header day_weekend">вс</div>
+            </div>
+            <div class="calendar__content">
+            </div>
+        </section>
+        <section class="calendar-description">
+            <h4 class="calendar-description__title">Кол-во дней</h4>
+            <p>Календарных <span id="CountDays">@Model.DateCountDto.CountDays</span></p>
+            <p>Рабочих <span id="CountWorkdays">@Model.DateCountDto.CountWorkdays</span></p>
+            <p>Выходных <span id="CountWeekends">@Model.DateCountDto.CountWeekends</span></p>
+            <p>Праздничные <span id="CountHolidays">@Model.DateCountDto.CountHolidays</span></p>
+        </section>
+    </main>
+    <aside class="calendar-event-info">
+        <section class="calendar-current">
+            <h4 class="calendar-current__day-number">@Clock.Now.Day</h4>
+            <div class="calendar-current__month-year-day">
+                <p class="calendar-current__day">понедельник</p>
+                <p class="calendar-current__month-year">@month[Clock.Now.Month - 1] @Clock.Now.Year</p>
+            </div>
+        </section>
+        <hr>
+        <section class="task-list task-list_grid-position"></section>
+    </aside>
+</div>

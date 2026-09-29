@@ -1,0 +1,36 @@
+﻿@page "{id:Guid}"
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Stories.SlidersModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Sliders"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.STORIES;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Stories/SlidersIndex.js"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <input asp-for="@Model.StoryId" hidden/>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Sliders"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+                <abp-button id="CreateNewSliderButton"
+                            text="@L["Sliders:New"]"
+                            icon="plus"
+                            button-type="Primary"/>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="Sliders"></abp-table>
+    </abp-card-body>
+</abp-card>

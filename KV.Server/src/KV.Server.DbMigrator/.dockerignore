@@ -1,0 +1,8 @@
+*
+obj
+bin
+!obj/Docker/publish/*
+!obj/Docker/empty/
+tempkey.*
+node_moodules
+wwwroot

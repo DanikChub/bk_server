@@ -1,0 +1,216 @@
+.clearfix:after,
+.clearfix:before,
+.panel-body:after,
+.panel-body:before,
+.row:after,
+.row:before {
+    content: ' ';
+    display: table;
+}
+
+.clearfix:after,
+.panel-body:after,
+.row:after { clear: both; }
+
+.mail-chat {
+    border: 1px solid #e5e6e7;
+    height: 300px;
+    margin: 0 auto;
+    min-height: 300px;
+    overflow: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    width: 97%;
+}
+
+.chat-view {
+    border-radius: 13px;
+    clear: both;
+    height: auto;
+    margin: 10px 0;
+    min-width: 80px;
+    padding: 10px;
+    width: auto;
+}
+
+.my-message-chat {
+    background-color: #f1f1f1;
+    float: left;
+    min-width: 30%;
+}
+
+.center-chat {
+    background-color: #a7b1c2;
+    color: #fff;
+    margin: 0 auto;
+}
+
+.other-message-chat {
+    background-color: #dde4e8;
+    float: right;
+    min-width: 30%;
+}
+
+.time-chat {
+    color: #999;
+    float: right;
+    margin-left: 10px;
+}
+
+.mail-chat::-webkit-scrollbar { width: 5px; }
+
+.mail-chat::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 100px;
+}
+
+.file-new {
+    margin-bottom: 20px;
+    padding: 0;
+    position: relative;
+}
+
+.file-new .file-name-new {
+    overflow: hidden;
+    padding: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-new .icon {
+    padding: 15px 10px;
+    text-align: center;
+}
+
+.file-new .icon,
+.file-new .image {
+    height: 80px;
+    overflow: hidden;
+}
+
+.file-new .icon i {
+    font-size: 55px;
+    margin-top: 10px;
+}
+
+.file-box {
+    float: left;
+    width: 170px;
+}
+
+.category-list__symbols {
+    align-items: center;
+    display: flex;
+    margin: 0;
+    padding: 4px 0px;
+}
+
+.category-list__symbols div {
+    border-radius: 100%;
+    display: inline-block;
+    height: 12px;
+    margin-right: 8px;
+    width: 12px;
+}
+
+.category-list_mt { margin-top: 20px; }
+
+.tickets-detail .mail-box { padding: 2rem 1.25rem 1.5rem 1.25rem; }
+
+.tickets-detail .mail-box h2 {
+    margin: 0;
+    padding: 0;
+}
+
+.tickets-detail .mail-tools { margin-top: 20px; }
+
+.tickets-detail .ticket__field b {
+    color: #253340;
+    font-weight: 400;
+    line-height: 1.125rem;
+}
+
+.tickets__text_blue {
+    background: #78b7d9;
+    border-radius: 3px;
+    color: #253340;
+    padding: 3px 6px;
+}
+
+.tickets-detail .mail-box { margin-bottom: 26px; }
+
+.tickets-detail .chat-view.my-message-chat {
+    border-radius: 10px;
+    color: #334557;
+    font-family: Open Sans;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.chat-submit-button {
+    align-items: center;
+    background: #1ab394;
+    color: #ffffff;
+    display: flex;
+    gap: 8px;
+    height: 30px;
+    padding: 5px 10px 6px 10px;
+    padding: 0.3rem 0.6rem;
+}
+
+.chat-input {
+    height: 30px;
+    width: auto;
+    width: 100%;
+}
+
+.chat-add-files {
+    background: #fff;
+    border: 1px solid #dde4e8;
+    border-radius: 3px;
+}
+
+.chat-input-container {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.file-box {
+    background: #f3f3f4;
+    border: 1px solid #dde4e8;
+    border-radius: 3px;
+    height: 112px;
+    padding: 11px 11px 22px;
+    width: 133px;
+}
+
+.file-box .file-name-new {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.file-box .icon {
+    margin: 0;
+    padding: 0;
+}
+
+.chat-view-files {
+    align-items: center;
+    background: transparent;
+    border-radius: 13px;
+    clear: both;
+    display: flex;
+    gap: 5px;
+    height: auto;
+    margin: 10px 0;
+    min-width: 80px;
+    padding: 10px;
+    width: auto;
+}
+
+@media (min-width: 1200px) and (max-width: 1468px) {
+    .ticket:first-of-type { width: 51%; }
+}

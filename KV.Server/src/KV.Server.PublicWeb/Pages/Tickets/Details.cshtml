@@ -1,0 +1,530 @@
+﻿@page "{id:int}"
+@using System.Globalization
+@using KV.Server
+@using KV.Server.Helpers
+@using KV.Server.Interfaces
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Layout
+@using Volo.Abp.Timing
+@using Volo.Abp.Users
+@model KV.Server.PublicWeb.Pages.Tickets.DetailsModel
+@inject IStringLocalizer<ServerResource> L
+@inject IClock clock
+@inject IEmployeeProfileAppService EmployeeService;
+@inject ICurrentUser CurrentUser
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Ticket:Details"];
+    var month = new[] { "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря" };
+}
+
+@section scripts {
+                <abp-script src="/Pages/Tickets/Details.js" />
+                <abp-script src="/libs/summernote/dist/summernote.min.js" />
+                <abp-script src="/js/summernote-config.js" />
+                <abp-script src="/js/details.js" />
+                <abp-script src="/js/chat-icon.js" />
+}
+
+@section styles {
+                <abp-style src="/css/tickets.css" />
+                <abp-style src="/css/details.css" />
+                <abp-style src="/libs/summernote/dist/summernote.min.css" />
+}
+
+<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet" asp-append-version="true">
+
+@{
+    var ticketFormatedId = Model.Ticket.Id.ToString("n", new NumberFormatInfo { NumberGroupSeparator = " " });
+    ticketFormatedId = ticketFormatedId.Remove(ticketFormatedId.Length - 3, 3);
+
+    string NormalizeLength(string value, int maxLength)
+    {
+        return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+    }
+}
+
+<div class="wrapper wrapper-content ng-tns-c150-0 tickets-detail">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox">
+                <div class="ibox-content mailbox-content">
+                    <div class="file-manager">
+                        <!-- <a class="btn col-12 btn-primary compose-mail" href="/tickets/compose">Создать новую заявку</a> -->
+                        <!-- <div class="space-25"></div> -->
+                        <!-- <h5>По статусам</h5> -->
+                        <ul class="folder-list m-b-md p-0">
+                            <li>
+                                <a href="/tickets?ticketStatusId=@Model.MyTicket.Name&subject=&servicepackageid=" class="active">
+                                    <div>
+                                        <i class="@Model.MyTicket.Icon"></i> @L[$"TicketStatus:{Model.MyTicket.Name}"]
+                                    </div>
+                                    <span class="label float-end @(Model.MyTicket.Count > 0 ? "status_shown" : "status_hidden")">@Model.MyTicket.Count</span>
+                                </a>
+                            </li>
+                            @foreach (var ticketStatus in Model.TicketStatusesView)
+                            {
+                                            <li>
+                                                <a href="/tickets?ticketStatusId=@ticketStatus.Id&subject=&servicepackageid=">
+                                                    <div>
+                                                        <i class="fa @ticketStatus.Icon"></i> @L[$"TicketStatus:{ticketStatus.Name}"]
+                                                    </div>
+                                                    <span class="label float-end @(ticketStatus.Count > 0 ? "status_shown" : "status_hidden")">@ticketStatus.Count</span>
+                                                </a>
+                                            </li>
+                            }
+                            <li>
+                                <a href="/tickets?ticketStatusId=@Model.FavoriteTicket.Name&subject=&servicepackageid=" class="active tiket_font">
+                                    <div>
+                                        <i class="@Model.FavoriteTicket.Icon"></i> @L[$"TicketStatus:{Model.FavoriteTicket.Name}"]
+                                    </div>
+                                    <span class="label float-end status_shown">@Model.FavoriteTicket.Count</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <h5>Активные пакеты услуг</h5>
+                        <!-- <p>-</p> -->
+                        <!-- <br/> -->
+                        <ul class="category-list p-0">
+                            @*<li class="category-list__symbols">
+                            <div style="background: #499ED6"></div>
+                            <span>Консалтинг</span>
+                            </li>*@
+
+                            @foreach (var ticketServicePackage in Model.TicketActiveServicePackagesView)
+                            {
+                                            <li>
+                                                <a href="/tickets?ticketStatusId=&subject=&servicepackageid=@ticketServicePackage.Id">
+                                                    <i class="fa fa-circle" style="@ticketServicePackage.Style"></i> @ticketServicePackage.Name
+                                                </a>
+                                            </li>
+                            }
+                        </ul>
+                        <ul class="category-list p-0">
+                            @foreach (var ticketServicePackage in Model.TicketNotActiveServicePackagesView)
+                            {
+                                            <li>
+                                                <a href="/tickets?ticketStatusId=&subject=&servicepackageid=@ticketServicePackage.Id">
+                                                    <i class="fa fa-circle text-secondary"></i> @ticketServicePackage.Name
+                                                </a>
+                                            </li>
+                            }
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box">
+                <h2>@Model.Ticket.Code</h2>
+                <div class="mail-tools tooltip-demo m-t-md">
+                    <input asp-for="@Model.Ticket.Id" hidden />
+                    <a onclick="abp.notify.success('Добавлено в избранное');" href="/tickets/details/@Model.Ticket.Id?ticketId=@(Model.Ticket.Id)&handler=SetFavorite" data-toggle="tooltip" data-placement="top" title="Сохранить в избранное" class="btn btn-white btn-sm">
+                        <i class="fa fa-bookmark"></i>
+                        <span>Добавить в избранное</span>
+                    </a>
+                    <button id="printModal" data-toggle="tooltip" data-placement="top" title="Сделать печать" class="btn btn-white btn-sm">
+                        <i class="fa fa-print"></i>
+                        <span>Распечатать</span>
+                    </button>
+                    @*                    <button data-toggle="tooltip" data-placement="top" title="Mark as read" class="btn btn-white btn-sm">
+                    <i class="fa fa-reply"></i>
+                    <span>Ответить</span>
+                    </button>*@
+                    <button id="ratingModal" data-toggle="tooltip" data-placement="top" title="Добавить оценку" class="btn btn-white btn-sm">
+                        <i class="fa fa-star"></i>
+                        <span>Оценить ответ</span>
+                    </button>
+
+                    <div class="ticket-wrapper">
+                        <div class="ticket">
+                            <p class="ticket__field">
+                                <b>Дата создания</b><span>@Model.Ticket.CreationTime.ToString("dd.MM.yyyy HH:mm")</span>
+                            </p>
+                            <p class="ticket__field">
+                                <b>Статус заявки</b><span>@L[$"TicketStatus:{Model.Ticket.TicketStatusName}"]</span>
+                            </p>
+                            <p class="ticket__field">
+                                <b>Раздел</b><span>@(Model.Ticket.TicketSection ?? "Отсутствует")</span>
+                            </p>
+                            <p class="ticket__field">
+                                <b>Тема</b><span>@Model.Ticket.Subject</span>
+                            </p>
+                            @if (Model.Ticket.ResponsibleId == null)
+                            {
+                                            <p>Не назначен исполнитель</p>
+                            }
+                            else
+                            {
+                                            <section class="ticket__field">
+                                                <b>Ответственный специалист</b>
+                                                <div class="specialist">
+                                                    <img src='@Url.Action("Avatar","EmployeeAvatar", new { employeeId = Model.Ticket.ResponsibleId })' 
+                                                         onerror="this.src='/img/Avatar.svg'"
+                                                         class="rounded-circle"
+                                                         style="max-width:50px;max-height:50px;min-width:50px;min-height:50px;"
+                                                         >
+                                                    <div class="specialist__description">
+                                                        <p>@Model.Ticket.ResponsibleLastName @Model.Ticket.ResponsibleFirstName @Model.Ticket.ResponsibleMiddleName</p>
+                                                        <p>@Model.Ticket.ResponsibleJobPost</p>
+                                                        <span class="tickets-details__specialist-number">
+                                                            <span style="color: var(--Dark-BG, #334557);">@Model.Ticket.ResponsiblePhoneNumber</span>
+                                                            позвонит вам с этого номера
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </section>
+                            }
+                        </div>
+                        <div class="ticket">
+                            <p class="ticket__field">
+                                <b>Дата обновления</b><span>@Model.Ticket.LastModificationTime?.ToString("dd.MM.yyyy HH:mm")</span>
+                            </p>
+                            <p class="ticket__field">
+                                <b>Пакет услуг</b>
+                                @foreach (var ticketServicePackage in Model.TicketActiveServicePackagesView)
+                                {
+                                                <span class="tickets__text_blue" style="margin-left: 10px; width: max-content;">@(ticketServicePackage.Name)</span>
+                                }
+                                @if (!Model.TicketActiveServicePackagesView.Any())
+                                {
+                                                <span class="tickets__text_blue">@(Model.Ticket.ServicePackages ?? "Отсутствует")</span>
+                                }
+                            </p>
+                            <p class="ticket__field">
+                                <b>Срок исполнения</b><span>@Model.Ticket.DueDate.ToString("dd.MM.yyyy")</span>
+                            </p>
+                            <p class="ticket__field">
+                                <b>Тип заявки</b><span>@L[$"{Model.Ticket.TicketTypeName}"]</span>
+                            </p>
+                        </div>
+                    </div>
+                    <b>
+                        <a style="color: #333" href="/tickets/details/@Model.Ticket.Id?Id=@Model.Ticket.Id&handler=DownloadAllFile">Скачать все файлы</a>
+                    </b>
+                </div>
+            </div>
+
+            <div class="mail-box" style="height: min-content;">
+                <div class="tickets-details__chat-item">
+                    @{
+                        var historyDate = Model.Ticket.CreationTime.Date;
+                    }
+                    <div class="tickets-details__chat-appointment">
+                        <div class="tickets-details__chat-appointment-itme">
+                            @($"{Model.Ticket.CreationTime.Date.Day} {month[Model.Ticket.CreationTime.Date.Month - 1]} {Model.Ticket.CreationTime.Date.Year}")
+                        </div>
+                    </div>
+
+
+                    <div class="tickets-details__chat-message @(Model.Ticket.CreatorId  == CurrentUser.Id ? "right-chat" : "left-chat")">
+                        <img style="margin-bottom: 10px;" src="@(Model.Ticket.ResponsibleAvatarId != null ? "/avatar/image?fileId=" + Model.Ticket.ResponsibleAvatarId : "/img/Avatar.svg")" class="message__avatar" />
+                        <strong>@Model.Ticket.CreatorLastName @Model.Ticket.CreatorFirstName</strong>
+                        @Html.Raw(Model.Ticket.Description)
+                        <span class="time-chat">
+                            @Model.Ticket.CreationTime.ToString("HH:mm")
+                        </span>
+                    </div> 
+
+                    @if (Model.Ticket.AttachmentsCount != 0)
+                    {
+                                    <div class="tickets-details__chat-file @(Model.Ticket.CreatorId == CurrentUser.Id ? "right-chat" : "left-chat")">
+                            @foreach (var file in Model.UploadedFilesTicket)
+                            {
+                                                        <a href="/tickets/details/@Model.Ticket.Id?fileId=@file.Id&handler=DownloadOneFile">
+                                                            <div class="file-box-item">
+                                                                <div data-toggle="tooltip" title='@NormalizeLength(file.Title, 30)' class="file-box-item__file-name">
+                                            @NormalizeLength(file.Title, 30)
+                                                                </div>
+                                                                <div class="file-box-item__img">
+                                                                    <div class='@GlobalClass.GetIconByFileExtension(System.IO.Path.GetExtension(file.FileName))'></div>
+                                                                </div>
+                                                                <div class="file-box-item__close hideCloseButton">
+                                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                            }
+                                    </div>
+                                    <div style='background: white; align-self: @(Model.Ticket.CreatorId == CurrentUser.Id ? "flex-end" : "flex-start")'>
+                            @{
+                                long fileSizeBytes = 0;
+                                Model.UploadedFilesTicket.ForEach(x => fileSizeBytes += x.SizeInBytes);
+                                var fileSizeMb = fileSizeBytes / 1024.0f / 1024.0f;
+                            }
+                                        <span>@Model.Ticket.AttachmentsCount файл (@(string.Format("{0:f2}", fileSizeMb)) МБ)</span>
+                                        <b>
+                                            <a style="color: #333" href="/tickets/details/@Model.Ticket.Id?Id=@Model.Ticket.Id&handler=DownloadAllFile">Скачать все</a>
+                                        </b>
+                                    </div>
+                    }
+
+                    @foreach (var history in Model.TicketHistory.TicketHistoryDtos.Where(x => x.IsInternal == false))
+                    {
+                        @if (history.CreationTime.Date != historyDate.Date)
+                        {
+                                                    <div class="tickets-details__chat-appointment">
+                                                        <div class="tickets-details__chat-appointment-itme">
+                                    @($"{history.CreationTime.Date.Day} {month[history.CreationTime.Date.Month - 1]} {history.CreationTime.Date.Year}")
+                                                        </div>
+                                @{
+                                    historyDate = history.CreationTime.Date;
+                                }
+                                                    </div>
+                        }
+
+                        @if (!history.Description.IsNullOrWhiteSpace())
+                        {
+                            @if (history.Type == TicketHistoryType.ResponsibleTicket)
+                            {
+                                                                    <div class="tickets-details__chat-appointment">
+
+                                                                        <div class="tickets-details__chat-appointment-itme">
+                                        @Html.Raw(history.Description)
+                                                                        </div>
+                                                                    </div>
+                            }
+                            else if (history.Type == TicketHistoryType.NotPickUp)
+                            {
+                                                                    <div class="tickets-details__chat-appointment-itme" style="width: fit-content; margin: 0 auto; padding: 6px 10px">
+                                    @Html.Raw(history.Description)
+                                                                    </div>
+                            }
+                            else if (history.Type == TicketHistoryType.ChangeLimit)
+                            {
+                                                                    <div class="tickets-details__chat-appointment-itme" style="width: fit-content; margin: 0 auto; padding: 6px 10px">
+                                    @Html.Raw(history.Description)
+                                                                    </div>
+                            }
+                            else
+                            {
+                                var uniqueId = $"collapse_{history.Id}";
+                                var descriptionLength = history.Description.Length;
+
+                                                                    <div class="tickets-details__chat-message @(history.CreatorId == CurrentUser.Id ? "right-chat" : "left-chat")">
+                                                                        <img style="margin-bottom: 10px;" src="@(Model.Ticket.ResponsibleAvatarId != null ? "/avatar/image?fileId=" + Model.Ticket.ResponsibleAvatarId : "/img/Avatar.svg")" class="message__avatar" />
+                                                                        <strong>@history.LastName @history.FirstName</strong>
+                                    @if (descriptionLength >= 500)
+                                    {
+                                                                                         <a style="color:gray;margin-left: 30px;" data-bs-toggle="collapse" href="#@uniqueId" role="button" aria-expanded="false" aria-controls="@uniqueId">
+                                                                                        Развернуть
+                                                                                    </a>
+                                                                                        <div class="collapse" id="@uniqueId">
+                                            @Html.Raw(history.Description)
+                                                                                            <a data-bs-toggle="collapse" href="#@uniqueId" role="button" aria-expanded="false" aria-controls="@uniqueId">
+                                                                                                Свернуть...
+                                                                                            </a>
+                                                                                        </div>
+                                                                                        <span class="time-chat">
+                                            @history.CreationTime.ToString("HH:mm")
+                                                                                        </span>
+                                    }
+                                    else
+                                    {
+                                                                                        <div style="overflow-wrap: anywhere;">
+                                            @Html.Raw(history.Description)
+                                                                                        </div>
+                                                                                        <span class="time-chat">
+                                            @history.CreationTime.ToString("HH:mm")
+                                                                                        </span>
+                                    }
+
+                                                                    </div>
+                            }
+                        }
+
+                        @if (history?.Attachments.Count() != 0)
+                        {
+                                                    <div class="tickets-details__chat-file @(history?.CreatorId == CurrentUser.Id ? "right-chat" : "left-chat")">
+                                @foreach (var attachment in history?.Attachments ?? new List<KV.Server.Dtos.File.UploadedFileDto>())
+                                {
+                                                                        <a href="?fileId=@attachment.Id&handler=DownloadOneFile">
+                                                                            <div class="file-box-item">
+                                                                                <div data-toggle="tooltip" title='@attachment.FileName от @string.Format("{0:dd.MM.yyyy HH:mm}", attachment.CreationTime)' class="file-box-item__file-name">
+                                                @attachment.FileName от @string.Format("{0:dd.MM.yyyy HH:mm}", attachment.CreationTime)
+                                                                                </div>
+                                                                                <div class="file-box-item__img">
+                                                                                    <div class='@GlobalClass.GetIconByFileExtension(System.IO.Path.GetExtension(attachment.FileName))'></div>
+                                                                                </div>
+                                                                                <div class="file-box-item__close hideCloseButton">
+                                                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                }
+                                                    </div>
+                                                    <div style='background: white; align-self: @(history?.CreatorId == CurrentUser.Id ? "flex-end" : "flex-start")'>
+                                @{
+                                    long fileSizeBytes = 0;
+                                    history?.Attachments.ForEach(x => fileSizeBytes += x.SizeInBytes);
+                                    float fileSizeMb = (float)fileSizeBytes / 1024.0f / 1024.0f;
+                                }
+                                                        <span>@history?.Attachments.Count() файл (@(string.Format("{0:f2}", fileSizeMb)) МБ)</span>
+                                                        <b>
+                                                            <a style="color: #333" href="/tickets/details/@Model.Ticket?.Id?ticketHistoryId=@history?.Id&handler=DownloadTicketHistoryZipFile">Скачать все</a>
+                                                        </b>
+                                                    </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="mail-box">
+                <div style="padding:20px;">
+                    <form method="post" enctype="multipart/form-data">
+                        <input asp-for="CreateTicketHistory.TicketId" value="@Model.Ticket.Id" type="hidden" />
+                        <input asp-for="@Model.TicketCreatorId" hidden />
+                        <input asp-for="CreateTicketHistory.TicketStatusId" hidden />
+                        <div class="chat-input-container" id="chat-input" style="display: none;">
+                            <textarea asp-for="CreateTicketHistory.Description" id="summernote"></textarea>
+                        </div>
+                        <div class="d-flex" style="gap: 0.5rem">
+                            <button type="button" onclick="$('#images').click();" class="border chat-add-files">
+                                <sup>*Размер загружаемых файлов не должен превышать 50Мб</sup> <!-- Сноска -->
+                                <i class="fa fa-paperclip opacity-50"></i>
+                            </button>
+                            <input onclick="$('#tickets-details-input').hide(); $('#chat-input').show();" id="tickets-details-input" type="text" class="form-control chat-input" placeholder="Написать сообщение">
+                            <button type="submit" class="border chat-submit-button"><i class="fa fa-paper-plane"></i> Отправить</button>
+                        </div>
+                        <input type="file" onchange="validateFileSize(this)" hidden style="height: 42px; margin-bottom: 10px;" name="images[]" id="images" asp-for="CreateTicketHistory.Attachments" multiple>
+                        <div class="form-group attachment">
+                            <div id="image_preview" style="width: 100%;"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+
+<script src="~/lib/summernote/plugin/jquery/jquery-3.4.1.slim.min.js" asp-append-version="true"></script>
+<script src="~/lib/summernote/summernote-lite.min.js" asp-append-version="true"></script>
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>
+
+<script>
+    $(document).ready(function () {
+        new SummerNote('#summernote');
+
+        const submitButton = document.querySelector(".chat-submit-button");
+        const selector = ".note-editor.note-airframe .note-editing-area .note-editable, .note-editor.note-frame .note-editing-area .note-editable";
+        const summerNoteTextErea = document.querySelector("#tickets-details-input");
+        const textData = document.querySelector(`${selector} p`);
+        const textField = document.querySelector(selector);
+
+        submitButton.addEventListener("click", () => {
+            if (!textData?.textContent?.length) {
+                summerNoteTextErea.style.border = "1px solid red";
+                textField.style.border = "1px solid red";
+            }
+        });
+
+        const observer = new MutationObserver(() => {
+            textField.style.border = "0px solid white";
+        });
+
+        observer.observe(textData, {
+            childList: true,
+            subtree: true,
+            characterDataOldValue: false
+        });
+    });
+</script>
+
+<script>
+    function validateFileSize(input) {
+        var totalSize = 0;
+        var files = input.files;
+
+        for (var i = 0; i < files.length; i++) {
+            totalSize += files[i].size;
+        }
+
+        if (totalSize > 50 * 1024 * 1024) {
+            abp.notify.error('Суммарный размер файлов превышает максимальный размер 50 МБ. Пожалуйста, выберите файлы с меньшим размером.');
+            input.value = '';
+        }
+    }
+   
+     const fileArr = [];
+
+    $("#images").change(function () {
+        const total_file = this.files;
+
+        if (!total_file.length) return;
+
+        Array.from(total_file).forEach(file => {
+            if (!fileArr.some(existingFile => existingFile.name === file.name)) {
+                fileArr.push(file);
+            }
+        });
+
+        drawFiles(fileArr);
+        updateInputFiles();
+    });
+
+    function drawFiles(fileList) {
+        const filesImgsContainer = $('#image_preview');
+        filesImgsContainer.html("");
+
+        fileArr.forEach(file => {
+            const { name } = file;
+            const extension = "." + name.split('.').pop();
+
+            filesImgsContainer.append(`
+                    <div onclick="removeFileFromSummerNote('${name}')" class="file-box-item">
+                        <div data-toggle="tooltip" title="${name}" class="file-box-item__file-name">
+                            ${name}
+                        </div>
+                        <div class="file-box-item__img">
+                            <div class="${chatIcon(extension)}"></div>
+                        </div>
+                        <div class="file-box-item__close hideCloseButton">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </div>
+                    </div>`);
+        });
+    }
+
+    function updateInputFiles() {
+        const dataTransfer = new DataTransfer();
+        fileArr.forEach(file => dataTransfer.items.add(file));
+
+        const inputFile = document.querySelector('#images');
+        inputFile.files = dataTransfer.files;
+    }
+
+    window.removeFileFromSummerNote = function (filename) {
+        const index = fileArr.findIndex(file => file.name === filename);
+        if (index !== -1) {
+            fileArr.splice(index, 1);
+            drawFiles(fileArr);
+            updateInputFiles();
+        }
+    };
+</script>
+
+<script>
+    $(function () {
+        var ticketId = $("#Ticket_Id").val();
+        var ratingModal = new abp.ModalManager(abp.appPath + 'Tickets/RatingModal');
+        var previewTicketPrint = new abp.ModalManager(abp.appPath + 'Tickets/PreviewTicketPrintModal');
+        var ratingSuccessModal = new abp.ModalManager(abp.appPath + 'Tickets/RatingSuccessModal');
+
+        $("#ratingModal").on("click", function () {
+            ratingModal.open({ ticketId: ticketId });
+        });
+
+        $("#printModal").on("click", function () {
+            previewTicketPrint.open({ ticketId: ticketId });
+        });
+
+        ratingModal.onResult(function () {
+            ratingSuccessModal.open();
+        });
+    });
+</script>

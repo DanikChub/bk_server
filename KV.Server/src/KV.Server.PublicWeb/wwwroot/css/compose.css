@@ -1,0 +1,152 @@
+.clearfix:after,
+.clearfix:before,
+.panel-body:after,
+.panel-body:before,
+.row:after,
+.row:before {
+    content: ' ';
+    display: table;
+}
+
+.clearfix:after,
+.panel-body:after,
+.row:after { clear: both; }
+
+.note-btn.dropdown-toggle:after { content: none; }
+
+.file-box-item {
+    background: #f3f3f4;
+    border: 1px solid #dde4e8;
+    border-radius: 3px;
+    height: 112px;
+    padding: 11px 11px 22px;
+    position: relative;
+    width: 133px;
+}
+
+.file-box-item__file-name {
+    color: #253340;
+    font-family: Open Sans, sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    height: 20px;
+    line-height: 20px;
+    max-height: 20px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-box-item__img {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+.file-box-item__close {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dde4e8;
+    border-radius: 48px;
+    cursor: pointer;
+    display: flex;
+    flex-shrink: 0;
+    height: 24px;
+    justify-content: center;
+    padding: 4px;
+    position: absolute;
+    right: -22px;
+    top: -41px;
+    width: 24px;
+}
+
+.file-box-item__img .file {
+    align-items: center;
+    background: #f3f3f4;
+    border: none;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    margin-top: 17px;
+    width: 100%;
+}
+
+.file-box-item__img .corner {
+    position: absolute;
+    right: 31%;
+    top: 5px;
+}
+
+.file-box-item__img .format {
+    font-weight: 600;
+    position: absolute;
+    right: 38%;
+    top: 35%;
+}
+
+#image_preview {
+    display: flex;
+    gap: 12px;
+}
+
+.chat-view .hideCloseButton,
+.chat-view-files .hideCloseButton,
+.tickets-details__chat-item .hideCloseButton { display: none; }
+
+.tickets-details__chat-file {
+    display: flex;
+    gap: 12px;
+}
+
+.file-word {
+    background: url('/img/file-icons/word.svg') 50% 50%;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+.file-xls {
+    background: url('/img/file-icons/xls.svg') 50% 50%;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+.file-zip {
+    background: url('/img/file-icons/zip.svg') 50% 50%;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+.file-pdf {
+    background: url('/img/file-icons/pdf.svg') 50% 50%;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+.file-another {
+    background: url('/img/file-icons/another-file.svg') 50% 50%;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 100%;
+}
+
+.chat-view {
+    display: flex;
+    gap: 12px;
+}
+
+.input-validation-error { border: 1px solid red !important; }
+
+.validation-fild {
+    background: #f3f3f4;
+    color: red;
+    padding: 5px 0;
+}

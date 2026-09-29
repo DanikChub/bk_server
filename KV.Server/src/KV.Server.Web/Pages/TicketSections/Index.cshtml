@@ -1,0 +1,34 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.TicketSections.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["TicketSection"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.TICKET_SECTION;
+}
+@section scripts
+{
+    <abp-script src="/Pages/TicketSections/Index.js"></abp-script>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["TicketSection"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+                <abp-button id="CreateNewTicketSection"
+                            text=@L["TicketSection:New"]
+                            icon="plus"
+                            button-type="Primary"/>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="TicketSectionsTable"></abp-table>
+    </abp-card-body>
+</abp-card>

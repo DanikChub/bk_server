@@ -1,0 +1,91 @@
+﻿@using Volo.Abp.Timing
+@using System.Globalization
+@model KV.Server.PublicWeb.Pages.Tickets.TicketHistoryViewModel
+@inject IClock clock
+@{
+    Layout = null;
+}
+
+<div class="ibox-title">
+    Ответы по заявке
+    <div class="btn-group float-end" style="bottom: 5px; left: 75px;">
+        <a class="btn btn-white btn-sm" href="?skipPage=@Model.PrevPage">
+            <i class="fa fa-arrow-left"></i>
+        </a>
+        <span class="btn btn-white btn-sm">@(Model.PrevPage + 1)</span>
+        <a class="btn btn-white btn-sm" href="?skipPage=@Model.NextPage">
+            <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<div class="ibox-content inspinia-timeline">
+    @foreach (var history in Model.TicketHistoryDtos)
+    {
+        <div class="timeline-item" style="@(history.ReadByClientDate == null && history.ReadBySpecialistDate == null ? "background-color: #f9f8f8;" : "")">
+            <div class="row">
+                <div class="col-3 date">
+                    @if (history?.Attachments?.Any() ?? false)
+                    {
+                        <i class="fa fa-file-text" style="margin-right: 30px;"></i>
+                    }
+                    @if (history?.IsSpecialistMessage ?? false)
+                    {
+                        <i class="fas fa-user-tie"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-user"></i>
+                    }
+                    <br>
+                    @if (clock.Now.Date == history?.CreationTime.Date)
+                    {
+                        <small>Добавлено: @string.Format("{0:HH:mm}", history?.CreationTime)</small>
+                    }
+                    else
+                    {
+                        <small>@string.Format("{0:dd.MM.yyyy HH:mm}", history?.CreationTime)</small>
+                    }
+                    <small class="text-navy humanize-duration" data-creationTime="@history?.CreationTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz", CultureInfo.InvariantCulture)"></small>
+                </div>
+                <div class="col-7 content no-top-border">
+                    @{
+                        var fullName = $"{history?.LastName} {history?.FirstName} {history?.MiddleName}";
+                        fullName = fullName.IsNullOrWhiteSpace() ? history?.UserName : fullName;
+                    }
+                    <p class="m-b-xs">
+                        <strong>@fullName</strong>
+                    </p>
+                    <p>@Html.Raw(history?.Description)</p>
+                    @if (history != null && history.Attachments != null && history.Attachments.Count() != 0)
+                    {
+                        <p>
+                            <strong>Вложения:</strong>
+                        </p>
+                        @foreach (var attachment in history.Attachments)
+                        {
+                            <div>
+                                <a href="?fileId=@attachment.Id&handler=DownloadOneFile">
+                                    @attachment.Title
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    $(() => {
+        var itemsToProcess = $(".humanize-duration");
+        for (let i = 0; i < itemsToProcess.length; i++) {
+            let time = $(itemsToProcess[i]).data("creationTime");
+            let dateTime = new Date(time);
+            let diff = new Date() - dateTime;
+            let formatTime = humanizeDuration(diff / 1000, { language: "ru" });
+            $(itemsToProcess[i]).text(formatTime);
+        }
+    });
+</script>

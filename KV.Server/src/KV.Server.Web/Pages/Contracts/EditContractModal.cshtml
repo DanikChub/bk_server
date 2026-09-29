@@ -1,0 +1,30 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Contracts.EditContractModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+<form asp-page="/Contracts/EditContractModal">
+    <abp-modal>
+        <abp-modal-header title="@L["Edit"]"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"></abp-input>
+            <abp-input asp-for="Contract.Name" label="@L["Contract:Name"]"></abp-input>
+            <abp-input asp-for="Contract.ContractStartDate" label="@L["Contract:ContractStartDate"]"></abp-input>
+            <abp-input asp-for="Contract.ContractFinishDate" label="@L["Contract:ContractFinishDate"]"></abp-input>
+
+            <abp-select asp-for="Contract.StatusId" asp-items="@Model.StatusList" label="@L["ContractStatus:Label:Item"]">
+                <option value="">@L["Global:Select"]</option>
+            </abp-select>
+
+            <abp-input asp-for="Contract.TenantId"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)" id="UpdateContractButton"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

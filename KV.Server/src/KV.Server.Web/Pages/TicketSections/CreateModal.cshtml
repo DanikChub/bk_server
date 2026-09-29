@@ -1,0 +1,21 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.TicketSections.CreateModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/TicketSections/CreateModal" method="post">
+    <abp-modal size="Large">
+        <abp-modal-header title="@L["TicketSection:New"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="TicketSection.Name" label="@L["TicketSection:Name"]"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>
+
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>

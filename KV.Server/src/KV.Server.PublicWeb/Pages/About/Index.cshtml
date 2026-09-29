@@ -1,0 +1,9 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.About.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["About"];
+}

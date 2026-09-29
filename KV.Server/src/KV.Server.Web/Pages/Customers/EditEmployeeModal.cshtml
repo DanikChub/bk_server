@@ -1,0 +1,53 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model KV.Server.Web.Pages.Customers.EditEmployeeModalModel
+@{
+    Layout = null;
+}
+
+<style>
+    .one-line>.mb-3 {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding-bottom: 16px;
+    }
+</style>
+
+<form asp-page="/Customers/EditEmployeeModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Редактирование сотрудника"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"></abp-input>
+
+            <div class="one-line">
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.LastName" label="Фамилия" required></abp-input>
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.FirstName" label="Имя" required></abp-input>
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.MiddleName" label="Отчество"></abp-input>
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.DateOfBirthDay" label="Дата рождения"
+                    type="date"></abp-input>
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.JobPost" label="Должность" required></abp-input>
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.PhoneNumber" label="Номер телефона"
+                    type="tel"></abp-input>
+                <abp-input asp-for="CreateUpdateEmployeeViewModel.Note" label="Примечание"></abp-input>
+                @* <input type="file" id="photo-input" asp-for="ImgFile" label="Аватар"> *@
+            </div>
+
+            @* <div class="row">
+            <div class="col">
+            </div>
+            <div class="col">
+            </div>
+            </div> *@
+
+            <!--hidden inputs-->
+            <abp-input asp-for="CreateUpdateEmployeeViewModel.TenantId" type="hidden"></abp-input>
+            <abp-input asp-for="CreateUpdateEmployeeViewModel.IdentityUserId" type="hidden"></abp-input>
+            <abp-input asp-for="CreateUpdateEmployeeViewModel.UserAvatarFileId" type="hidden"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

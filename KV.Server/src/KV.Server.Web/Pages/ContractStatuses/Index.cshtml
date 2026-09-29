@@ -1,0 +1,43 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.ContractStatuses.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["ContractStatus"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.CONTRACT_STATUSES;
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/ContractStatuses/Index.js"></abp-script>
+}
+
+@section styles {
+    <abp-style src="/css/common-table.css"/>
+}
+
+<style>
+    div.dataTables_wrapper div.dataTables_info { padding-top: 7px; }
+</style>
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["ContractStatus"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+                <abp-button id="CreateNewContractStatus"
+                            text=@L["ContractStatus:New"]
+                            icon="plus"
+                            button-type="Primary"/>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="ContractStatusesTable"></abp-table>
+    </abp-card-body>
+</abp-card>

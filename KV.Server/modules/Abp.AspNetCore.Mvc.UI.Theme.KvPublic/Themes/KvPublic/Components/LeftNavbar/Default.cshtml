@@ -1,0 +1,11 @@
+﻿@using Abp.AspNetCore.Mvc.UI.Theme.KvPublic.Themes.KvPublic.Components.Brand
+@using Abp.AspNetCore.Mvc.UI.Theme.KvPublic.Themes.KvPublic.Components.Menu
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            @(await Component.InvokeAsync<LeftNavbarBrandViewComponent>())
+            @(await Component.InvokeAsync<LeftNavbarMenuViewComponent>())
+        </ul>
+    </div>
+</nav>

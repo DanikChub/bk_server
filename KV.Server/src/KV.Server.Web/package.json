@@ -1,0 +1,15 @@
+{
+    "version": "1.0.0",
+    "name": "my-app",
+    "private": true,
+    "dependencies": {
+        "@abp/aspnetcore.mvc.ui.theme.basic": "~8.0.4",
+        "@appricot/custom-stories-component": "^0.0.9",
+        "@volo/abp.aspnetcore.mvc.ui.theme.lepton": "~8.0.4",
+        "datatables.net-buttons": "^3.1.1",
+        "keen-slider": "^6.8.5",
+        "summernote": "^0.8.18",
+        "sweetalert2": "11.4.8",
+        "zuck.js": "^2.1.0"
+    }
+}

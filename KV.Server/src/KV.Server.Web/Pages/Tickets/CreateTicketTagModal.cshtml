@@ -1,0 +1,20 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Tickets.CreateTicketTagModal
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Tickets/CreateTicketTagModal">
+    <abp-modal>
+        <abp-modal-header title="@L["Ticket:CreateTicketTag"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="@Model.Tag.TicketId"/>
+            <abp-input asp-for="@Model.Tag.TagName" label="@L["Ticket:TagName"]"/>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>

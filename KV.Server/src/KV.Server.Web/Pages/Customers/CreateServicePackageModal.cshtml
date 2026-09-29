@@ -1,0 +1,23 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model KV.Server.Web.Pages.Customers.CreateServicePackageModalModel
+@{
+    Layout = null;
+}
+
+<form asp-page="/Customers/CreateServicePackageModal">
+    <abp-modal size="Small">
+        <abp-modal-header title="Пакет услуг"></abp-modal-header>
+        <abp-modal-body>
+            <div class="row">
+                <div class="col">
+                    <input asp-for="Id" hidden />
+                    <select asp-for="ServiceId" class="select full-width" asp-items="@Model.ServicePackages" type="text">
+
+                    </select>
+                </div>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

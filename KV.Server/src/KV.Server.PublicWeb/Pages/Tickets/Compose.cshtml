@@ -1,0 +1,335 @@
+﻿@page
+@using Volo.Abp.MultiTenancy
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.Tickets.ComposeModel
+@inject ICurrentTenant CurrentTenant
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Compose"];
+}
+
+@section scripts {
+    <abp-script src="/libs/summernote/dist/summernote.min.js"/>
+    <abp-script src="/js/summernote-config.js"/>
+    <abp-script src="/js/chat-icon.js"/>
+}
+
+@section styles {
+    <abp-style src="/libs/summernote/dist/summernote.min.css"/>
+    <abp-style src="/css/tickets.css"/>
+    <abp-style src="/css/compose.css"/>
+}
+
+<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet" asp-append-version="true">
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="ibox">
+            <div class="ibox-content mailbox-content">
+                <div class="file-manager">
+                    <h5>По статусам</h5>
+                    <ul class="folder-list m-b-md" style="padding: 0;">
+                        <li>
+                            <a href="/tickets?ticketStatusId=@Model.MyTicket.Name&subject=&servicepackageid=" class="active">
+                                <div>
+                                    <i class="@Model.MyTicket.Icon"></i> @L[$"TicketStatus:{Model.MyTicket.Name}"]
+                                </div>
+
+                                <span class="label float-end @(Model.MyTicket.Count > 0 ? "status_shown" : "status_hidden")">@Model.MyTicket.Count</span>
+                            </a>
+                        </li>
+                        @foreach (var ticketStatus in Model.TicketStatusesView)
+                        {
+                            <li>
+                                <a href="/tickets?ticketStatusId=@ticketStatus.Id&subject=&servicepackageid=">
+                                    <div>
+                                        <i class="fa @ticketStatus.Icon"></i> @L[$"TicketStatus:{ticketStatus.Name}"]
+                                    </div>
+                                    <span class="label float-end @(ticketStatus.Count > 0 ? "status_shown" : "status_hidden")">@ticketStatus.Count</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a href="/tickets?ticketStatusId=@Model.FavoriteTicket.Name&subject=&servicepackageid=" class="tiket_font">
+                                <div>
+                                    <i class="fas fa-star"></i> @L[$"TicketStatus:InFavorite"]
+                                </div>
+                                <span class="label float-end @(Model.MyTicket.Count > 0 ? "status_shown" : "status_hidden")">@Model.FavoriteTicket.Count</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <h5>Активные пакеты услуги</h5>
+                    <ul class="category-list" style="padding: 0;">
+                        @foreach (var ticketServicePackage in Model.TicketActiveServicePackagesView)
+                        {
+                            <li>
+                                <a href="/tickets?ticketStatusId=&subject=&servicepackageid=@ticketServicePackage.Id">
+                                    <i class="fa fa-circle" style="@ticketServicePackage.Style"></i> @ticketServicePackage.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <h5></h5>
+                    <ul class="category-list" style="padding: 0;">
+                        @foreach (var ticketServicePackage in Model.TicketNotActiveServicePackagesView)
+                        {
+                            <li>
+                                <a href="/tickets?ticketStatusId=&subject=&servicepackageid=@ticketServicePackage.Id">
+                                    <i class="fa fa-circle" style="color: gray"></i> @ticketServicePackage.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9 animated fadeInRight tikets-compose">
+        <form method="post" class="ng-untouched ng-pristine ng-valid" enctype="multipart/form-data">
+            <input type="text" hidden class="form-control" asp-for="Ticket.CreatorId">
+            <div class="mail-box-header">
+                <div class="float-end tooltip-demo">
+                    @if (Model.ClientHasContract)
+                    {
+                        <button style="align-items: center; display: flex; gap: 10px;" onclick="changeOnArchiveTicket()" data-toggle="tooltip" data-placement="top" title="Сохранить как черновик" class="btn btn-white btn-sm mr-1"><i class="fa fa-pencil"></i>Сохранить как черновик</button>
+                    }
+                    else
+                    {
+                        <button type="button" style="align-items: center; display: flex; gap: 10px;" onclick="failNoContract();" data-toggle="tooltip" data-placement="top" title="Сохранить как черновик" class="btn btn-white btn-sm mr-1"><i class="fa fa-pencil"></i>Сохранить как черновик</button>
+                    }
+                </div>
+                <h2> Создание заявки</h2>
+            </div>
+            <div class="mail-box">
+                <div class="mail-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label tikets-compose-lable-text">Тема:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" asp-for="Ticket.Subject">
+                            <div class="mb-2">
+                                <span>
+                                    Возможно ответ на ваш вопрос уже содержится в библиотеке консультаций. Предлагаем Вам воспользоваться готовым решением, чтобы не дажидаться ответа специалиста.
+                                    <a class="tikets-compose-link" target="_blank" href="https://bk.kv34.ru/">
+                                        Перейти в Библиотеку консультаций
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @if (!Model.UserSelectContractId.IsNullOrWhiteSpace())
+                    {
+                        <input hidden asp-for="UserSelectContractId"/>
+                    }
+                    <select class="form-control" hidden asp-for="UserSelectTicketTypeId" asp-items="Model.SelectListTicketType"></select>
+                </div>
+                <div class="mail-text h-200" style="border: none; padding-top: 0px;">
+                    <div style="border-top: 1px solid #e7eaec; height: 1px; min-width: 100%;"></div>
+                    <div class="note-editor note-frame card">
+                        <textarea required data-val-required="Поле Description необходимо заполнить." id="summernote" asp-for="Ticket.Description"></textarea>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="validation-fild">Не заполнены обязательные поля.</div>
+                <div class="tikets-compose__rules">
+                    <a class="tikets-compose-link" onclick="openRuleModal()">Правила работы Правового Консалтинга</a>
+                </div>
+                <div class="mail-body text-right tooltip-demo low-control-panel" style="padding-bottom: 0">
+                    @if (Model.ClientHasContract)
+                    {
+                        <button onclick="changeOnNewTicket()" type="submit" data-toggle="tooltip" data-placement="top" title="Отправить" class="btn btn-sm btn-primary mr-1"><i class="fa fa-paper-plane-o"></i> Отправить</button>
+                        <a href="/Tickets" data-toggle="tooltip" data-placement="top" title="Отмена" class="btn btn-danger btn-sm mr-1 tikets-compose__cancel-button"><i class="fa fa-times"></i> Отмена</a>
+                        <button style="align-items: center; display: flex; gap: 4px;" onclick="changeOnArchiveTicket()" type="submit" data-toggle="tooltip" data-placement="top" title="Сохранить как черновик" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i>Сохранить как черновик</button>
+                    }
+                    else
+                    {
+                        <button onclick="failNoContract();" type="button" data-toggle="tooltip" data-placement="top" title="Отправить" class="btn btn-sm btn-primary mr-1"><i class="fa fa-paper-plane-o"></i> Отправить</button>
+                        <a href="/Tickets" data-toggle="tooltip" data-placement="top" title="Отмена" class="btn btn-danger btn-sm mr-1 tikets-compose__cancel-button"><i class="fa fa-times"></i> Отмена</a>
+                        <button type="button" style="align-items: center; display: flex; gap: 4px;" onclick="failNoContract()" data-toggle="tooltip" data-placement="top" title="Сохранить как черновик" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i>Сохранить как черновик</button>
+                    }
+
+                    <div class="custom_input">
+                        <label data-toggle="tooltip" title="Прикрепить файл" for="images">
+                            Прикрепить файл
+                        </label>
+                        <input multiple
+                               style="height: 42px;"
+                               name="images[]"
+                               id="images"
+                               type="file"
+                               asp-for="Ticket.Attachments"
+                               onchange="validateFileSize(this)" />
+                    </div>
+                    <input asp-for="TicketStatusArchiveId" id="statusArchiveId" hidden/>
+                    <input asp-for="TicketStatusNewId" id="statusNewId" hidden/>
+                    <input asp-for="Ticket.TicketStatusId" hidden/>
+                </div>
+                <sup style="padding-left: 20px; top: 0">*Размер загружаемых файлов не должен превышать 50Мб</sup> <!-- Сноска -->
+                <div class="form-group attachment" style="padding: 20px; padding-top: 0">
+                    <div id="image_preview" style="width: 100%;"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const validationFild = document.querySelector(".validation-fild");
+    validationFild.style.display = "none";
+
+    function validateFileSize(input) {
+        var totalSize = 0;
+        var files = input.files;
+
+        for (var i = 0; i < files.length; i++) {
+            totalSize += files[i].size;
+        }
+
+        if (totalSize > 50 * 1024 * 1024) {
+            abp.notify.error('Суммарный размер файлов превышает максимальный размер 50 МБ. Пожалуйста, выберите файлы с меньшим размером.');
+            input.value = '';
+        }
+    }
+    function changeOnNewTicket() {
+        const summernoteSelector = ".note-editor.note-airframe .note-editing-area .note-editable, .note-editor.note-frame .note-editing-area .note-editable";
+        const summernoteItem = document.querySelector(summernoteSelector);
+        const summernoteField = document.querySelector(`${summernoteSelector} p`);
+
+        summernoteItem.classList.remove('input-validation-error');
+
+        if (!summernoteField.textContent.length) {
+            summernoteItem.classList.add("input-validation-error");
+            validationFild.style.display = "block";
+        }
+
+        var statusArchiveId = document.getElementById('statusNewId').value;
+        document.getElementById('Ticket_TicketStatusId').value = statusArchiveId;
+    }
+
+    function openRuleModal() {
+        let modal = new abp.ModalManager(abp.appPath + 'Tickets/RulesModal');
+        modal.open();
+    }
+
+    function failNoContract()
+    {
+        abp.notify.error("Нет действующего договора");
+    }
+
+    function changeOnArchiveTicket() {
+        var statusNewId = document.getElementById('statusArchiveId').value;
+        document.getElementById('Ticket_TicketStatusId').value = statusNewId;
+    }
+</script>
+
+<script src="~/lib/summernote/plugin/jquery/jquery-3.4.1.slim.min.js" asp-append-version="true"></script>
+<script src="~/lib/summernote/summernote-lite.min.js" asp-append-version="true"></script>
+
+<script>
+    $(document).ready(function() {
+        new SummerNote('#summernote'); 
+
+        const summernoteSelector = ".note-editor.note-airframe .note-editing-area .note-editable, .note-editor.note-frame .note-editing-area .note-editable"
+
+        const selector = `${summernoteSelector} p`;
+        const summerNoteField = document.querySelector(summernoteSelector);
+        const summernoteItem = document.querySelector(selector);
+        let observer = new MutationObserver(res => {
+            summerNoteField.classList.remove('input-validation-error');
+        });
+
+        const node = document.querySelector(selector);
+
+        observer.observe(node, {
+            childList: true
+        });
+
+    });
+</script>
+
+<script src="~/lib/jquery-ajax/jquery-ajax.min.js" asp-append-version="true"></script>
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>
+<script>
+
+    function removeFile(filename) {
+        const target = event.target;
+        if (!target.classList.contains('fa-times')) return;
+
+        target.parentElement.parentElement.parentElement.parentElement.remove();
+
+        const dt = new DataTransfer();
+        const fileList = document.getElementById("images").files;
+
+        const newArrey = Array.from(fileList)
+            .filter(el => el.name !== filename)
+            .forEach(el => dt.items.add(el));
+
+        const file_list = dt.files;
+        document.querySelector('#images').files = file_list;
+    };
+
+    $(document).ready(function () {
+        var fileArr = [];
+
+        $("#images").change(function () {
+            if (fileArr.length > 0) {
+                fileArr = [];
+            }
+            $('#image_preview').html("");
+            var total_file = document.getElementById("images").files;
+            if (!total_file.length) {
+                return;
+            }
+            for (var i = 0; i < total_file.length; i++) {
+                let extension = "." + total_file[i].name.split('.').pop();
+                let fileIcon = getIconByFileExtension(extension);
+                // let imageIcon = "<div class='icon'><i class='" + fileIcon + "'></i></div>";
+                //if (total_file[i].size < 1048576) { // this good if make that
+                    //imageIcon = "<img alt='image' class='img-fluid' src='" + URL.createObjectURL(event.target.files[i]) + "'>"
+                //}
+
+
+                fileArr.push(total_file[i]);
+                // $('#image_preview').append("<div class='file-box'><div class='file'><a href='#'><div class='image'>" + imageIcon + "</div><div class='file-name' style='height: 90px;'>" + total_file[i].name + "<br><small></small></div></a></div></div>");
+                $('#image_preview').append(`<div style="margin-top: 1.25rem;" onclick="removeFile('${total_file[i].name}')" class="file-box-item">
+                                                <div data-toggle="tooltip" title="${total_file[i].name}" class="file-box-item__file-name">${total_file[i].name}</div>
+                                                <div class="file-box-item__img">
+                                                    <div class="${chatIcon(extension)}">
+                                                <div class="file-box-item__close"><i class="fa fa-times" aria-hidden="true"></i></div>
+                                            </div>`);
+            }
+        });
+
+        $('body').on('click', '#action-icon', function (evt) {
+            var divName = this.value;
+            var fileName = $(this).attr('role');
+            $(`#${divName}`).remove();
+
+            for (var i = 0; i < fileArr.length; i++) {
+                if (fileArr[i].name === fileName) {
+                    fileArr.splice(i, 1);
+                }
+            }
+            document.getElementById('images').files = FileListItem(fileArr);
+            evt.preventDefault();
+        });
+
+        function FileListItem(file) {
+            file = [].slice.call(Array.isArray(file) ? file : arguments)
+            for (var c, b = c = file.length, d = !0; b-- && d;) {
+                d = file[b];
+            }
+            if (!d) {
+                throw new TypeError("expected argument to FileList is File or array of File objects");
+            }
+            for (b = (new ClipboardEvent("")).clipboardData || new DataTransfer; c--;) {
+                b.items.add(file[c]);
+            }
+            return b.files
+        }
+    });
+</script>

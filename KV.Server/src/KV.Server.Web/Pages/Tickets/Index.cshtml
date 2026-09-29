@@ -1,0 +1,162 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using KV.Server;
+@using Microsoft.Extensions.Localization
+@using KV.Server.Helpers
+@using Volo.Abp.Users
+@model KV.Server.Web.Pages.Tickets.IndexModel
+@inject ICurrentUser CurrentUser
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Tickets"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.TICKETS;
+}
+
+@section scripts
+{
+    <abp-script src="/js/renderTooltip.js"></abp-script>
+    <abp-script src="/js/createTableFunctions.js"></abp-script>
+    <abp-script src="/js/createTable.js" />
+    <abp-script src="/Pages/Tickets/Index.js" />
+    <abp-script src="/js/setActiveStatusInNavList.js"></abp-script>
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+    <script src="/libs/datatables.net-buttons/dataTables.buttons.min.js"></script>
+    <script src="/libs/datatables.net-buttons/buttons.colVis.min.js"></script>
+}
+
+@section styles {
+    <abp-style src="/css/bem.css" />
+    <abp-style src="/css/table.css" />
+    <abp-style src="/css/site.css" />
+    <abp-style src="/css/tickets.css" />
+    <abp-style src="/css/common-table.css" />
+    <abp-style src="/css/common.css" />
+    <abp-style src="/css/buttons.dataTables.css" />
+}
+
+@{
+    var currentUri =
+    $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+    var uri = new Uri(currentUri);
+}
+
+<style>
+    .tub-item a {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .colvis-btn {
+        background-color: white !important;
+        border: 1px solid #dde4e8 !important;
+        height: 29px;
+        border-radius: 3px;
+    }
+
+    .dt-button-down-arrow {
+        display: none;
+    }
+</style>
+
+<div style="display: flex; gap: 1rem;margin-bottom: 28px;">
+    <abp-card style="width: 100%">
+        <abp-card-body>
+            <nav>
+                <h2 style="margin: 0">
+                    Список заявок<span id="Tickets-Count"></span>
+                </h2>
+                <ul class="tubs-container-list">
+                    <li class="tub-item" id="@CurrentUser.Id">
+                        <a onclick="sortByStatus(_, '@CurrentUser.Id')">
+                            Мои
+                        </a>
+                    </li>
+                    <li class="tub-item" id="@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "New").Id">
+                        <a
+                            onclick="sortByStatus(_, '@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "New").Id')">
+                            @Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "New").DisplayNameMany
+                        </a>
+                    </li>
+                    <li class="tub-item"
+                        id="@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "InProgress").Id">
+                        <a
+                            onclick="sortByStatus(_, '@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "InProgress").Id')">
+                            @Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "InProgress").DisplayNameMany
+                        </a>
+                    </li>
+                    <li class="tub-item" id="@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "Renewed").Id">
+                        <a
+                            onclick="sortByStatus(_, '@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "Renewed").Id')">
+                            @Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "Renewed").DisplayNameMany
+                        </a>
+                    </li>
+                    <li class="tub-item" id="@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "Answered").Id">
+                        <a
+                            onclick="sortByStatus(_, '@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "Answered").Id')">
+                            @Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == "Answered").DisplayNameMany
+                        </a>
+                    </li>
+                    <li class="tub-item" id="all">
+                        <a onclick="sortByStatus(_, null)">
+                            Все
+                        </a>
+                    </li>
+                    <li class="tub-item" id="InFavorite">
+                        <a onclick="sortByStatus(_, 'InFavorite')">
+                            Избранные
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+            <form>
+                <div class="tickets-p__table-search">
+                    <div style="display: flex; gap: 1rem; width: 100%">
+                        <button type="button" class="open-in-excel"
+                            onclick="window.open('@(uri.CreateOrUpdateParameterValueUri("handler", "ExcelTable"))', '_self');">
+                            Открыть в Excel
+                        </button>
+                    </div>
+                    <div id='btn-container' style="display: flex; max-width: 25rem; width: 100%;align-items: center;">
+                        <span style="margin-right: 12px;" id="filter_count"></span>
+                        <button id="table-filter" type="button" style="margin-right: 1rem;" class="btn btn_white">
+                            <img src="/img/buttons/filter.svg" alt="filters" width="16" height="16">
+                        </button>
+
+                        <input asp-for="Search.SearchStr" type="text" class="form-control input_bordered input_small"
+                            placeholder="Номер заявки/Наименование клиента" />
+                        <button type="submit" class="button_small button_small_green button_small_bordered">
+                            Найти
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="tickets-p__table-item" style="padding-bottom: 20px;">
+                <input id="Search_UpperTicketStatusId" asp-for="Search.UpperTicketStatusId" hidden />
+                <abp-table striped-rows="true" id="Tickets"></abp-table>
+            </div>
+        </abp-card-body>
+    </abp-card>
+
+    <div class="tickets-p__persons">
+        <ul class="tickets-p__persons-with-count">
+            @foreach (var responsible in Model.ResponsibleWithMoreCounts)
+            {
+                <li>
+                    <a
+                        href="/Tickets?Search.ResponsibleLastName=@responsible.LastName&Search.UpperTicketStatusId=@Model.TicketDisplayStatuses.FirstOrDefault(x => x.Name == TicketStatusConstants.InProgress).Id">
+                        @responsible.LastName
+                    </a>
+                    <span>@responsible.CountTicketTake</span>
+                </li>
+            }
+        </ul>
+
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model Server.Web.Pages.Tickets.EditModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Tickets/EditModal">
+    <abp-modal>
+        <abp-modal-header title="@L["TenantProfile:Edit"]"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"/>
+
+            <abp-input asp-for="Ticket.Subject" label="@L["Ticket:ShortName"]"/>
+            <abp-input asp-for="Ticket.Description" label="@L["Ticket:LongName"]"/>
+            <abp-input asp-for="Ticket.TicketTypeId" label="@L["Ticket:Type"]"/>
+
+            <abp-select asp-for="Ticket.TicketTypeId" asp-items="@Model.TicketTypesList" label="@L["ContractStatus:Label:Item"]">
+                <option value="">@L["Global:Select"]</option>
+            </abp-select>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>

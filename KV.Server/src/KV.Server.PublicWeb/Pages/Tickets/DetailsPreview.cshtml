@@ -1,0 +1,184 @@
+﻿@page "{id:int}"
+@using KV.Server.Contracts
+@using Newtonsoft.Json
+@using Volo.Abp.AspNetCore.Mvc.UI.Theming
+@using Volo.Abp.Timing
+@using Volo.Abp.Users
+@using KV.Server
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.Tickets.DetailsPreviewModel
+@inject IStringLocalizer<ServerResource> L
+@inject IClock clock
+@inject ICurrentUser CurrentUser
+
+@section scripts {
+    <abp-script src="/Pages/Tickets/Details.js"/>
+}
+
+@section styles {
+    <abp-style src="/css/detailsPreview.css"/>
+}
+
+@inject IThemeManager ThemeManager
+@{
+    Layout = ThemeManager.CurrentTheme.GetEmptyLayout();
+}
+
+@{
+    var month = new[] { "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря" };
+}
+
+<div class="content">
+    <button class="no-print" id='print' type='button' onclick='window.print()'>Печать</button>
+    <button  id='download_pdf' type='button' >Скачать в Pdf</button>
+    <table>
+        <tbody>
+            <tr>
+                <td><b>Дата создания</b></td>
+                <td>@Model.Ticket.CreationTime.ToString("dd.MM.yyyy HH:mm")</td>
+                <td><b>Дата обновления</b></td>
+                <td>@Model.Ticket.LastModificationTime?.ToString("dd.MM.yyyy HH:mm")</td>
+            </tr>
+            <tr>
+                <td><b>Статус заявки</b></td>
+                <td>@L[$"TicketStatus:{Model.Ticket.TicketStatusName}"]</td>
+                <td><b>Пакет услуг</b></td>
+                <td>
+                    @if (!string.IsNullOrEmpty(Model.Ticket.ServicePackages))
+                    {
+                        try
+                        {
+                            var servicePackages = JsonConvert.DeserializeObject<List<ServicePackage>>(Model.Ticket.ServicePackages);
+
+                            if (servicePackages != null && servicePackages.Any())
+                            {
+                                @foreach (var servicePackage in servicePackages)
+                                {
+                                    <div>
+                                        <span style="@servicePackage.Style">@servicePackage.Name</span>
+                                    </div>
+                                }
+                            }
+                            else if (Model.TicketActiveServicePackagesView.Any())
+                            {
+                                <span class="tickets__text_blue">@Model.TicketActiveServicePackagesView.FirstOrDefault()?.Name</span>
+                            }
+                            else
+                            {
+                                <span class="tickets__text_blue">Отсутствует</span>
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            <span class="error-message">Не удалось отобразить пакеты услуг</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="error-message">Нет пакетов услуг</span>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td><b>Раздел</b></td>
+                <td>@(Model.Ticket.TicketSection ?? "Отсутствует")</td>
+                <td><b>Срок исполнения</b></td>
+                <td>@Model.Ticket.DueDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            <tr>
+                <td><b>Тема</b></td>
+                <td>@Model.Ticket.Subject</td>
+                <td><b>Тип заявки</b></td>
+                <td>@L[$"{Model.Ticket.TicketTypeName}"]</td>
+            </tr>
+            <tr>
+                <td><b>Ответственный специалист</b></td>
+                <td>
+                    @($"{Model.Ticket.ResponsibleLastName} {Model.Ticket.ResponsibleFirstName} {Model.Ticket.ResponsibleMiddleName}")
+                    <br />
+                    @Model.Ticket.ResponsibleJobPost
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="margin-top: 1rem; width: 100%">
+        @{
+            var historyDate = new DateTime();
+        }
+        <tr>
+            <td>
+                @if (Model.Ticket.CreationTime.Date != historyDate.Date)
+                {
+                    <p class="message-date">
+                        @($"{Model.Ticket.CreationTime.Date.Day} {month[Model.Ticket.CreationTime.Date.Month - 1]} {Model.Ticket.CreationTime.Date.Year}")
+                        @* 23 октября*@
+                    </p>
+                    {
+                        historyDate = Model.Ticket.CreationTime.Date;
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="message">
+                    <p>
+                        @Model.Ticket.CreatorLastName @Model.Ticket.CreatorFirstName
+                        <span>
+                            @Model.Ticket.CreationTime.ToString("HH:mm")
+                        </span>
+                    </p>
+                    @Html.Raw(Model.Ticket.Description)
+                </div>
+            </td>
+        </tr>
+        @foreach (var history in Model.TicketHistory.TicketHistoryDtos)
+        {
+            <tr>
+                <td>
+                    @if (history.CreationTime.Date != historyDate.Date)
+                    {
+                        <p class="message-date">
+                            @($"{history.CreationTime.Date.Day} {month[history.CreationTime.Date.Month - 1]} {history.CreationTime.Date.Year}")
+                           @* 23 октября*@
+                        </p>
+                        {
+                            historyDate = history.CreationTime.Date;
+                        }
+                    }
+
+                    @if (!history.Description.IsNullOrWhiteSpace())
+                    {
+                        @if (history.Type == TicketHistoryType.ResponsibleTicket)
+                        {
+                            <div class="message">
+                                <p>
+                                    @history.LastName @history.FirstName
+                                    <span>
+                                        @history.CreationTime.ToString("HH:mm")
+                                    </span>
+                                </p>
+                                @Html.Raw(history.Description)
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="message">
+                                <p>
+                                    @history.LastName @history.FirstName
+                                    <span>
+                                        @history.CreationTime.ToString("HH:mm")
+                                    </span>
+                                </p>
+                                @Html.Raw(history.Description)
+                            </div>
+                            
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>

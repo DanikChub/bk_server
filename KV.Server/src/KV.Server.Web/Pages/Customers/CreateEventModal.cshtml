@@ -1,0 +1,21 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model KV.Server.Web.Pages.Customers.CreateEventModalModel
+@{
+    Layout = null;
+}
+<form asp-page="/Customers/CreateEventModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Добавить событие"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="CreateEventVM.Title" label="Заголовок"></abp-input>
+            <abp-input asp-for="CreateEventVM.Description" label="Описание"></abp-input>
+            <abp-input asp-for="CreateEventVM.EventDate" label="Дата события"></abp-input>
+            <abp-input asp-for="CreateEventVM.TenantId" hidden></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

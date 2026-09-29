@@ -1,0 +1,70 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@using KV.Server.Helpers
+@model KV.Server.Web.Pages.Contracts.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Contract"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.CONTRACTS;
+}
+
+@section scripts
+{
+    <abp-script src="/js/renderTooltip.js"></abp-script>
+    <abp-script src="/js/createTableFunctions.js"></abp-script>
+    <abp-script src="/js/createTable.js"></abp-script>
+    <abp-script src="/Pages/Contracts/Index.js"></abp-script>
+    <abp-script src="/Pages/Contracts/CreateContractModal.js"></abp-script>
+}
+
+@section styles {
+    <abp-style src="/css/bem.css" />
+    <abp-style src="/css/contracts.css" />
+    <abp-style src="/css/table.css" />
+    <abp-style src="/css/site.css" />
+    <abp-style src="/css/common-table.css" />
+}
+
+@{
+    var currentUri =
+    $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+    var uri = new Uri(currentUri);
+}
+
+<abp-card style="border: 0">
+    <abp-card-body>
+        <h3 class="contracts__title" style="background-color: white;">Договоры <span id="ContractsTable-Count"></span>
+        </h3>
+        <form class="table-header">
+            <div class="contracts">
+                <div style="display: flex; justify-content: space-between; padding-bottom: 1rem">
+                    <div style="display: flex; gap: 1rem">
+                        <button type="button" class="open-in-excel btn btn-primary"
+                            onclick="window.open('@(uri.CreateOrUpdateParameterValueUri("handler", "ExcelTable"))', '_self');"
+                            )>
+                            Открыть в Excel
+                        </button>
+
+                        <button type="button" style="background-color: #1AB394;" class="button_small"
+                            id="createContractButton">
+                            <span style="color: white;">Добавить новый контракт</span>
+                        </button>
+                    </div>
+                    <div>
+                        <span style="margin-right: 12px;" id="filter_count"></span>
+                        <button id="table-filter" type="button" style="margin-right: 1rem;" class="btn btn_white">
+                            <img src="/img/buttons/filter.svg" alt="filters" width="16" height="16">
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <abp-input asp-for="Contract.ManagerId" />
+        </form>
+        <abp-table striped-rows="true" id="ContractsTable"></abp-table>
+    </abp-card-body>
+</abp-card>

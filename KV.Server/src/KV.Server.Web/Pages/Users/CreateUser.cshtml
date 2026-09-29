@@ -1,0 +1,57 @@
+﻿@page
+@model KV.Server.Web.Pages.Users.CreateUserModel
+@{
+    
+}
+
+<h1>Добавить польователя</h1>
+
+<form method="post" class="container">
+    <input asp-for="Id" hidden />
+    <input asp-for="CreateUserViewModel.TenantId" hidden />
+    <div class="form-group">
+        <label for="Client">Клиент:</label>
+        <input type="text" id="Client" name="Client" asp-for="Client.DisplayName" class="form-control" disabled />
+    </div>
+    <div class="form-group">
+        <label for="FullName">ФИО:</label>
+        <div class="row">
+            <div class="col">
+                <input type="text" id="FirstName" asp-for="CreateUserViewModel.FirstName" class="form-control" required />
+            </div>
+            <div class="col">
+                <input type="text" id="LastName"  asp-for="CreateUserViewModel.LastName" class="form-control" required />
+            </div>
+            <div class="col">
+                <input type="text" id="MiddleName" asp-for="CreateUserViewModel.MiddleName" class="form-control" required />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="JobPost">Должность:</label>
+        <input type="text" id="JobPost" name="User.JobPost" asp-for="CreateUserViewModel.JobPost" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="PhoneNumber">Телефон:</label>
+        <input type="text" id="PhoneNumber" name="User.PhoneNumber" asp-for="CreateUserViewModel.PhoneNumber" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="DateOfBirth">Дата рождения:</label>
+        <input id="DateOfBirth" asp-for="CreateUserViewModel.DateOfBirth" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="UserName">Имя пользователя:</label>
+        <input type="text" id="UserName" name="User.UserName" asp-for="CreateUserViewModel.UserName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Password">Пароль:</label>
+        <input type="password" id="Password" name="User.Password" asp-for="CreateUserViewModel.Password" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Email">Электронная почта:</label>
+        <input type="email" id="Email" name="User.Email" asp-for="CreateUserViewModel.Email" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Создать" class="btn btn-primary" />
+    </div>
+</form>

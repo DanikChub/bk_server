@@ -1,0 +1,239 @@
+---
+openapi: 3.0.0
+info:
+  title: BKParser
+  description: This Api parses news and articles from bk.kv34
+  version: v1
+servers:
+
+- url: https://bk.kv34.ru/api/v1
+  description: Bk cite
+paths:
+  /apostrophe-blog:
+    get:
+      summary: Returns all articles from Bk.kv32.ru/apostrophe-blog
+      description: Lorem Ipsum
+      parameters:
+      - name: apikey
+        in: query
+        description: Key for request 
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: includeFields
+        in: query
+        description: fields to get
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: string
+      - name: published
+        in: query
+        description: Is publised
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      - name: perPage
+        in: query
+        description: number of entries per page
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          example: 2
+      - name: page
+        in: query
+        description: lorem ipsum
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          example: 2
+      responses:
+        "200":
+          description: :Successful pull of news info
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/bkArticleResponse'
+        "500":
+          description: Unknown error No 1
+          content:
+            application/json:
+              schema:
+                type: string
+  /news:
+    get:
+      summary: Returns all news from Bk.kv32.ru/news
+      description: Lorem Ipsum
+      parameters:
+      - name: apikey
+        in: query
+        description: Key for request 
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: includeFields
+        in: query
+        description: fields to get
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: string
+      - name: published
+        in: query
+        description: Is publised
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      - name: perPage
+        in: query
+        description: number of entries per page
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          example: 2
+      - name: page
+        in: query
+        description: lorem ipsum
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          example: 2
+      responses:
+        "200":
+          description: :Successful pull of news info
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/bkNewsResponse'
+        "500":
+          description: Unknown error No 1
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+   schemas:
+    bkNewsResponse:
+        type: object
+        properties:
+          total:
+            type: integer
+          pages:
+            type: integer
+          perPage:
+            type: integer
+          currentPage:
+            type: integer
+          results:
+            type: array
+            items:
+              type: object
+              properties:
+                publishedAt:
+                  type: string
+                title:
+                  type: string
+                thumbnail:
+                  type: object
+                  properties:
+                    items:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          _pieces:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                item:
+                                  type: object
+                                  properties:
+                                    attachment:
+                                      type: object
+                                      properties:
+                                        _urls:
+                                          type: object
+                                          properties:
+                                            max:
+                                              type: string
+                                            full:
+                                              type: string
+                                            two-thirds:
+                                              type: string
+                                            one-half:
+                                              type: string
+                                            one-third:
+                                              type: string
+                                            one-sixth:
+                                              type: string
+                                            original:
+                                              type: string
+
+                searchSummary:
+                  type: string
+                _publish:
+                  type: boolean
+                _purpose:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                _url:
+                  type: string
+    bkArticleResponse:
+     type: object
+     properties:
+        total:
+          type: integer
+        pages:
+          type: integer
+        perPage:
+          type: integer
+        currentPage:
+          type: integer
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              publishedAt:
+                type: string
+              title:
+                type: string
+              postType:
+                type: string
+              _url:
+                type: string
+            
+
+        
+   

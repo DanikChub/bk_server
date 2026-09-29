@@ -1,0 +1,117 @@
+﻿@page
+@using KV.Server.Helpers
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.Tickets.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Tickets"];
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Tickets/Index.js"/>
+}
+
+@section styles
+{
+    <abp-style src="/Pages/Tickets/index.css"/>
+}
+
+<link href="css/tickets.css" rel="stylesheet"/>
+
+@{
+    var currentUri = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+    var uri = new Uri(currentUri);
+}
+
+<div class="wrapper wrapper-content ng-tns-c150-0">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox">
+                <div class="ibox-content mailbox-content">
+                    <div class="file-manager">
+                        <a class="tiket_font btn col-12 btn-primary compose-mail" href="/tickets/compose" style="color: white">
+                            Создать новую заявку
+                        </a>
+                        <div class="space-25"></div>
+                        <ul class="folder-list m-b-md" style="padding: 0;">
+                            <li>
+                                <a href="@(uri.CreateOrUpdateParameterValueUri("TicketStatusId", Model.MyTicket.Name))" class="active tiket_font">
+                                    <div>
+                                        <i class="@Model.MyTicket.Icon"></i> @L[$"TicketStatus:{Model.MyTicket.Name}"]
+                                    </div>
+                                    <span class="float-end label @(Model.MyTicket.Count > 0 ? "status_shown" : "status_hidden")">@Model.MyTicket.Count</span>
+                                </a>
+                            </li>
+                            @foreach (var ticketStatus in Model.TicketStatusesView)
+                            {
+                                <li>
+                                    <a href="@(uri.CreateOrUpdateParameterValueUri("TicketStatusId", ticketStatus.Id.ToString()))" class="tiket_font">
+                                        <div>
+                                            <i class="fa @ticketStatus.Icon"></i> @L[$"TicketStatus:{ticketStatus.Name}"]
+                                        </div>
+                                        <span class="float-end label @(ticketStatus.Count == 0 || ticketStatus.Name == " Закрыта\n                                        " ? "status_hidden" : "status_shown")">@ticketStatus.Count</span>
+                                    </a>
+                                </li>
+                            }
+                            <li>
+                                <a href="@(uri.CreateOrUpdateParameterValueUri("TicketStatusId", Model.FavoriteTicket.Name))" class="tiket_font">
+                                    <div>
+                                        <i class="@Model.FavoriteTicket.Icon"></i> @L[$"TicketStatus:{Model.FavoriteTicket.Name}"]
+                                    </div>
+                                    <span class="label float-end status_shown">@Model.FavoriteTicket.Count</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box-header">
+                <form method="get" class="float-end mail-search ng-untouched ng-pristine ng-valid">
+                    <div class="input-group">
+                        <input asp-for="@Model.TicketStatusId" type="text" hidden>
+                        <input asp-for="@Model.ServicePackageId" type="text" hidden>
+                        <input asp-for="@Model.Subject" type="text" placeholder="Поиск по заявкам" class="form-control input_bordered input_small">
+                        <button onclick="searchSubject()" id="Input" class="button_small button_small_green button_small_bordered">Найти</button>
+                    </div>
+                </form>
+                @{
+                    var nameStatus = Model.TicketStatusesView.FirstOrDefault(x => x.Id.ToString() == Model.TicketStatusId)?.Name;
+                    if (nameStatus == null)
+                    {
+                        nameStatus = Model.TicketStatusId;
+                    }
+                }
+                <h2> @(L[$"TicketStatus:{nameStatus}"]) </h2>
+                <div class="mail-tools tooltip-demo m-t-md">
+                    <a href="" data-toggle="tooltip" data-placement="left" title="Обновить" class="btn btn-white btn-sm"><i class="fa fa-refresh" style="margin-right: 0.25rem"></i>Обновить</a>
+                </div>
+            </div>
+            @if (Model.TicketsCount == 0)
+            {
+                <div class="mail-box" style="height: 80%;">
+                    <div class="text-center">
+                        <span style="font-size: 27px;">Нет заявок</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <abp-table striped-rows="true" id="TicketsTable"></abp-table>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchSubject()
+    {
+        let search = "?TicketStatusId=@(Model.TicketStatusId)&skipPage=@Model.PrevPage&servicepackageid=@(Model.ServicePackageId)&subject=" + document.getElementById("Subject").value;
+        $(location).prop('href', search);
+    }
+</script>

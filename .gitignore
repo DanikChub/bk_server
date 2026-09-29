@@ -1,0 +1,55 @@
+# ============================================================
+# Migration-only ignores
+# Старый .NET проект загружается для анализа и переноса на Node/TS
+# ============================================================
+
+# IDE
+.vscode/
+.idea/
+.vs/
+
+# .NET build output
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+**/artifacts/
+**/TestResults/
+**/Logs/
+
+# Node / frontend generated dependencies
+**/node_modules/
+**/bower_components/
+**/.yarn/
+**/.npm/
+**/.cache/
+
+# Generated / vendored frontend libraries
+**/wwwroot/libs/
+**/wwwroot/lib/
+
+# Огромная vendored-тема ABP.
+# Для переноса backend она не нужна.
+KV.Server/modules/Abp.AspNetCore.Mvc.UI.Theme.KvInternal/wwwroot/
+
+# Packages / binaries
+*.nupkg
+*.snupkg
+*.abppkg
+*.dll
+*.exe
+*.pdb
+
+# Local/secrets
+**/.env
+**/.env.*
+**/.npmrc
+**/.yarnrc
+*.pfx
+*.snk
+
+# OS/temp
+.DS_Store
+Thumbs.db
+*.tmp
+*.log

@@ -1,0 +1,123 @@
+﻿@page
+@using KV.Server
+@model KV.Server.Web.Pages.Inbox.IndexModel
+@inject INotificationAppService NotificationAppService
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = "Мои уведомления";
+}
+
+<div class="wrapper wrapper-content ng-tns-c150-0">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox">
+                <div class="ibox-content mailbox-content">
+                    <div class="file-manager">
+                        <div class="space-25"></div>
+                        <h5>По статусам</h5>
+                        <ul class="folder-list m-b-md" style="padding: 0;">
+                            @foreach (var notificationStatus in Model.NotificationStatusesView)
+                            {
+                                <li>
+                                    <a href="?status=@notificationStatus.Id&title=&category=">
+                                        <div>
+                                            <i class="fa @notificationStatus.Icon"></i> @notificationStatus.DisplayNameMany
+                                        </div>
+                                        <span class="label float-end" style="@notificationStatus.Style">@notificationStatus.Count</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <h5>По категориям</h5>
+                        <ul class="category-list" style="padding: 0;">
+                            @foreach (var notificationCategory in Model.NotificationCategoriesView)
+                            {
+                                <li>
+                                    <a href="?status=@Model.NotificationStatusId&title=&category=@notificationCategory.Id">
+                                        <i class="fa fa-circle" style="@notificationCategory.Style"></i> @notificationCategory.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 animated fadeInRight">
+            <div class="mail-box-header">
+                <form method="get" class="float-end mail-search ng-untouched ng-pristine ng-valid">
+                    <div class="input-group">
+                        <input asp-for="@Model.Title" type="text" placeholder="Поиск по уведомлениям" class="form-control form-control-sm">
+                        <div class="input-group-append">
+                            <a style="padding: 5px 8px;" onclick="searchSubject()" id="Input" class="btn btn-sm btn-primary" href="#">Найти</a>
+                        </div>
+                    </div>
+                </form>
+                <h2>@(Model.NotificationStatusesView.FirstOrDefault(x => x.Id == Model.NotificationStatusId)?.DisplayNameMany ?? "Уведомлений") (@Model.Notifcations.TotalCount) </h2>
+                <div class="mail-tools tooltip-demo m-t-md">
+                    <div class="btn-group float-end">
+                        <a class="btn btn-white btn-sm" href="?status=@(Model.NotificationStatusId)&skipPage=@Model.PrevPage&title=@Model.Title&category=@Model.NotificationCategoryId">
+                            <i class="fa fa-arrow-left"></i>
+                        </a>
+                        <span class="btn btn-white btn-sm">@(Model.CurrentPage + 1)</span>
+                        <a class="btn btn-white btn-sm" href="?status=@(Model.NotificationStatusId)&skipPage=@Model.NextPage&title=@Model.Title&category=@Model.NotificationCategoryId">
+                            <i class="fa fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <a href="" data-toggle="tooltip" data-placement="left" title="Refresh inbox" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> Обновить</a>
+                    <button data-toggle="tooltip" data-placement="top" title="Mark as read" class="btn btn-white btn-sm">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button data-toggle="tooltip" data-placement="top" title="Mark as important" class="btn btn-white btn-sm">
+                        <i class="fa fa-exclamation"></i>
+                    </button>
+                </div>
+            </div>
+            @if (Model.Notifcations.Items.Count() == 0 && Model.CurrentPage == 0)
+            {
+                <div class="mail-box" style="height: 55%;">
+                    <div class="text-center">
+                        <span style="font-size: 27px;">Нет уведомлений</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="mail-box">
+                    <table class="table table-hover table-mail">
+                        <tbody>
+                        @foreach (var notification in Model.Notifcations.Items)
+                        {
+                            <tr class="read">
+                                <td class="check-mail">
+                                    <input type="checkbox" class="i-checks">
+                                </td>
+                                <td class="mail-subject">
+                                    <a href="?id=@notification.Id&handler=Redirect">@notification.Title</a>
+                                </td>
+                                <td class="mail-ontact">
+                                    @if (notification.CategoryNotificationName != null)
+                                    {
+                                        <span class="label float-start" style="color: white; background-@notification.CategoryNotificationStyle margin-right: 7px;">@notification.CategoryNotificationName</span>
+                                    }
+                                </td>
+                                <td></td>
+                                <td class="text-right mail-date">@notification.CreationTime</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchSubject()
+    {
+        let search = "?status=@(Model.NotificationStatusId)&skipPage=@Model.PrevPage&category=@(Model.NotificationCategoryId)&title=" + document.getElementById("Title").value;
+        $(location).prop('href', search);
+    }
+</script>

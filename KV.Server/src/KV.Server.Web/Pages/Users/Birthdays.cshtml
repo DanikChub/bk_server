@@ -1,0 +1,59 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using KV.Server.Helpers
+@model KV.Server.Web.Pages.Users.BirthdaysModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Users:Birthdays"];
+}
+
+@section styles {
+    <abp-style src="/css/bem.css"></abp-style>
+}
+
+@section scripts {
+    <abp-script src="/Pages/Users/Birthdays.js"></abp-script>
+}
+
+<div class="content">
+    <h2 class="content__title">
+        <img src="/img/arrow-left.svg" style="cursor:pointer"></img>
+        Дни рождения пользователей
+    </h2>
+
+    <section class="content__buttons">
+        <button class="button" style="margin-right: 0.5rem">
+            <img src="/img/buttons/document.svg" class="button__icon"></img>
+            Открыть в Excel
+        </button>
+        <button class="button" id="show-birthday">Показать</button>
+        <input type="date" placeholder="дд.мм.гггг" class="input input_small input_small-birthdays"></input>
+        <input type="date" placeholder="дд.мм.гггг" class="input input_small input_small-birthdays"></input>
+    </section>
+    
+    <article class="birthday"></article>
+</div>
+
+@*
+        <h5 class="birthday__title">Сегодня, 24 августа 2023, четверг</h5>
+        <section class="birthday__info">
+            <p>24.08.1967</p> 
+            <p class="birthday__person">Воробьева Любовь Павловна</p> 
+            <p>Администрация Чапаевского сельского поселения</p>
+            <button class="button">Открыть</button>
+        </section>
+        <section class="birthday__info">
+            <p>24.08.1988</p> 
+            <p class="birthday__person">Луковкина Татьяна Валерьевна</p> 
+            <p>Администрация Мтякинского сельского поселения</p>
+            <button class="button">Открыть</button>
+        </section>
+        <section class="birthday__info">
+            <p>24.08.1975</p> 
+            <p class="birthday__person">Воробьева Любовь Павловна</p> 
+            <p>Администрация Чапаевского сельского поселения</p>
+            <button class="button">Открыть</button>
+        </section>
+*@

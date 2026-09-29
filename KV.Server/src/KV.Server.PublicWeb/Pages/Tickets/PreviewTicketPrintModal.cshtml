@@ -1,0 +1,50 @@
+﻿@page
+@model KV.Server.PublicWeb.Pages.Tickets.PreviewTicketPrintModalModel
+@{
+    Layout = null;
+}
+
+<style>
+    .download-button {
+        background-color: green;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 20px;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        width: 300px;
+    }
+
+    .downloadDocx {
+        background-color: #4CAF50;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        padding: 10px 20px;
+        text-decoration: none;
+    }
+
+    .downloadDocx:hover { background-color: #45a049; }
+
+    .updateContainer {
+        display: flex;
+        justify-content: end;
+    }
+
+    .download-button:hover { background-color: gray; }
+</style>
+
+<form asp-page="/Tickets/PreviewTicketPrintModal">
+    <abp-modal size="ExtraLarge">
+        <abp-modal-header title="KB-@Model.TicketId"></abp-modal-header>
+        <abp-modal-body>
+            <iframe src="/Tickets/DetailsPreview/@Model.TicketId" width="100%" height="900"></iframe>
+        </abp-modal-body>
+    </abp-modal>
+</form>

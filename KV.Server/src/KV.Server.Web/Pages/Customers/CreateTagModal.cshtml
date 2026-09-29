@@ -1,0 +1,21 @@
+﻿@page
+@using KV.Server.Localization;
+@using Microsoft.Extensions.Localization;
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model KV.Server.Web.Pages.Customers.CreateTagModalModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    Layout = null;
+}
+<form asp-page="/Customers/CreateTagModal">
+    <abp-modal>
+        <abp-modal-header title="Добавление тега"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="ContractCreateTag.TagName" label="Название тега"></abp-input>
+            <abp-input asp-for="ContractCreateTag.ContractId" hidden></abp-input>
+
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

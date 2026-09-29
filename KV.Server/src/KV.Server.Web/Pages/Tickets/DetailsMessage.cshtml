@@ -1,0 +1,128 @@
+﻿@page "{id:long}"
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Tickets.DetailsMessageModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+
+    PageLayout.Content.MenuItemName = ServerMenuContributor.TICKETS;
+}
+<style>
+    .chat-discussion {
+        background: #ffffff;
+        height: 100%;
+        margin-top: 0px;
+        padding-left: 15px;
+        padding-right: 5%;
+    }
+
+    .btn-submit-message {
+        font-size: 20px;
+        height: 50px;
+        margin-top: 20px;
+        width: 150px;
+    }
+</style>
+
+<div class="wrapper wrapper-content ng-tns-c150-0" style="height: 100%">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox">
+                <div class="ibox-content mailbox-content">
+                    <div class="file-manager">
+                        <a class="btn col-12 btn-primary compose-mail" href="/tickets/compose">Создать новую заявку</a>
+                        <a class="btn col-12 btn-secondary compose-mail" style="margin-top: 10px" href="/tickets/details/@Model.WriteTicketMessage.TicketId">Вернутся к деталям</a>
+                        <div class="space-25"></div>
+                        <h5>По статусам</h5>
+                        <ul class="folder-list m-b-md" style="padding: 0;">
+                            <li>
+                                <a href="/Tickets" class="active">
+                                    <i class="@Model.MyTicket.Icon"></i> @L[$"TicketStatus:{Model.MyTicket.Name}"]
+                                    <span style="@Model.MyTicket.Style" class="label float-end">@Model.MyTicket.Count</span>
+                                </a>
+                            </li>
+                            @foreach (var ticketStatus in Model.TicketStatusesView)
+                            {
+                                <li>
+                                    <a href="/Tickets" class="active">
+                                        <i class="fa @ticketStatus.Icon"></i> @L[$"TicketStatus:{ticketStatus.Name}"]
+                                        <span class="label @ticketStatus.Style float-end">@ticketStatus.Count</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <h5>По пакетам услуг</h5>
+                        <ul class="category-list" style="padding: 0;">
+                            @foreach (var ticketServicePackage in Model.TicketServicePackagesView)
+                            {
+                                <li>
+                                    <a href="/Tickets">
+                                        <i class="fa fa-circle" style="@ticketServicePackage.Style"></i> @ticketServicePackage.Name
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9" style="height: 100%">
+            <div class="mail-box-header">
+                <h2>KB-@Model.WriteTicketMessage.TicketId</h2>
+
+                <div class="btn-group float-end" style="background: #ffffff; margin-right: 1.75%;">
+                    <a class="btn btn-white btn-sm" href="?skipPage=@Model.TicketMessage.PrevPage">
+                        <i class="fa fa-arrow-left"></i>
+                    </a>
+                    <span class="btn btn-white btn-sm">@(Model.CurrentPage + 1)</span>
+                    <a class="btn btn-white btn-sm" href="?skipPage=@Model.TicketMessage.NextPage">
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
+                </div>
+                <h3 style="margin-top: 20px;">
+                    <span class="font-normal">Сообщения: </span>
+                </h3>
+            </div>
+            <div class="mail-box chat-discussion" style="width: 100%;">
+                <div class="mail-body">
+                    @foreach (var message in Model.TicketMessage.Messages)
+                    {
+                        <div class="chat-message left">
+                            <!--TODO: Maybe add class in message "rounded-circle"-->
+                            <img class="message-avatar" src="/img/profile_small.jpg" alt="">
+                            <div class="message">
+                                <a class="message-author" href="#" style="font-size: 18px;">
+                                    @{
+                                        var fullName = $"{message?.CreatorLastName} {message?.CreatorFirstName} {message?.CreatorMiddleName}";
+                                        fullName = fullName.IsNullOrWhiteSpace() ? message?.CreatorUserName : fullName;
+                                    }
+                                    @fullName
+                                </a>
+                                <span class="message-date" style="font-size: 12px; margin-top: 6px;">
+                                    @message.CreationTime.ToString("hh:mm")
+                                </span>
+                                <br/>
+                                <span class="message-date" style="font-size: 12px;">
+                                    @message.CreationTime.ToString("dd/MM/yyyy")
+                                </span>
+                                <span class="message-content" style="font-size: 14px; margin-right: 10px;">
+                                    <pre style="background-color: #ffffff; border: 0px solid #ffffff;">@message.Comment</pre>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    <form method="post">
+                        <input asp-for="@Model.WriteTicketMessage.TicketId" hidden/>
+                        <input asp-for="@Model.CurrentCustomerUserProfileId" hidden/>
+                        <textarea class="form-control message-input" placeholder="Enter message text" style="margin-top: 5px; overflow-wrap: break-word; white-space: pre-wrap;" asp-for="@Model.WriteTicketMessage.Message"></textarea>
+                        <button class="btn btn-sm btn-primary mr-1 btn-submit-message" type="submit">Отправить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

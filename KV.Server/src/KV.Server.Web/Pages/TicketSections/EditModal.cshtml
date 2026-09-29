@@ -1,0 +1,23 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.TicketSections.EditModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/TicketSections/EditModal" method="post">
+    <abp-modal size="Large">
+        <abp-modal-header title="Изменить шаблон"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"></abp-input>
+            <abp-input asp-for="TicketSection.Name" label="@L["TicketSection:Name"]"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>
+
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>

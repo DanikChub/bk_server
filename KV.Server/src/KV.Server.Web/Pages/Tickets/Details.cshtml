@@ -1,0 +1,811 @@
+﻿@page "{id:int}"
+@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Themes.KvInternal.Components.BreadCrumb
+@using KV.Server
+@using KV.Server.Helpers
+@using KV.Server.Interfaces
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.Timing
+@using Volo.Abp.Users
+@using KV.Server.Permissions
+@using Volo.Abp.Authorization
+@model KV.Server.Web.Pages.Tickets.DetailsModel
+@inject IStringLocalizer<ServerResource> L
+@inject IClock clock
+@inject ICurrentUser CurrentUser
+@inject ICustomerUserProfilesAppService UserProfilesAppService;
+@inject IAbpAuthorizationService AuthorizationService
+@inject IPageLayout PageLayout
+@inject IAuthorizationService Authorization
+@inject IPageLayout PageLayout
+
+@{
+    PageLayout.Content.MenuItemName = ServerMenuContributor.TICKETS;
+
+    var canEdit = await Authorization.IsGrantedAsync(TicketHistoryPermissions.TicketHistory.Edit);
+    var canDelete = await Authorization.IsGrantedAsync(TicketHistoryPermissions.TicketHistory.Delete);
+
+    PageLayout.Content.Title = L["Ticket:Details"];
+    var month = new[] { "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря" };
+    PageLayout.Content.BreadCrumb.Add("Заявки", "/Tickets");
+    PageLayout.Content.BreadCrumb.Add($"№ {Model.Ticket.Id}");
+    PageLayout.Content.BreadCrumb.ShowCurrent = false;
+
+    var contract = Model.Contract;
+    var ticket = Model.Ticket;
+    var procent = 100;
+    try
+    {
+        procent = (int)(100 * (DateTime.Now - ticket.CreationTime) / (ticket.DueDate - ticket.CreationTime));
+    }
+    catch
+    {
+    }
+
+    procent = 0 > procent ? 0 : procent;
+    procent = 100 < procent ? 100 : procent;
+
+    string NormalizeLength(string value, int maxLength)
+    {
+        return value.Length <= maxLength ? value : value.Substring(0, maxLength) + "...";
+    }
+}
+
+@functions{
+    public string GetNoun(int number, string one, string two, string five)
+    {
+        var n = Math.Abs(number);
+        n %= 100;
+        if (n >= 5 && n <= 20)
+        {
+            return five;
+        }
+        n %= 10;
+        if (n == 1)
+        {
+            return one;
+        }
+        if (n >= 2 && n <= 4)
+        {
+            return two;
+        }
+        return five;
+    } 
+}
+
+@section scripts {
+            <abp-script src="/Pages/Tickets/Details.js" />
+            <abp-script src="/Pages/Tickets/EditTicketDescription.js" />
+            <abp-script src="/libs/summernote/dist/summernote.min.js" />
+            <abp-script src="/js/summernote-config.js" />
+            <abp-script src="/js/chat-icon.js" />
+}
+
+@section styles {
+            <abp-style src="/css/bem.css" />
+            <abp-style src="/css/details.css" />
+            <abp-style src="/libs/summernote/dist/summernote.min.css" />
+            <abp-style src="/lib/summernote/summernote-lite.min.css" />
+
+            <style>
+                .edit-tickets__favorites::before,
+                .edit-tickets__basket::before {
+                    margin-top: 3px;
+                }
+
+                .blue-text {
+                    color: blue;
+                }
+
+                .exclamation-mark {
+                    width: 16px;
+                    height: 16px;
+                    font-weight: 700;
+                    font-size: 14px;
+                    cursor: help;
+                }
+            </style>
+}
+
+
+<div class="tickets-details__content">
+    <div class="tickets-details__main-data">
+        <header class="tickets-details__header">
+            <a href="/Tickets">
+                <img src="/img/arrow-left.svg" alt="arrow back">
+            </a>
+            <h2>
+                Заявка №<span style="font-weight: 300" id="ticket-id">@Model.Ticket.Id</span>
+            </h2>
+        </header>
+
+        <div class="tickets-details__table">
+            <div class="tickets-details__table-wrapper">
+                <div class="tickets-details__table-col">
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Статус
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @if (Model.Ticket.TicketStatusDisplayName == "Закрыта")
+                            {
+                                <img class='status-img' src='/img/cross-gray.png'>
+                            }
+                            else if (Model.Ticket.TicketStatusDisplayName == "Новая")
+                            {
+                                <img class='status-img' src='/img/status-lightning.png'>
+                            }
+                            else if (Model.Ticket.TicketStatusDisplayName == "В работе")
+                            {
+                                <img class='status-img' src='/img/status-ok.png'>
+                            }
+                            else if (Model.Ticket.TicketStatusDisplayName == "Возобновленные")
+                            {
+                                <img class='status-img' src='/img/status-warning.png'>
+                            }
+                            else
+                            {
+                                <img class='status-img' src='/img/status/status-unknown.svg'>
+                            }
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Автор
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            <section class="tickets-details__section ">
+                                @*
+                                tickets-details__status_online_true - Автор в сети
+                                tickets-details__status_online_false - Автор не в сети
+                                *@
+                                <div class="tickets-details__status_online_false"></div>
+                                <a href="/Customers/DetailsEmployee/@Model.TicketCreatorId">@Model.Ticket.CreatorLastName @Model.Ticket.CreatorFirstName @Model.Ticket.CreatorMiddleName</a>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Должность
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @(Model.Ticket.CreatorJobPost ?? "Отсутствует")
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Телефон
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @(Model.Ticket.CreatorPhoneNumber ?? "Отсутствует")
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Электронная почта
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @Model.Ticket.CreatorEmail
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Клиент
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            <a href="/Customers/Details/@Model.Ticket.TenantId">
+                                @(Model.Ticket.ClientCompanyShortName.IsNullOrWhiteSpace() ? "Консалтинг-Волга" : Model.Ticket.ClientCompanyShortName)
+                            </a>
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title">Срок исполнения</div>
+                        <div class="tickets-details__table-item-value">
+                            <div class="tickets-details__progress-percent-text tickets-details__table-text">
+                                @procent%
+                                <p>
+                                    @{
+                                        DateTime dueDate = ticket.DueDate;
+                                        DateTime currentDate = DateTime.Now;
+
+                                        TimeSpan timeDifference = dueDate - currentDate;
+                                        int daysDifference = (int)Math.Ceiling(timeDifference.TotalDays);
+
+                                        if (daysDifference > 0)
+                                        {
+                                            <text>@daysDifference @GetNoun(daysDifference, "день", "дня", "дней") до окончания</text>
+                                        }
+                                    }
+                                </p>
+                            </div>
+                            <div class="progress-line">
+                                @if (procent >= 89 && procent < 99)
+                                {
+                                    <div class="progress-line_red" style="width: @procent%"></div>
+                                }
+                                else
+                                {
+                                    <div class="progress-line__item" style="width: @procent%"></div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tickets-details__table-col">
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Тема
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @Model.Ticket.Subject
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Дата обновления
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @Model.Ticket.LastModificationTime?.ToString("dd.MM.yyyy HH:mm")
+                        </div>
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Дата создания
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @Model.Ticket.CreationTime.ToString("dd.MM.yyyy HH:mm")
+                        </div>
+                    </div>
+
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Назначенный специалист
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            <section class="tickets-details__section">
+                                @if (Model.Ticket.ResponsibleId == null)
+                                {
+                                    <span>Отсутствует</span>
+                                }
+                                else
+                                {
+                                    <img class="tickets-details__avatar-img" src="/img/Avatar.svg" alt="avatar">
+                                    <div style="display: flex; flex-direction: column; gap: 0.25rem">
+                                        <span class="tickets-details__specialist-name">@Model.Ticket.ResponsibleLastName @Model.Ticket.ResponsibleFirstName @Model.Ticket.ResponsibleMiddleName</span>
+                                        <span class="tickets-details__specialist-position">@Model.Ticket.ResponsibleJobPost</span>
+                                        <span class="tickets-details__specialist-number">
+                                            <span style="color: var(--Dark-BG, #334557);">@Model.Ticket.ResponsiblePhoneNumber</span>
+                                            позвонит вам с этого номера
+                                        </span>
+                                    </div>
+                                }
+                            </section>
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Тэг
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @(string.Join(" / ", Model.Ticket.Tags.Select(x => x.Name)))
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Ограничение
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @foreach (var ticketRange in Model.ConstraintTypes)
+                            {
+                                if (ticketRange.NowCount > ticketRange.MaxCount)
+                                {
+                                    <div title="Превышено максимально допустимое значение" class="exceeded-tooltip">
+                                        @($"{ticketRange.Name}: {ticketRange.NowCount} / {ticketRange.MaxCount} ")
+                                        <span class="exclamation-mark">!</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @($"{ticketRange.Name}: {ticketRange.NowCount} / {ticketRange.MaxCount} ")
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Тип
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @L[$"{Model.Ticket.TicketTypeName}"]
+                        </div>
+                    </div>
+                    <div class="tickets-details__table-item">
+                        <div class="tickets-details__table-item-title tickets-details__table-text">
+                            Раздел
+                        </div>
+                        <div class="tickets-details__table-item-value tickets-details__table-text">
+                            @(Model.Ticket.TicketSection ?? "Отсутствует")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tickets-details__chat-header">
+            <p class="tickets-details__chat-wrapper-title">События по заявке:</p>
+            <p>
+                @{
+                    long fileSize = 0;
+                    Model.UploadedFilesTicket.ForEach(x => fileSize += x.SizeInBytes);
+                    var fileSizeInMb = fileSize / 1024.0f / 1024.0f;
+                }
+                @if (Model.Ticket.AttachmentsCount > 0)
+                {
+                    <span class="tickets-details__files">@Model.Ticket.AttachmentsCount Файлов  (@(string.Format("{0:f2}", fileSizeInMb)) МБ)</span>
+                    <a class="tickets-details__download " href="/tickets/details/@Model.Ticket.Id?Id=@Model.Ticket.Id&tenantId=@ticket.TenantId&handler=DownloadAllFile">Скачать все файлы по заявке</a>
+                }
+            </p>
+        </div>
+
+        <div class="tickets-details__chat-wrapper">
+
+            <div class="tickets-details__chat-item">
+                @{
+                    var historyDate = Model.Ticket.CreationTime.Date;
+                }
+                <div class="tickets-details__chat-appointment">
+                    <div class="tickets-details__chat-appointment-itme">
+                        @($"{Model.Ticket.CreationTime.Date.Day} {month[Model.Ticket.CreationTime.Date.Month - 1]} {Model.Ticket.CreationTime.Date.Year}")
+                    </div>
+                </div>
+
+                <div class="tickets-details__chat-message left-chat">
+                    <div class="message__sender" style="margin-bottom:12px;">
+                        <img src="/img/Avatar.svg" class="message__avatar" />
+
+                        <span class="message__name">@Model.Ticket.CreatorLastName @Model.Ticket.CreatorFirstName @Model.Ticket.CreatorMiddleName</span>
+                    </div>
+                    @Html.Raw(Model.Ticket.Description)
+                    @if (canEdit)
+                    {
+                        <div class="button-ticket-group" style="display: flex; gap:24px; margin-top: 10px; justify-content: space-between; align-items: center">
+                            <div>
+                                <button ticket-id="@Model.Ticket.Id" id="EditTicketDescriptionButton" style="  background-color: transparent;height:20px; width: 15px; margin-right: 10px; background-image: url('/img/buttons/editTicket.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                @if (canDelete)
+                                {
+                                    <button ticket-id="@Model.Ticket.Id" class="deleteTicket" style=" background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <span class="time-chat">
+                        @Model.Ticket.CreationTime.ToString("HH:mm")
+                    </span>
+                </div>
+                @if (Model.Ticket.AttachmentsCount != 0)
+                {
+                    <div class="tickets-details__chat-file left-chat">
+                        @foreach (var file in Model.UploadedFilesTicket)
+                        {
+                            <a href="/tickets/details/@Model.Ticket.Id?fileId=@file.Id&handler=DownloadOneFile">
+                                <div class="file-box-item">
+                                    <div data-toggle="tooltip" title='@NormalizeLength(file?.Title, 30)' class="file-box-item__file-name">
+                                        @NormalizeLength(file?.Title, 30)
+                                    </div>
+                                    <div class="file-box-item__img">
+                                        <div class='@GlobalClass.GetIconByFileExtension(System.IO.Path.GetExtension(file.FileName))'></div>
+                                    </div>
+                                    <div class="file-box-item__close hideCloseButton">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                    <div style='background: white; align-self: flex-start'>
+                        @{
+                            long fileSizeBytes = 0;
+                            Model.UploadedFilesTicket.ForEach(x => fileSizeBytes += x.SizeInBytes);
+                            var fileSizeMb = fileSizeBytes / 1024.0f / 1024.0f;
+                        }
+                        <span>@Model.Ticket.AttachmentsCount файл (@(string.Format("{0:f2}", fileSizeMb)) МБ)</span>
+                        <b>
+                            <a style="color: #333" href="/tickets/details/@Model.Ticket.Id?Id=@Model.Ticket.Id&handler=DownloadTicketZipFile">Скачать все</a>
+                        </b>
+                    </div>
+                }
+                @foreach (var history in Model.TicketHistory.TicketHistoryDtos)
+                { 
+                    @if (history.CreationTime.Date != historyDate.Date)
+                    {
+                        <div class="tickets-details__chat-appointment">
+                            <div class="tickets-details__chat-appointment-itme">
+                                @($"{history.CreationTime.Date.Day} {month[history.CreationTime.Date.Month - 1]} {history.CreationTime.Date.Year}")
+                            </div>
+                            @{
+                                historyDate = history.CreationTime.Date;
+                            }
+                        </div>
+                    }
+                    @if (!history.Description.IsNullOrWhiteSpace())
+                    {
+                        switch (history.Type)
+                        {
+                            case TicketHistoryType.HiddenForClient:
+                                <div class="tickets-details__chat-message right-chat">
+                                    <strong>@history.LastName @history.FirstName</strong>
+                                    <div style="color: blue;">@Html.Raw(history.Description)</div>
+
+                                    @if (canEdit || history.CreatorId == CurrentUser.Id)
+                                    {
+                                        <div class="button-ticket-group" style="display: flex; gap:24px; margin-top: 10px; justify-content: space-between; align-items: center">
+                                            <div>
+                                                <button ticket-history-id="@history.Id" class="EditTicketHistoryButton" style=" background-color: transparent; height:20px; width: 15px; margin-right: 10px; background-image: url('/img/buttons/editTicket.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                                @if (canDelete)
+                                                {
+                                                    <button ticket-history-id="@history.Id" class="DeleteTicketHistoryButton" style=" background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                        <span class="time-chat">
+                                            @history.CreationTime.ToString("HH:mm")
+                                        </span>
+                                </div>
+                                break;
+                            case TicketHistoryType.ResponsibleTicket:
+
+                                <div class="tickets-details__chat-appointment">
+                                    <div class="tickets-details__chat-appointment-itme">
+                                        @Html.Raw(history.Description)
+                                        <div style="display: flex; gap:24px; margin-top: 10px; justify-content: space-between; align-items: center">
+                                            <div>
+                                                @if (canDelete)
+                                                {
+                                                    <button ticket-history-id="@history.Id" class="DeleteTicketHistoryButton" style=" background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                break;
+                            case TicketHistoryType.NotPickUp:
+                                <div class="tickets-details__chat-appointment-itme" style="width: fit-content; margin: 0 auto; padding: 6px 10px">
+                                    @Html.Raw(history.Description)
+                                    @if (canDelete)
+                                    {
+                                        <button ticket-history-id="@history.Id" class="DeleteTicketHistoryButton" style="background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                    }
+                                </div>
+                                break;
+                            case TicketHistoryType.ChangeLimit:
+                                <div class="tickets-details__chat-appointment-itme" style="width: fit-content; margin: 0 auto; padding: 6px 10px">
+                                    @Html.Raw(history.Description)
+                                    @if (canDelete)
+                                    {
+                                        <button ticket-history-id="@history.Id" class="DeleteTicketHistoryButton" style="background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                    }
+                                </div>
+                                break;
+                            case TicketHistoryType.StatusUpdate:
+                                <div class="tickets-details__chat-appointment-itme" style="width: fit-content; margin: 0 auto; padding: 6px 10px">
+                                    @Html.Raw(history.Description)
+                                    @if (canDelete)
+                                    {
+                                        <button ticket-history-id="@history.Id" class="DeleteTicketHistoryButton" style="background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                    }
+                                </div>
+                                break;
+                            default:
+                                    <div class="tickets-details__chat-message @(history.IsSpecialistMessage ? "right-chat" : "left-chat")">
+                                        @if (history.IsSpecialistMessage)
+                                        {
+                                            <img src="@("/avatar/image?identityUserId=" + history.CreatorId)" class="message__avatar" />
+                                        }
+                                        else
+                                        {
+                                            <img src="@(UserProfilesAppService.GetCustomerByUserNameAsync(Model.Ticket.CreatorUserName).Result.UserAvatarFileId != null ? "/avatar/image?fileId=" + UserProfilesAppService.GetCustomerByUserNameAsync(Model.Ticket.CreatorUserName).Result.UserAvatarFileId : "/img/Avatar.svg")" class="message__avatar" />
+                                        }
+                                            <strong>@history.LastName @history.FirstName</strong>
+                                        @{
+                                            var uniqueId = $"collapse_{history.Id}"; 
+                                            var descriptionLength = history.Description.Length;
+                                        }
+
+                                        @if (descriptionLength >= 500)
+                                        {
+                                            <a style="color:gray;margin-left: 30px;" data-bs-toggle="collapse" href="#@uniqueId" role="button" aria-expanded="false" aria-controls="@uniqueId">
+                                                Развернуть
+                                            </a>
+                                            <div class="collapse" id="@uniqueId">
+                                                @Html.Raw(history.Description)
+                                                <a data-bs-toggle="collapse" href="#@uniqueId" role="button" aria-expanded="false" aria-controls="@uniqueId">
+                                                    Свернуть...
+                                                </a>
+                                            </div>
+                                        }
+                                        else 
+                                        {
+                                            @Html.Raw(history.Description)
+                                        }
+                                        
+                                        @if (canEdit || history.CreatorId == CurrentUser.Id)
+                                        {
+                                        <div class="button-ticket-group" style="display: flex; gap:24px; margin-top: 10px; justify-content: space-between; align-items: center">
+                                            <div>
+                                            <button ticket-history-id="@history.Id" class="EditTicketHistoryButton" style=" background-color: transparent; height:20px; width: 15px; margin-right: 10px; background-image: url('/img/buttons/editTicket.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                                    @if (canDelete)
+                                                    {
+                                            <button ticket-history-id="@history.Id" class="DeleteTicketHistoryButton" style=" background-color: transparent; height:20px; width: 10px; background-image: url('/img/buttons/delete.svg'); background-repeat: no-repeat; background-position: center; border: none;"></button>
+                                                    }
+                                            </div>
+                                        </div>
+                                        }
+                                            <span class="time-chat">
+                                                @history.CreationTime.ToString("HH:mm")
+                                            </span>
+                                    </div>
+
+                                break;
+
+                        }
+                    }
+
+                    @if (history?.Attachments.Count() != 0)
+                    {
+                        <div class="tickets-details__chat-file @(history.IsSpecialistMessage ? "right-chat" : "left-chat")">
+                            @foreach (var attachment in history?.Attachments)
+                            {
+                               <a href="?fileId=@attachment.Id&tenantId=@ticket.TenantId&handler=DownloadOneFile">
+                                    <div class="file-box-item">
+                                        <div data-toggle="tooltip" title='@attachment.FileName от @string.Format("{0:dd.MM.yyyy HH:mm}", attachment.CreationTime)' class="file-box-item__file-name">
+                                            @attachment.FileName от @string.Format("{0:dd.MM.yyyy HH:mm}", attachment.CreationTime)
+                                        </div>
+                                        <div class="file-box-item__img">
+                                            <div class='@GlobalClass.GetIconByFileExtension(System.IO.Path.GetExtension(attachment.FileName))'></div>
+                                        </div>
+                                        <div class="file-box-item__close hideCloseButton">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                        <div style='background: white; align-self: @(history.IsSpecialistMessage ? "flex-end" : "flex-start")'>
+                            @{
+                                long fileSizeBytes = 0;
+                                history?.Attachments.ForEach(x => fileSizeBytes += x.SizeInBytes);
+                                float fileSizeMb = (float)fileSizeBytes / 1024.0f / 1024.0f;
+                            }
+                            <span>@history?.Attachments.Count() файл (@(string.Format("{0:f2}", fileSizeMb)) МБ)</span>
+                            <b>
+                            <a style="color: #333" href="/tickets/details/@Model.Ticket?.Id?ticketHistoryId=@history?.Id&tenantId=@ticket.TenantId&handler=DownloadTicketHistoryZipFile">Скачать все</a>
+                            </b>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="tickets-details__chat-form">
+                <form method="post" enctype="multipart/form-data" id="form-message-post">
+                    <input type="hidden" asp-for="CreateTicketHistory.TicketId" value="@Model.Ticket.Id" />
+                    <input asp-for="@Model.TicketCreatorId" hidden />
+                    <div class="tickets-details__chat-form-selects">
+
+                        <div class="tickets-details__response-template">
+                            <div class="tickets-details__field">
+                                <label for="response-template">Выбрать шаблон ответа</label>
+                                <select class="select select_small" onchange="$('#tickets-details-input').hide(); $('#chat-input').show();" id="response-template" style="min-width: 223px;" asp-for="CreateTicketHistory.AnswerTemplateId" asp-items="@Model.AnswerTemplates">
+                                    <option selected value="">Шаблон ответа</option>
+                                </select>
+                            </div>
+
+                            <button type="button" id="NotPickUpButton" style="min-width: 128px;background: var(--White, #FFF);height: 30px;
+                                border: 1px solid var(--Stroke, #DDE4E8); border-radius: 3px; padding: 4px 0; color: var(--Muted-color, #828282);">
+                                Не дозвонились
+                            </button>
+                            <div class="tickets-details__field">
+                                <label>Статус</label>
+                                <select class="select select_small" asp-for="CreateTicketHistory.TicketStatusId" asp-items="@Model.TicketStatuses"></select>
+                            </div>
+                            <div class="tickets-details__field">
+                                <label class="edit-tickets__title">Установить ограничение</label>
+                                <select class="edit-tickets__item" style="min-width: 100px;"
+                                        asp-for="CreateTicketHistory.ConstraintTypeId"
+                                        asp-items="@Model.TicketRanges">
+                                </select>
+                            </div>
+                            <input class="edit-tickets__item" style="width: 57px;" min="0" value="0" asp-for="CreateTicketHistory.ConstraintTypeValue" type="number" />
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <input id="sendClient" asp-for="IsHiddenForClient" width="30" type="checkbox" />
+                        <h4 style="margin-left: 10px;">Скрыть для клиента</h4>
+                    </div>
+                    <div class="summernote-item" id="chat-input" style="display: none;">
+                        <textarea asp-for="CreateTicketHistory.Description" id="summernote"></textarea>
+                    </div>
+                    <div class="tickets-details__chat-form-input" style="padding-bottom: 8px">
+                        <div onclick="$('#images').click();">
+                            <img src="/img/clip-icon.svg" alt="clip-icon">
+                        </div>
+                        <div class="tickets-details__chat-form-input-item">
+                            <input onclick="$('#tickets-details-input').hide(); $('#chat-input').show();" id="tickets-details-input" class="tickets-details__message-text" placeholder="Написать сообщение" type="text" name="message">
+                        </div>
+                        <div>
+                            <button onclick="inputIsEmpty()" class="tickets-details__chat-form-button" type="submit">
+                                Отправить
+                            </button>
+                        </div>
+                        <br />
+                        <input type="file" onchange="validateFileSize(this)" hidden style="height: 42px; margin-bottom: 10px;" name="images[]" id="images" asp-for="CreateTicketHistory" multiple>
+                    </div>
+                    <sup>*Размер загружаемых файлов не должен превышать 50Мб</sup>
+                    <div class="form-group attachment">
+                        <div id="image_preview" style="width: 100%;"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <form method="post" asp-page-handler="RightNavMenu" class="edit-tickets" id="right-nav-form">
+        <input asp-for="CreateRightMenu.TicketId" hidden />
+        <h3 class="edit-tickets__title">Редактирование записи</h3>
+
+        <section class="edit-tickets__buttons-row">
+            @if (!Model.IsTicketFavorite)
+            {
+               <button class="edit-tickets__favorites" id="add-favorit">
+                    Добавить в избранное
+               </button>
+            }
+            else
+            {
+               <button class="edit-tickets__favorites" id="delete-favorit">
+                    Убрать из избранного
+               </button>
+            }
+
+            @if (CurrentUser.IsInRole("Руководитель отдела продаж") || CurrentUser.IsInRole("admin"))
+            {
+               <button ticket-id="@Model.Ticket.Id" class="edit-tickets__basket deleteTicket" style="background: #ED5565; color:white" type="button">
+                    Удалить заявку
+               </button>
+            }
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Пакеты услуг</h5>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem">
+                @foreach (var servicePackage in Model.TicketActiveServicePackages)
+                {
+                    <p class="edit-tickets__service-packages" style="background-@servicePackage.Style">
+                        @servicePackage.Name
+                    </p>
+                }
+            </div>
+
+            @if (!Model.TicketActiveServicePackages.Any())
+            {
+             <p class="edit-tickets__service-packages">
+                    @(Model.Ticket.ServicePackages ?? "Отсутствует")
+             </p>
+            }
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Статус</h5>
+            <select class="select select_small" asp-for="CreateRightMenu.TicketStatusId" asp-items="@Model.TicketStatuses"></select>
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Назначенный специалист</h5>
+            <select class="select select_small" asp-for="CreateRightMenu.ResponsibleId" asp-items="@Model.Specialists"></select>
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Тэг</h5>
+            <div class="edit-tickets__tag-list">
+                @foreach (var tag in Model.Ticket.Tags)
+                {
+                  <div class="edit-tickets__tag edit-tickets__tag_blue" id="@tag.Id">
+                        @tag.Name
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" style="cursor: pointer; margin-left: 0.25rem">
+                          <g clip-path="url(#clip0_2260_12289)">
+                              <path d="M14.0217 3.19144L12.8088 1.97852L8.00012 6.7872L3.19144 1.97852L1.97852 3.19144L6.7872 8.00012L1.97852 12.8088L3.19144 14.0217L8.00012 9.21305L12.8088 14.0217L14.0217 12.8088L9.21305 8.00012L14.0217 3.19144Z" fill="#334557" />
+                          </g>
+                         <defs>
+                              <clipPath id="clip0_2260_12289">
+                                  <rect width="16" height="16" fill="white" />
+                              </clipPath>
+                          </defs>
+                      </svg>
+                  </div>
+                }
+                <button class="edit-tickets__item edit-tickets__item_red" type="button" id="CreateNewTicketTag">
+                    <img src="/assets/ticketsDetails/addButton.svg" alt="">
+                    Добавить
+                </button>
+            </div>
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Тип задачи</h5>
+            <select class="edit-tickets__item" asp-for="CreateRightMenu.TicketTypeId" asp-items="@Model.TicketTypes"></select>
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Установить ограничение</h5>
+            <select class="edit-tickets__item" style="min-width: 100px;" asp-for="CreateRightMenu.ConstraintTypeId" asp-items="@Model.TicketRanges"></select>
+            <input class="edit-tickets__item" style="width: 57px;" min="0" value="0" asp-for="CreateRightMenu.ConstraintTypeValue" type="number" />
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Раздел</h5>
+            <div class="edit-tickets__value_column">
+                <select asp-for="CreateRightMenu.TicketSectionId" asp-items="@Model.TicketSections" class="edit-tickets__item"></select>
+            </div>
+        </section>
+        <section class="edit-tickets__field">
+            <h5 class="edit-tickets__title">Создать событие</h5>
+            <div class="edit-tickets__value_column">
+                <input asp-for="CreateRightMenu.EventTicketId" hidden />
+                <input asp-for="CreateRightMenu.EventTenantId" hidden />
+                <textarea asp-for="CreateRightMenu.EventName" class="edit-tickets__item edit-tickets__textarea" placeholder="Введите событие"></textarea>
+                <div class="edit-tickets__create-event">
+                    <input asp-for="CreateRightMenu.EventDate" type="datetime-local" class="edit-tickets__datepiker" placeholder="24.08.2023">
+                    <button type="submit" class="edit-tickets__item edit-tickets__item_red">Создать</button>
+                </div>
+            </div>
+        </section>
+        <section class="edit-tickets__buttons-row edit-tickets__lower-block">
+            <button id="save-btn" type="submit" class="edit-tickets__item edit-tickets__item_green">
+                Сохранить изменения
+            </button>
+            <button class="edit-tickets__item edit-tickets__item_cancel">Отмена</button>
+        </section>
+        @if (Model.Events.Any())
+        {
+            <br />
+            <span>Список событий:</span>
+            <br />
+        }
+        @foreach (var eventDto in Model.Events)
+        {
+            @($"{eventDto.Title} ({eventDto.EventDate.ToString("dd.MM.yyyy")})")
+            <br />
+        }
+    </form>
+</div>
+
+<script src="~/lib/summernote/plugin/jquery/jquery-3.4.1.slim.min.js" asp-append-version="true"></script>
+<script src="~/lib/summernote/summernote-lite.min.js" asp-append-version="true"></script>
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>
+<abp-script src="/Pages/Tickets/Details-files.js" />
+
+<script>
+    function validateFileSize(input) {
+        var totalSize = 0;
+        var files = input.files;
+
+        for (var i = 0; i < files.length; i++) {
+            totalSize += files[i].size;
+        }
+
+        if (totalSize > 50 * 1024 * 1024) {
+            abp.notify.error('Суммарный размер файлов превышает максимальный размер 50 МБ. Пожалуйста, выберите файлы с меньшим размером.');
+            input.value = '';
+        }
+    }
+
+    const inputIsEmpty = () => {
+        const inputItem = document.querySelector(".note-editable");
+        const textAria = document.querySelector("#summernote");
+        const inputAria = document.querySelector("#tickets-details-input");
+
+        const validBorder = "1px solid #1AB394";
+        const InValidBorder = "1px solid red";
+
+        if (!textAria.value.length) {
+            inputItem.style.border = InValidBorder;
+            inputAria.style.border = InValidBorder;
+        } else {
+            inputItem.style.border = validBorder;
+            inputAria.style.border = validBorder;
+        }
+    } 
+</script>

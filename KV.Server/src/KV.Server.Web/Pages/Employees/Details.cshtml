@@ -1,0 +1,16 @@
+﻿@page "{id:Guid}"
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Employees.DetailsModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.MenuItemName = ServerMenuContributor.CUSTOMERS;
+}
+@section scripts
+{
+    <abp-script src="/Pages/Employees/DetailsEmployee.js"></abp-script>
+}
+
+<input id="Model_Id" data-employee-id="@Model.Id" hidden/>

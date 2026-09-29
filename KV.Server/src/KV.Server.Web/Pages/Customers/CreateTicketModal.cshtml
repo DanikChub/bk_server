@@ -1,0 +1,69 @@
+﻿@page
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model KV.Server.Web.Pages.Customers.CreateTicketModalModel
+@{
+    Layout = null;
+}
+
+<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet" asp-append-version="true">
+
+<style>
+.note-modal-backdrop {
+    z-index: 1000;
+}
+.note-modal-footer {
+    padding-bottom: 48px
+}
+</style>
+
+<form asp-page="/Customers/CreateTicketModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Создание заявки"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id" hidden></abp-input>
+            <abp-input asp-for="TenantId" hidden></abp-input>
+            <label>Статус</label>
+            <select asp-for="CreateTicketVM.TicketStatusId"  asp-items="@Model.Statuses"></select>
+            <label>Тип заявки</label>
+            <select asp-for="CreateTicketVM.TicketTypeId" asp-items="@Model.TicketTypes"></select>
+
+
+            <abp-input asp-for="CreateTicketVM.Subject" required label="Тема"></abp-input>
+            <textarea id="CreateTicket_Description" asp-for="@Model.CreateTicketVM.Description"></textarea><br />
+            <label>Договор</label>
+            <select asp-for="CreateTicketVM.ContractId" asp-items="@Model.Contracts"></select>
+@*            <abp-input asp-for="" required label="Описание заявки"></abp-input>*@
+            <abp-input asp-for="CreateTicketVM.TicketSectionId" hidden></abp-input>
+            <abp-input asp-for="CreateTicketVM.CreatorId" hidden></abp-input>
+
+          
+
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>
+
+<script src="~/lib/summernote/plugin/jquery/jquery-3.4.1.slim.min.js" asp-append-version="true"></script>
+<script src="~/lib/summernote/summernote-lite.min.js" asp-append-version="true"></script>
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>
+<script>
+    $('#CreateTicket_Description').summernote({
+        placeholder: '',
+        tabsize: 2,
+        height: 200,
+        focus: true,
+        disableResizeEditor: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['view', ['codeview']],
+            ['picture', ['picture']]
+        ]
+    }).summernote('editor.pasteHTML', "");
+</script>

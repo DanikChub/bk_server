@@ -1,0 +1,29 @@
+.tubs-container-list {
+    align-items: center;
+    display: flex;
+    gap: 0px;
+    justify-content: start;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    padding-left: 0;
+}
+
+.tub-item {
+    align-items: center;
+    background: white;
+    color: #828282;
+    display: flex;
+    font-family: Open Sans, sans-serif;
+    font-size: 14px;
+    height: 34px;
+    justify-content: center;
+    line-height: 18px;
+    padding: 10px 27px;
+    border: 1px solid #dde4e8;
+    min-width: 160px;
+}
+
+.tub-item_active {
+    color: #828282;
+    background: #dde4e8;
+}

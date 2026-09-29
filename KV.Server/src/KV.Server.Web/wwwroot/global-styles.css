@@ -1,0 +1,42 @@
+﻿/* Your Global Styles */
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: white;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #aaaaaa;
+    border: 2px solid white;
+    border-radius: 20px;
+}
+
+input.input-validation-error {
+    border: 1px solid red !important;
+}
+
+.btn_red {
+    background-color: #ed5565;
+    color: white;
+    height: 29px;
+    border: none;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn_white {
+    border: 1px solid #dde4e8;
+    max-height: 30px;
+}
+
+.btn_green {
+    background: #1ab394;
+    color: white;
+    height: 29px;
+    display: flex;
+    align-items: center;
+}

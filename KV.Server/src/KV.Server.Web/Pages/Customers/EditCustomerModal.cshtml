@@ -1,0 +1,58 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Customers.EditCustomerModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<style>
+    #shirt-name { width: 200px; }
+
+    #inn { width: 200px; }
+
+    #kpp { width: 200px; }
+
+    #site { width: 200px; }
+
+    #email { width: 200px; }
+
+    #phone { width: 200px; }
+</style>
+
+<form asp-page="/Customers/EditCustomerModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Редактирование сотрудника"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id"></abp-input>
+
+            <div class="row">
+                <div class="col">
+                    <abp-input asp-for="CustomerEdit.ShortName" id="shirt-name" label="Короткое Название"></abp-input>
+                    <abp-input asp-for="CustomerEdit.INNNumber" id="inn" label="Номер ИНН"></abp-input>
+                </div>
+                <div class="col">
+                    <abp-input asp-for="CustomerEdit.KPPNumber" id="kpp" label="Номер КПП"></abp-input>
+                    <abp-input asp-for="CustomerEdit.SiteUrl" id="site" label="Ссылка Сайта"></abp-input>
+                </div>
+                <div class="col">
+                    <abp-input asp-for="CustomerEdit.ContractEmail" id="email" label="Контактный Email"></abp-input>
+                    <abp-input asp-for="CustomerEdit.ContractPhoneNumber" id="phone" label="Контактный Телефон"></abp-input>
+                </div>
+                <abp-input asp-for="CustomerEdit.LongName" id="long-name" label="Длинное Название"></abp-input>
+                <abp-input asp-for="CustomerEdit.Address" id="adress" label="Адрес"></abp-input>
+                <abp-input asp-for="CustomerEdit.DisplayName" label="Отображаемое имя"></abp-input>
+                <abp-input asp-for="CustomerEdit.CommentNotes" label="Заметки"></abp-input>
+
+                <label>Описание</label>
+                <textarea asp-for="CustomerEdit.Description" class="form-control" style="height: 200px; margin-left: 15px; width: 700px;"></textarea>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

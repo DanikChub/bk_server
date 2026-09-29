@@ -1,0 +1,22 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.ContractStatuses.EditModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+<form asp-page="/ContractStatuses/EditModal">
+    <abp-modal>
+        <abp-modal-header title="@L["Edit"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="ContractStatus.Title" label="@L["ContractStatus:Name"]"></abp-input>
+            <abp-input asp-for="ContractStatus.Code" label="@L["ContractStatus:Code"]"></abp-input>
+
+            <!--hidden input-->
+            <abp-input asp-for="Id"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)" id="UpdateContractButton"></abp-modal-footer>
+    </abp-modal>
+</form>

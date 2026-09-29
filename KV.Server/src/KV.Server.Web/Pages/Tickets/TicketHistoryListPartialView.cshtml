@@ -1,0 +1,85 @@
+﻿@using Volo.Abp.Timing
+@using Volo.Abp.Users
+@model KV.Server.Web.Pages.Tickets.TicketHistoryViewModel
+@inject IClock clock
+@inject ICurrentUser CurrentUser
+@{
+    Layout = null;
+}
+
+<div class="ibox-title">
+    <div class="btn-group float-end" style="bottom: 5px; left: 75px;">
+        <a class="btn btn-white btn-sm" href="?skipPage=@Model.PrevPage">
+            <i class="fa fa-arrow-left"></i>
+        </a>
+        <span class="btn btn-white btn-sm">@(Model.PrevPage + 1)</span>
+        <a class="btn btn-white btn-sm" href="?skipPage=@Model.NextPage">
+            <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+<div class="ibox-content inspinia-timeline">
+    @foreach (var history in Model.TicketHistoryDtos)
+    {
+        <div class="timeline-item" style="@(history.ReadByClientDate == null && history.ReadBySpecialistDate == null ? "background-color: #f9f8f8;" : "")">
+            <div class="row">
+                <div class="col-3 date">
+                    @if (history.Attachments.Any())
+                    {
+                        <i class="fa fa-file-text" style="margin-right: 30px;"></i>
+                    }
+                    @if (history.IsSpecialistMessage)
+                    {
+                        <i class="fas fa-user-tie"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-user"></i>
+                    }
+                    <br>
+                    @if (clock.Now.Date == history?.CreationTime.Date)
+                    {
+                        <small>Добавлено: @string.Format("{0:HH:mm}", history?.CreationTime)</small>
+                    }
+                    else
+                    {
+                        <small>@string.Format("{0:dd.MM.yyyy HH:mm}", history?.CreationTime)</small>
+                    }
+                </div>
+                <div class="col-8 content no-top-border">
+                    @{
+                        var fullName = $"{history?.LastName} {history?.FirstName} {history?.MiddleName}";
+                        fullName = fullName.IsNullOrWhiteSpace() ? history?.UserName : fullName;
+                        var isEdit = history.IsSpecialistMessage && (CurrentUser.IsInRole("admin") || CurrentUser.IsInRole("Руководитель отдела продаж"));
+                    }
+                    @if (CurrentUser?.Id == history.CreatorId || isEdit)
+                    {
+                        <a style="color: #666666; float: right; font-size: 16px; text-decoration: none;" data-title="@history.Id" class="EditTicketHistoryButton">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    }
+                    <p class="m-b-xs">
+                        <strong>@fullName</strong>
+                    </p>
+                    <p>@Html.Raw(history?.Description)</p>
+                    @if (history?.Attachments.Count() != 0)
+                    {
+                        <p>
+                            <strong>Вложения:</strong>
+                        </p>
+                        @foreach (var attachment in history?.Attachments)
+                        {
+                            <div>
+                                <a href="?fileId=@attachment.Id&handler=DownloadOneFile">
+                                    @attachment.FileName от @string.Format("{0:dd.MM.yyyy HH:mm}", attachment.CreationTime)
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-1 content no-top-border"></div>
+            </div>
+        </div>
+    }
+</div>

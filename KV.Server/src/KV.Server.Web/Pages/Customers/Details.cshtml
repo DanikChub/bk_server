@@ -1,0 +1,327 @@
+﻿@page "{id:Guid}"
+@using System.Globalization
+@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Themes.KvInternal.Components.BreadCrumb
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@using KV.Server.Helpers
+@using Volo.Abp.Users
+@model KV.Server.Web.Pages.Customers.DetailsModel
+@inject IStringLocalizer<ServerResource> L
+@inject ICurrentUser CurrentUser
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Details"];
+    var month = new[] { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+    PageLayout.Content.MenuItemName = ServerMenuContributor.CUSTOMERS;
+    PageLayout.Content.BreadCrumb.Add("Клиенты", "/Customers");
+    PageLayout.Content.BreadCrumb.Add($"{Model.Customer.DisplayName}");
+    PageLayout.Content.BreadCrumb.ShowCurrent = false;
+}
+
+@section scripts
+{
+    <abp-script src="/js/generatePasswordConfig.js" />
+    <abp-script src="/js/generatePassword.js" />
+
+    <abp-script src="/js/createTableFunctions.js"></abp-script>
+    <abp-script src="/js/createTable.js"/>
+    <abp-script src="/js/renderTooltip.js"/>
+
+    <abp-script src="/Pages/Customers/CustomerDetailTables.js" />
+    <abp-script src="/Pages/Customers/Details.js" />
+    <abp-script src="/Pages/Customers/CreateContractModal.js" />
+    <abp-script src="/Pages/Customers/HideTabs.js" />
+}
+
+@section styles {
+    <abp-style src="/css/customers.css"/>
+    <abp-style src="/css/common-table.css"/>
+    <abp-style src="/css/common.css"/>
+    <abp-style src="/css/table.css"/>
+    <abp-style src="/css/site.css"/>
+    <abp-style src="/css/bem.css"/>
+    <abp-style src="/css/new-user.css"/>
+}
+
+@{
+    var currentUri = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}";
+    var uri = new Uri(currentUri);
+}
+
+<div class="customers">
+    
+<input id="Customer_Id" data-customer-id="@Model.Customer.Id" hidden/>
+<div class="customers__content">
+<div class="customers__main-data">
+    <div class="customers__table">
+
+                <a href="/Customers" class="customer-name"><img src="/img/arrow-left.svg"> @Model.Customer.ShortName</a>
+
+                <div class="" style="display: flex; gap: 48px;">
+                    <div style="width: 100%">
+                        <div class="customers__side-data-item" style="display: flex; border-bottom: 2px solid #dde4e8; padding: 8px 0">
+                            <div class="customers__side-data-item-title">Статус</div>
+                            <div>
+                                <img src=@( Model.Customer.IsActive ? "/img/status-ok.png" : "/img/status/status-gray-minus.svg") alt="status-icon">
+                            </div>
+                        </div>
+
+                        <div class="customers__side-data-item" style="display: flex; border-bottom: 2px solid #dde4e8; padding: 8px 0">
+                            <div class="customers__side-data-item-title">Контактное лицо</div>
+                            <div>
+                                @Model.Customer.ContractOwner
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%">
+                        <div class="customers__side-data-item" style="display: flex; border-bottom: 2px solid #dde4e8; padding: 8px 0">
+                            <div class="customers__side-data-item-title">Дата создания</div>
+                            <div>
+                                @Model.Customer.CreationTime.ToString("dd.MM.yyyy HH:ss")
+                            </div>
+                        </div>
+
+                        <div class="customers__side-data-item" style="display: flex; border-bottom: 2px solid #dde4e8; padding: 8px 0">
+                            <div class="customers__side-data-item-title">Ответственный</div>
+                            <div>
+                                @Model.Customer.ResponsibleFullName
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        <!-- <div class="customers__title-wrapper">
+            <span>
+                <a href="/Customers"></a>@Model.Customer.ShortName
+            </span>
+            <button>Сбросить все фильтры</button>
+        </div> -->
+        <div class="tubs-container-list">
+            <!-- Нужно передать в data-tab-category id кнопки-->
+            <button class="tub-item" data-tab-category="Заявки клиента" data-id="CustomerProfiles" type="button">Заявки клиента</button>
+            <button class="tub-item" data-tab-category="Пользователи" data-id="CustomerProfilesUsers" type="button">Пользователи</button>
+            <button class="tub-item" data-tab-category="Статистика" type="button">Статистика</button>
+            <button class="tub-item" data-tab-category="Договоры" data-id="CustomerTreaties" id="contractsTab" type="button">Договоры</button>
+            <button class="tub-item" data-tab-category="Журнал событий" type="button">Журнал событий</button>
+        </div>
+        <div class="customers__tab-content">
+            <!-- Нужно передать в data-tab-category id кнопки-->
+            <div data-tab-category="Заявки клиента">
+                <div class="tickets-search-input" style="margin-bottom: 20px">
+                    <h3>Все заявки <span id="CustomerProfiles-Count"></span></h3>
+                    <div style="display: flex; justify-content: end;">
+                        <input  placeholder="Поиск" class="form-control input_bordered input_small" type="text" style="flex-basis: 95%"/>
+                        <button style="background-color: #1AB394;" class="button_small button_small_green button_small_bordered" type="submit">Найти</button>
+                    </div>
+                </div>
+                <abp-table striped-rows="true" id="CustomerProfiles"></abp-table>
+            </div>
+            <div data-tab-category="Пользователи">
+                <div class="tickets-search-input" style="margin-bottom: 22px">
+                    <h3>Все пользователи <span id="CustomerProfilesUsers-Count"></span></h3>
+                    <div style="display: flex; justify-content: end;">
+                        <input  placeholder="Поиск" class="form-control input_bordered input_small" type="text" style="flex-basis: 95%"/>
+                        <button style="background-color: #1AB394;" class="button_small button_small_green button_small_bordered" type="submit">Найти</button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 20px">
+                        <button type="button" class="open-in-excel btn" onclick="window.open('@(uri.CreateHandlerUri(nameof(Model.OnGetExcelTableCustomerAsync)))', '_self');">
+                            Открыть в Excel
+                        </button>
+                           
+                            <button type="button" id="createEmployee" style="background-color: #1AB394;" class="button button_text-white">
+                                <img src="/img/buttons/addWhite.svg" class="button__icon"></img>
+                                Добавить пользователя
+                            </button>
+                        
+                </div>
+                <abp-table striped-rows="true" id="CustomerProfilesUsers"></abp-table>
+            </div>
+            <div data-tab-category="Статистика">
+                <div class="statistics-wrapper">
+                    <div class="statistics-buttons">
+                                <button class="open-in-excel" type="button" onclick="window.open('@(uri.CreateHandlerUri(nameof(Model.OnGetExcelTableStatisticsAsync)))', '_self');">
+                            Открыть в Excel
+                        </button>
+                        <form class="statistics-dates">
+                            <input asp-for="@Model.SearchStatistics.TenantId" hidden />
+                            <div class="statistics-datepicker from">
+                                <label for="data-from">Показать</label>
+                                        <abp-date-picker asp-for="@Model.SearchStatistics.StartPeriod"
+                                       type="date"
+                                       name="data-from"
+                                       min="2000-01-01"
+                                       max="2023-09-30"/>
+                            </div>
+                            <div class="statistics-datepicker to">
+                                <input asp-for="@Model.SearchStatistics.EndPeriod"
+                                       type="date"
+                                       name="data-to"
+                                       min="2000-01-01"
+                                       max="2023-09-30"/>
+                            </div>
+                            <button class="btn" style="padding: 0 0.75rem; background-color: #FFF; border: 1px solid #DDE4E8; border-radius: 3px; color: #000; height: 1.875rem;" type="submit">Поиск</button>
+                        </form>
+                    </div>
+                    <div class="statistics__table">
+                        <div class="row">
+                            <div class="col-1 statistics__table-title title1">Месяц</div>
+                            <div class="col-3 statistics__table-title title2">Ограничение</div>
+                            <div class="col-3 statistics__table-title title3">Тип</div>
+                            <div class="col-4 statistics__table-title title4">Раздел</div>
+                        </div>
+                                @if (Model.Statistics.Count == 0)
+                                {
+                                    <div style="text-align: center; font-size: 24px;">
+                                        <p style="color: gray; font-weight: bold;">Нет данных</p>
+                                    </div>
+                                }
+                                else
+                                { @foreach (var monthStatistics in Model.Statistics)
+                                    {
+                                        <div class="row statistics__table-data">
+                                            <div class="col-1">@month[monthStatistics.Month - 1]</div>
+                                            <div class="col-3">
+                                                @foreach (var constraint in monthStatistics.ConstraintsByMonths)
+                                                {
+                                                    <div class="limitation">
+                                                        <div class="batle-block1">@constraint.Name</div>
+                                                        <div class="batle-block2">@constraint.Sum</div>
+                                                        @if(constraint.MaxCount > 0) { <div class="batle-block3">/@constraint.MaxCount</div> }
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="col-3">
+                                                @foreach (var ticketType in monthStatistics.TicketTypesByMonths)
+                                                {
+                                                    <div class="type">
+                                                        <div class="batle-block1">@ticketType.Name</div>
+                                                        <div class="batle-block2">@ticketType.Count</div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="col-4">
+                                                @foreach (var ticketSection in monthStatistics.TicketSectionsByMonths)
+                                                {
+                                                    <div class="chapter">
+                                                        <div class="batle-block2">@ticketSection.Count</div>
+                                                        <div class="batle-block4">@ticketSection.Name</div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                       
+                    </div>
+                </div>
+            </div>
+            <div data-tab-category="Договоры">
+                    
+                <div class="tickets-search-input" style="margin-bottom: 18px">
+                    <h3>Все договоры <span id="CustomerTreaties-Count"></span></h3>
+                    <div style="display: flex; justify-content: end;">
+                        <input  placeholder="Поиск" class="form-control input_bordered input_small" type="text" style="flex-basis: 95%"/>
+                        <button style="background-color: #1AB394;" class="button_small button_small_green button_small_bordered" type="submit">Найти</button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-bottom: 20px">
+                            <button type="button" class="open-in-excel btn" onclick="window.open('@(uri.CreateHandlerUri(nameof(Model.OnGetExcelTableContractAsync)))', '_self');">
+                            Открыть в Excel
+                        </button>
+                        
+                            <button id="createContractButton" type="button" style="background-color: #1AB394;" class="button button_text-white">
+                                <img src="/img/buttons/addWhite.svg" class="button__icon"></img>
+                                Новый договор
+                            </button>
+                      
+                </div>
+                 <abp-table striped-rows="true" id="CustomerTreaties"></abp-table> 
+            </div>
+            <div data-tab-category="Журнал событий">
+                @{
+                    var lastDate = new DateTime();
+                }
+                <div class="event-log__wrapper">
+                    <abp-table striped-rows="true" id="EventsLogTable"></abp-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="customers__side-data">
+    <h3>Информация об организации</h3>
+    <div class="customers__side-data-wrapper">
+        <button onclick="window.open('/Customers/UpdateCustomer/@Model.Customer.Id')" class="open-reply-block-btn btn btn-sm btn-white mr-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M7.92857 11.8571L8.96429 10.8214L7.60714 9.46429L6.57143 10.5V11H7.42857V11.8571H7.92857ZM11.8482 5.72322C11.9494 5.62202 11.9524 5.52381 11.8571 5.42857C11.7619 5.33333 11.6637 5.33631 11.5625 5.4375L8.4375 8.5625C8.33631 8.66369 8.33333 8.76191 8.42857 8.85714C8.52381 8.95238 8.62202 8.94941 8.72322 8.84821L11.8482 5.72322ZM12.5714 10.7321V12.4286C12.5714 13.1369 12.3199 13.7426 11.817 14.2455C11.314 14.7485 10.7083 15 10 15H2.57143C1.8631 15 1.25744 14.7485 0.754464 14.2455C0.251488 13.7426 0 13.1369 0 12.4286V5C0 4.29167 0.251488 3.68601 0.754464 3.18304C1.25744 2.68006 1.8631 2.42857 2.57143 2.42857H10C10.375 2.42857 10.7232 2.50298 11.0446 2.65179C11.1339 2.69345 11.1875 2.76191 11.2054 2.85714C11.2232 2.95833 11.1964 3.04464 11.125 3.11607L10.6875 3.55357C10.6042 3.63691 10.5089 3.66072 10.4018 3.625C10.2649 3.58929 10.131 3.57143 10 3.57143H2.57143C2.17857 3.57143 1.84226 3.71131 1.5625 3.99107C1.28274 4.27083 1.14286 4.60714 1.14286 5V12.4286C1.14286 12.8214 1.28274 13.1577 1.5625 13.4375C1.84226 13.7173 2.17857 13.8571 2.57143 13.8571H10C10.3929 13.8571 10.7292 13.7173 11.0089 13.4375C11.2887 13.1577 11.4286 12.8214 11.4286 12.4286V11.3036C11.4286 11.2262 11.4554 11.1607 11.5089 11.1071L12.0804 10.5357C12.1696 10.4464 12.2738 10.4256 12.3929 10.4732C12.5119 10.5208 12.5714 10.6071 12.5714 10.7321ZM11.7143 4.14286L14.2857 6.71429L8.28572 12.7143H5.71429V10.1429L11.7143 4.14286ZM15.6786 5.32143L14.8571 6.14286L12.2857 3.57143L13.1071 2.75C13.2738 2.58333 13.4762 2.5 13.7143 2.5C13.9524 2.5 14.1548 2.58333 14.3214 2.75L15.6786 4.10714C15.8452 4.27381 15.9286 4.47619 15.9286 4.71429C15.9286 4.95238 15.8452 5.15476 15.6786 5.32143Z" fill="#828282"/>
+            </svg> Редактировать
+        </button>
+
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">Название организации</div>
+            <div>
+                @Model.Customer.OrganizationName
+            </div>
+        </div>
+        
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">ИНН/КПП</div>
+            <div>
+                @{
+                    var iNNAndKPPNumber = $"{Model.Customer.INNNumber}";
+                    if (!(Model.Customer.INNNumber.IsNullOrWhiteSpace() || Model.Customer.KPPNumber.IsNullOrWhiteSpace()))
+                    {
+                        iNNAndKPPNumber += " / ";
+                    }
+                    iNNAndKPPNumber += Model.Customer.KPPNumber;
+                }
+                @iNNAndKPPNumber
+            </div>
+        </div>
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">Адрес</div>
+            <div>
+                @Model.Customer.Address
+            </div>
+        </div>
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">Web-сайт</div>
+            <div>
+                @Model.Customer.SiteUrl
+            </div>
+        </div>
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">Эл. почта</div>
+            <div>
+                @Model.Customer.ContractEmail
+            </div>
+        </div>
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">Примечание</div>
+            <div>
+                @Model.Customer.CommentNotes
+            </div>
+        </div>
+        <div class="customers__side-data-item">
+            <div class="customers__side-data-item-title">Пакеты услуг</div>
+            <div class="customers__side-data-item-description">
+                @if (Model.ContractServicePackages?.Count == 0)
+                {
+                    <p class="info__value">Отсутствует</p>
+                }
+                @foreach (var uniqueServicePackage in Model.ContractServicePackages?.DistinctBy(x => x.Name))
+                {
+                    <div class="side-data_blue" style="background-@uniqueServicePackage.Style">@uniqueServicePackage.Name</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+

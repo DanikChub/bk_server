@@ -1,0 +1,152 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Customers.CreateEmployeeModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<style>
+.modal-header {
+    border: 0;
+    height: 60px;
+    border-bottom: 1px solid #DDE4E8;
+}
+
+.modal-footer {
+     padding: 0;
+    margin-top: 10px;
+    border-top: 1px solid #DDE4E8;
+    padding-top: 16px;
+}
+
+.modal-body {
+    margin-bottom: 16px
+}
+
+.modal-header, .modal-body {
+    padding: 0;
+}
+
+.modal-content {
+    padding: 24px;
+}
+
+.modal-title {
+   color: var(--Muted-color, #828282);
+    font-family: "Open Sans";
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 28px; 
+    margin-bottom: 16px;
+}
+
+.form-control {
+    border-radius: 6px
+}
+
+.col .mb-3 label, 
+.col-pass  label {
+    width: 30%;
+    color: #334557;
+    font-family: "Inter";
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    text-align: right;
+}
+
+.col-pass, 
+.col .mb-3  {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.col .mb-3 span, .col-pass .mb-3 span {
+    display: none;
+}
+.col .mb-3 input,
+.col-pass .new-customers__custom-input {
+    width: 100%;
+}
+
+.col-pass .form-label {
+    opacity: 0;
+}
+
+.col .mb-3
+ {
+    height: 70px;
+    border-bottom: 1px solid #DDE4E8;
+}
+
+.col-pass{
+    height: 70px;
+}
+
+.col-pass input {
+    border-radius: 6px
+}
+
+</style>
+<form asp-page="/Customers/CreateEmployeeModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Новый сотрудник"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input hidden asp-for="Id"></abp-input>
+            <abp-input asp-for="CreateEmployee.TenantId"></abp-input>
+
+            <!-- <div class="row" style="margin-bottom: 12px">
+                <div class="col">
+                    <abp-input asp-for="CreateEmployee.FirstName" label="Имя"></abp-input>
+                </div>
+                <div class="col">
+                    <abp-input asp-for="CreateEmployee.LastName" label="Фамилия"></abp-input>
+                </div>
+                <div class="col">
+                    <abp-input asp-for="CreateEmployee.MiddleName" label="Отчество"></abp-input>
+                </div>
+            </div> -->
+
+            <div class="col">
+                <abp-input asp-for="CreateEmployee.FIO" label="ФИО"></abp-input>
+            </div>
+
+            <div class="col">
+                <abp-input asp-for="CreateEmployee.DateOfBirthDay" type="date" label="Дата рождения"></abp-input>
+            </div>
+
+            <div class="col">
+                <abp-input asp-for="CreateEmployee.JobPost" label="Должность"></abp-input>
+            </div>
+
+            <div class="col">
+                <abp-input asp-for="CreateEmployee.PhoneNumber" label="Телефон"></abp-input>
+            </div>
+        
+            <div class="col">
+                <abp-input asp-for="CreateEmployee.Email" label="Email"></abp-input>
+            </div>     
+
+            <div class="col">
+                <abp-input asp-for="CreateEmployee.Login" label="Логин"></abp-input>
+            </div>
+
+            <div class="col-pass ">
+                <label>Пароль</label>
+                <div class="new-customers__custom-input disable-mb-3" style="margin-bottom: 12px">
+                    <div class="password">
+                        <abp-input label="Пароль *" asp-for="CreateEmployee.Password"  type="text" id="user-password" class="password__input" />
+                        <img src="/img/eye-opened.svg" class="password__hide-password">
+                    </div>
+                    <p id="generate-password" class="new-customers__generate-password">Сгенерировать пароль</p>
+                </div>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

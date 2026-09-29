@@ -1,0 +1,64 @@
+/* Open Sans */
+@font-face {
+    font-family: "Open Sans";
+    font-weight: 300;
+    src: url("/fonts/OpenSans/static/OpenSans-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-weight: 400;
+    src: url("/fonts/OpenSans/static/OpenSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-weight: 500;
+    src: url("/fonts/OpenSans/static/OpenSans-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-weight: 600;
+    src: url("/fonts/OpenSans/static/OpenSans-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-weight: 700;
+    src: url("/fonts/OpenSans/OpenSans-Bold.ttf") format("truetype");
+}
+
+/* Inter */
+
+@font-face {
+    font-family: "Inter";
+    font-weight: 300;
+    src: url("/fonts/Inter/static/Inter-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-weight: 400;
+    src: url("/fonts/Inter/static/Inter-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-weight: 500;
+    src: url("/fonts/Inter/static/Inter-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-weight: 600;
+    src: url("/fonts/Inter/static/Inter-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Inter";
+    font-weight: 700;
+    src: url("/fonts/Inter/static/Inter-Bold.ttf") format("truetype");
+}
+
+body.pace-done { font-family: "Open Sans", sans-serif; }

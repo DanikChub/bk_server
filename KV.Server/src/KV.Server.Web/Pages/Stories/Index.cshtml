@@ -1,0 +1,38 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Stories.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Stories"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.STORIES;
+}
+@section scripts
+{
+    <abp-script src="/Pages/Stories/Index.js"/>
+}
+
+@section styles {
+    <abp-style src="/css/common-table.css"/>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["Stories"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+                <abp-button id="CreateNewStoryButton"
+                            text="@L["Stories:New"]"
+                            icon="plus"
+                            button-type="Primary"/>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="Stories"></abp-table>
+    </abp-card-body>
+</abp-card>

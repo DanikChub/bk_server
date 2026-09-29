@@ -1,0 +1,168 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Customers.CreateCustomerModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    <!-- Layout = null; -->
+}
+<!--<abp-style src="/css/new-user.css" />-->
+
+<style>
+    #phone,
+    #email,
+    #site,
+    #kpp,
+    #inn,
+    #shirt-name { width: 200px; }
+</style>
+
+<!-- <div class="new-customers">
+    <h2>Добавление нового клиента</h2>
+    <div class="new-customers__buttons">
+        <button type="button" class="new-customers__button-save">
+            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+            <span>Сохранить</span>
+        </button>
+        <button type="button" class="new-customers__button-cancel">
+            <i class="fa fa-times" aria-hidden="true"></i>
+            <span>Отмена</span>
+        </button>
+    </div>
+    <form action="">
+        <h3>Реквизиты организации</h3>
+        <div class="new-customers__custom-input">
+            <label for="full-name-of-the-organization">Полное наименование организации</label><br>
+            <input placeholder="Общество с ограниченной ответственностью  “Дельта”" type="text" id="full-name-of-the-organization" />
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="abbreviated">Сокращенное наименование организации</label><br>
+                <input placeholder="ООО “Альфа”" type="text" id="abbreviated" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="inn">ИНН</label><br>
+                <input placeholder="2462458455" type="text" id="inn" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="kpp">КПП</label><br>
+                <input placeholder="3462000000" type="text" id="kpp" />
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="phone">Телефон</label><br>
+                <input placeholder="+7 (900) 000-00-00" type="text" id="phone" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="email">Электронная почта</label><br>
+                <input placeholder="alex.smith@corporat.com" type="text" id="email" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="web-site">Web-сайт</label><br>
+                <input placeholder="www.website.ru" type="text" id="web-site" />
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-select new-customers__city-item">
+                <label for="city">Регион</label> <br>
+                <select name="city" id="city">
+                    <option value="" selected>Ленинградская область</option>
+                </select>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="address">Адрес</label><br>
+                <input placeholder="г. Санкт-Петербург, ул. Пушкина, д.17" type="text" id="address" />
+            </div>
+        </div>
+        <h3>Контактное лицо</h3>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="contact-user">ФИО контактного лица</label><br>
+                <input placeholder="Иванов Иван Иванович" type="text" id="contact-user" />
+            </div>
+            <div class="new-customers__custom-date-picker new-customers__date-of-birthday">
+                <label for="date-of-birthday">Дата рождения</label> <br>
+                <input 
+                    type="date" 
+                    id="date-of-birthday" 
+                    name="date-of-birthday"
+                    value="2023-09-22" 
+                    min="1900-01-01" 
+                    max="2023-09-22"
+                >
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="user-job-title">Должность</label><br>
+                <input placeholder="Главный бухгалтер" type="text" id="user-job-title" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="user-phone">Телефон</label><br>
+                <input placeholder="+7 (900) 000-00-00" type="text" id="user-phone" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="user-email">Электронная почта</label><br>
+                <input placeholder="alex.smith@corporat.com" type="text" id="user-email" />
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="user-login">Логин</label><br>
+                <input placeholder="Ivanov20010101" type="text" id="user-login" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="user-password">Пароль</label><br>
+                <input placeholder="не менее 8 символов" type="text" id="user-password" />
+            </div>
+        </div>
+        <h3>Дополнительно</h3>  
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input new-customers__full-name-responsible">
+                <label for="full-name-responsible">ФИО ответственного</label><br>
+                <input placeholder="Петров Петр Петрович" type="text" id="full-name-responsible" />
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="note">Примечание</label><br>
+                <input placeholder="Примечание по данному клиенту" type="text" id="note" />
+            </div>
+        </div>  
+    </form>
+</div> -->
+
+<form asp-page="/Customers/CreateCustomerModal">
+    <abp-modal size="Large">
+        <abp-modal-header title="Новый клиент"></abp-modal-header>
+        <abp-modal-body>
+            <div class="row">
+                <div class="col">
+                    <abp-input asp-for="Customer.ShortName" id="shirt-name" label="Короткое Название"></abp-input>
+                    <abp-input asp-for="Customer.INNNumber" id="inn" label="Номер ИНН"></abp-input>
+                </div>
+                <div class="col">
+                    <abp-input asp-for="Customer.KPPNumber" id="kpp" label="Номер КПП"></abp-input>
+                    <abp-input asp-for="Customer.SiteUrl" id="site" label="Ссылка Сайта"></abp-input>
+                </div>
+                <div class="col">
+                    <abp-input asp-for="Customer.ContractEmail" id="email" label="Контактный Email"></abp-input>
+                    <abp-input asp-for="Customer.ContractPhoneNumber" id="phone" label="Контактный Телефон"></abp-input>
+                </div>
+                <abp-input asp-for="Customer.LongName" id="long-name" label="Длинное Название"></abp-input>
+                <abp-input asp-for="Customer.Address" id="adress" label="Адрес"></abp-input>
+                <abp-input asp-for="Customer.DisplayName" label="Отображаемое имя"></abp-input>
+                <abp-input asp-for="Customer.CommentNotes" label="Заметки"></abp-input>
+
+                <abp-input asp-for="Customer.AdminEmailAddress" label="@L["TenantProfile:AdminEmailAddress"]"></abp-input>
+                <abp-input asp-for="Customer.AdminPassword" label="@L["TenantProfile:AdminPassword"]"></abp-input>
+
+                <label>Описание</label>
+                <div class="mb-3">
+                    <textarea asp-for="Customer.Description" class="form-control" style="height: 200px;"></textarea>
+                </div>
+            </div>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+</form>

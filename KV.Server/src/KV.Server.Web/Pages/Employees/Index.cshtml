@@ -1,0 +1,60 @@
+﻿@page
+@using KV.Server.Localization
+@using KV.Server.Web.Menus
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Employees.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Employees"];
+    PageLayout.Content.MenuItemName = ServerMenuContributor.EMPLOYEE;
+}
+
+@section scripts
+{
+    <abp-script src="/js/renderTooltip.js" />
+    <abp-script src="/js/createTableFunctions.js"></abp-script>
+    <abp-script src="/js/createTable.js" />
+    <abp-script src="/Pages/Employees/Index.js" />
+}
+
+@section styles {
+    <abp-style src="/css/bem.css" />
+    <abp-style src="/css/table.css" />
+    <abp-style src="/css/site.css" />
+    <abp-style src="/css/common-table.css" />
+
+    <style>
+        .card {
+            border-radius: 0;
+        }
+    </style>
+}
+
+@{
+    var currentUri = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}{HttpContext.Request.Path}{HttpContext.Request.QueryString}";
+    var uri = new Uri(currentUri);
+}
+
+<abp-card style="border: 0">
+    <abp-card-body>
+        <h3 class="title title_position">Сотрудники <span id="EmployeeProfiles-Count"></span></h3>
+        <form>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 1rem">
+                <div style="display: flex; gap: 1rem">
+                    <a href="/Employees/CreateEmployee">
+                        <button type="button" style="background-color: #1AB394;" class="button button_text-white">
+                            <img src="/img/buttons/addWhite.svg" class="button__icon"></img>
+                            Новый сотрудник
+                        </button>
+                    </a>
+                </div>
+                @* <div style="align-items: center; display: flex;">
+                    <input asp-for="Search.SearchStr" placeholder="Поиск" class="form-control input_bordered input_small" type="text" style="flex-basis: 95%" />
+                    <button style="background-color: #1AB394;" class="button_small button_small_green button_small_bordered" type="submit" id="sub">Найти</button>
+                </div> *@
+            </div>
+        </form>
+        <abp-table striped-rows="true" id="EmployeeProfiles"></abp-table>
+    </abp-card-body>
+</abp-card>

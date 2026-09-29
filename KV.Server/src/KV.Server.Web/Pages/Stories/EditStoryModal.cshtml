@@ -1,0 +1,38 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Stories.EditStoryModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Stories/EditStoryModal" enctype="multipart/form-data">
+    <abp-modal>
+        <abp-modal-header title="@L["Edit"]"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Story.Id"></abp-input>
+
+            <div class="mb-3">
+                <label class="form-label" for="Story_OrderIndex">Группа</label>
+                <select class="form-select form-control" asp-for="Story.GroupName" label="@L["Story:Type"]">
+                    <option value="News">Новости</option>
+                    <option value="Services">Услуги</option>
+                </select>
+            </div>
+            <abp-input asp-for="Story.Name" label="Название" />
+            <abp-input asp-for="Story.CoverImageUrl" label="Отображаемое изображение" />
+            <div class="mb-3">
+                <label class="form-label">Выберите файл</label>
+                <input class="form-control" type="file" name="uploadedFile" />
+            </div>
+            <abp-input asp-for="Story.OrderIndex" label="Порядковый номер"/>
+            <abp-select asp-items="@Model.StoryStatuses" asp-for="Story.Status" label="@L["Story:Status"]"/>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)" id="UpdateContractButton"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

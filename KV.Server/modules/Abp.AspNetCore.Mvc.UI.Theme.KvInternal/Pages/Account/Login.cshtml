@@ -1,0 +1,159 @@
+﻿@page "/Account/Login"
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.Account.Localization
+@using Volo.Abp.Account.Settings
+@using Volo.Abp.Account.Web.Pages.Account
+@using Volo.Abp.AspNetCore.Mvc.UI.Theming
+@using Volo.Abp.Identity
+@using Volo.Abp.Settings
+@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Pages.Account
+@model CustomLoginModel
+@inject IHtmlLocalizer<AccountResource> L
+@inject IThemeManager ThemeManager
+@inject Volo.Abp.Settings.ISettingProvider SettingProvider
+@{
+    Layout = ThemeManager.CurrentTheme.GetAccountLayout();
+}
+
+@section scripts
+{
+    <abp-script-bundle name="@typeof(CustomLoginModel).FullName">
+        <abp-script src="/Pages/Account/Login.js" />
+    </abp-script-bundle>
+}
+
+<style>
+    .shadow-sm {
+        display: none;
+    }
+
+    html {
+        background: url("/assets/loginBg.png") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    body {
+        background: transparent;
+        height: auto;
+    }
+
+    .form__title {
+        gap: 0.5rem;
+        display: flex;
+        justify-content: start;
+        margin-left: 24px;
+    }
+
+    .form-control {
+        height: 3.6875rem;
+        border-radius: 0.5rem;
+    }
+
+    .btn {
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+
+    button {
+        height: 3.6875rem;
+    }
+
+    .section {
+        margin-top: 0 !important;
+    }
+
+    .p-4 {
+        padding: 0 !important;
+    }
+
+    .mb-1 {
+        margin: 0 !important;
+    }
+
+
+    .card-body {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+
+<div class="rounded" style="background: transparent">
+    <div class="card-body" style="padding: 1rem">
+        <div class="form__title"><img src="/assets/ellipse.svg" />
+            <h3 class="text-dark">ИПС Консалтинг</h3>
+        </div>
+
+        @if (await SettingProvider.IsTrueAsync(AccountSettingNames.IsSelfRegistrationEnabled))
+        {
+            <strong>
+                @L["AreYouANewUser"]
+                <a href="@Url.Page("./Register", new {returnUrl = Model.ReturnUrl, returnUrlHash = Model.ReturnUrlHash})"
+                    class="text-decoration-none">@L["Register"]</a>
+            </strong>
+        }
+        @if (Model.EnableLocalLogin)
+        {
+            <form method="post" class="d-flex flex-column mt-2 gap-4">
+                <div>
+                    <input asp-for="LoginInput.UserNameOrEmailAddress" class="form-control" placeholder="Логин" />
+                    <span asp-validation-for="LoginInput.UserNameOrEmailAddress" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <div class="input-group">
+                        <input type="password" class="form-control" autocomplete="new-password"
+                            maxlength="@IdentityUserConsts.MaxPasswordLength" asp-for="LoginInput.Password"
+                            placeholder="Пароль" />
+                        <button class="btn btn-secondary" type="button" id="PasswordVisibilityButton"><i
+                                class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                    </div>
+                    <span asp-validation-for="LoginInput.Password"></span>
+                </div>
+
+                <div class="d-grid">
+                    <abp-button type="submit" button-type="Primary" name="Action" value="Login"
+                        class="btn-lg">@L["Login"]</abp-button>
+                    @if (Model.ShowCancelButton)
+                    {
+                        <abp-button type="submit" button-type="Secondary" formnovalidate="formnovalidate" name="Action"
+                            value="Cancel" class="btn-lg mt-3">@L["Cancel"]</abp-button>
+                    }
+                </div>
+            </form>
+                <div class="mt-2">
+                    <p class="mb-0" style="text-align: center">Вход в систему доступен только авторизованным пользователям.</p>
+                    <p class="mb-0" style="text-align: center">Для регистрации свяжитесь с нами по телефону 8 800 550 5690</p>
+                </div>
+        }
+
+        @if (Model.VisibleExternalProviders.Any())
+        {
+            <div class="mt-2">
+                <h5>@L["OrLoginWith"]</h5>
+                <form asp-page="./Login" asp-page-handler="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
+                    asp-route-returnUrlHash="@Model.ReturnUrlHash" method="post">
+                    @foreach (var provider in Model.VisibleExternalProviders)
+                    {
+                        <button type="submit" class="btn btn-primary m-1" name="provider" value="@provider.AuthenticationScheme"
+                            title="@L["LogInUsingYourProviderAccount", provider.DisplayName]">@provider.DisplayName</button>
+                    }
+                </form>
+            </div>
+        }
+
+        @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+        {
+            <div class="alert alert-warning">
+                <strong>@L["InvalidLoginRequest"]</strong>
+                @L["ThereAreNoLoginSchemesConfiguredForThisClient"]
+            </div>
+        }
+
+    </div>
+</div>

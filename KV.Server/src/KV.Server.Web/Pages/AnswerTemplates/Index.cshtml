@@ -1,0 +1,33 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.AnswerTemplates.IndexModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["AnswerTemplate"];
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/AnswerTemplates/Index.js"></abp-script>
+}
+
+<abp-card>
+    <abp-card-header>
+        <abp-row>
+            <abp-column size-md="_6">
+                <abp-card-title>@L["AnswerTemplate"]</abp-card-title>
+            </abp-column>
+            <abp-column size-md="_6" class="text-end">
+                <abp-button id="CreateNewAnswerTemplate"
+                            text=@L["AnswerTemplate:New"]
+                            icon="plus"
+                            button-type="Primary"/>
+            </abp-column>
+        </abp-row>
+    </abp-card-header>
+    <abp-card-body>
+        <abp-table striped-rows="true" id="AnswerTemplatesTable"></abp-table>
+    </abp-card-body>
+</abp-card>

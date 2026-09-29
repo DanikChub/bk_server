@@ -1,0 +1,30 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Stories.EditSliderModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Stories/EditSliderModal" enctype="multipart/form-data">
+    <abp-modal>
+        <abp-modal-header title="@L["Edit"]"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Slider.Id"></abp-input>
+
+            <abp-input asp-for="Slider.ImageUrl" label="Ссылка на баннер"/>
+            <div class="mb-3">
+                <label class="form-label">Выберите файл</label>
+                <input class="form-control" type="file" name="uploadedFile" />
+            </div>
+            <abp-input asp-for="Slider.OrderIndex" label="Номер"/>
+            <abp-input asp-for="Slider.StoryId"/>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)" id="UpdateContractButton"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

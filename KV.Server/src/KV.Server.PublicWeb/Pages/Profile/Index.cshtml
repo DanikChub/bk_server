@@ -1,0 +1,277 @@
+﻿@page
+@using Volo.Abp.Users
+@using Volo.Abp.MultiTenancy
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.Profile.IndexModel
+@inject ICurrentUser CurrentUser
+@inject ICurrentTenant CurrentTenant
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.Title = L["Profile"];
+    var month = new[] { "январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь" };
+}
+
+@section styles {
+    <abp-style src="/css/profile.css"/>
+}
+
+<style>
+    .hidden { display: none; }
+</style>
+
+<div class="profile-header">
+    <div class="profile-header__img">
+        <img src="~/assets/profile/profile.svg" alt="profile" class="rounded-circle">
+    </div>
+    <h1 class="profile-header__name">
+        @Model.CustomerUserProfile?.FirstName @Model.CustomerUserProfile?.MiddleName @Model.CustomerUserProfile?.LastName
+    </h1>
+</div>
+
+
+<div class="profile wrapper wrapper-content ng-tns-c150-0">
+
+<div class="ibox-content profile-private-info grid-element-1">
+    <div class="profile__title">
+        <h4>Личные данные</h4>
+        <button onclick="openEditModal();" class="open-reply-block-btn btn btn-sm btn-white mr-1">
+            <img src="/assets/profile/pencil.svg"></img> Редактировать
+        </button>
+    </div>
+    <div class="profile-private-info__content">
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">Должность</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">@(Model.CustomerUserProfile?.JobPost ?? "Отсутствует")</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">Телефон</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">@(Model.CustomerUserProfile?.PhoneNumber ?? "Отсутствует")</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">Электронная почта</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">@Model.CustomerUserProfile?.Email</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">Дата рождения</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">@(Model.CustomerUserProfile?.DateOfBirthDay == null ? "Неизвестно" : Model.CustomerUserProfile.DateOfBirthDay?.ToString("dd.MM.yyyy"))</p>
+        </div>
+    </div>
+</div>
+
+<div class="ibox-content profile-private-info grid-element-2">
+    <div class="profile__title">
+        <h4>Моя организация</h4>
+    </div>
+    <div class="profile-my-organization__content">
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">Наименование</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">@(Model.TenantProfile?.DisplayName ?? "Консалтинг-Волга")</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">Адрес</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">@(Model.TenantProfile?.Address ?? "Неизвестно")</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_dark">ИНН/КПП</p>
+        </div>
+        <div class="profile__text-container">
+            <p class="profile__field profile__field_light">
+                @{
+                    var innAndKpp = $"{Model.TenantProfile?.INNNumber}/{Model.TenantProfile?.KPPNumber}";
+                    if (innAndKpp.Length <= 1) innAndKpp = "Неизвестно";
+                }
+                @innAndKpp
+            </p>
+        </div>
+    </div>
+</div>
+<div class="table-wrapper grid-element-3">
+    <div class="ibox-content" style="height: 100%; padding: 0;">
+        @{
+            var contractCount = Model.Contracts.Items.Count();
+        }
+        <form method="get" class="table-header table-header_default" novalidate="novalidate" class="">
+            <h2>Все подключенные пакеты услуг @(Model.ContractsCount == 0 ? "" : $"({contractCount})")</h2>
+            <div class="table-header__search-field">
+                <input asp-for="@Model.Name" type="text" placeholder="Поиск по заявкам" class="form-control">
+                <button onclick="searchName()" id="Input" class="btn btn-primary">Найти</button>
+            </div>
+        </form>
+
+        @if (Model.Contracts.Items.Count() == 0)
+        {
+            <p style="font-size: 24px; text-align: center">Нет контрактов</p>
+        }
+        else
+        {
+            <div class="project-list" style="width: 100%">
+                <table class="table table-hover" style="table-layout: fixed;">
+                    <tbody>
+                    <tr>
+                        <th width="20%">Статус</th>
+                        <th width="15%">Номер</th>
+                        <th width="15%">Пакет услуг</th>
+                        <th width="20%">Срок действия</th>
+                        <th width="25%">Процент исполнения</th>
+                        <th width="5%"></th>
+                    </tr>
+                    @foreach (var contract in Model.Contracts.Items)
+                    {
+                        var procent = 0;
+                        bool isEndContract = false, isStartContract = false;
+                        try
+                        {
+                            procent = (int)(100 * (DateTime.Now - contract.ContractStartDate) / (contract.ContractFinishDate - contract.ContractStartDate));
+                        }
+                        catch
+                        {
+                        }
+                        procent = 0 > procent ? 0 : procent;
+                        procent = 100 < procent ? 100 : procent;
+                        isEndContract = contract.ContractFinishDate < DateTime.Now;
+                        isStartContract = contract.ContractStartDate < DateTime.Now;
+
+                        <tr onclick="hiddenOrDisplayConstraintById('row-@(contract.Id)'); hiddenOrDisplayConstraintIconById('icon-@(contract.Id)');">
+                            <td class="project-status">
+                                @if (isStartContract && !isEndContract)
+                                {
+                                    <p class="table__status table__status_primary">
+                                        @contract.StatusTitle
+                                    </p>
+                                }
+                                else if (!isStartContract)
+                                {
+                                    <p class="table__status label-secondary">
+                                        @contract.StatusTitle
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="table__status table__status_success">
+                                        @contract.StatusTitle
+                                    </p>
+                                }
+                            </td>
+                            <td>
+                                <p class="table__number">@contract.Name</p>
+                            </td>
+                            <td class="project-people">
+                                @foreach (var service in contract.ServicePackages)
+                                {
+                                    <span class="table__status float-start table__service" style="background-@service.Style">@service.Name</span>
+                                }
+                            </td>
+                            <td>
+                                <p class="table__time-expire ">@($"{contract.ContractStartDate.ToString("dd.MM.yyyy")} - {contract.ContractFinishDate.ToString("dd.MM.yyyy")}")</p>
+                            </td>
+                            <td class="project-completion">
+                                <p class="table__percentage ">@procent%</p>
+                                <div class="progress progress-mini" style="margin-top: 0.25rem">
+                                    <div class="progress-bar" style="width: @procent%;"></div>
+                                </div>
+                            </td>
+                            <td>
+                                <i class="fas fa-caret-right" id="icon-@contract.Id"></i>
+                            </td>
+                        </tr>
+                        <tr class="hidden" id="row-@contract.Id">
+                            <td colspan="6" style="background-color: #F3F3F3;">
+                                <table style="margin: 0 auto; width: 60%;">
+                                    @if (!contract.ContractStatistics.Any())
+                                    {
+                                        <p>Нет данных</p>
+                                    }
+                                    @foreach (var constraint in contract.ContractStatistics)
+                                    {
+                                        <tr>
+                                            <td width="10%">@(month[constraint.Month - 1])</td>
+                                            @foreach (var constraintType in constraint.ConstraintsByMonths)
+                                            {
+                                                <td width="10%">@constraintType.Name: @constraintType.MaxCount/@constraintType.Sum</td>
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+<div class="employees-wrapper grid-element-4">
+    <div class="ibox-content" style="height: 100%">
+        <h3>Коллеги</h3>
+        <div class="colleague-list">
+            @if (!Model.Colleagues.Any())
+            {
+                <p style="font-size: 24px; margin-top: 12px; padding: 2rem 0; text-align: center">Нет коллег :(</p>
+            }
+            else
+            {
+                @foreach (var colleag in Model.Colleagues)
+                {
+                    <p class="colleague">
+                        <img alt="image" src="~/assets/img/profile-default.svg" class="rounded-circle" style="height: 3rem; width: 3rem;">
+                        <a>
+                            @colleag.LastName @colleag.FirstName @colleag.MiddleName
+                        </a>
+                    </p>
+                }
+            }
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    function openEditModal()
+    {
+        var editModal = new abp.ModalManager(abp.appPath + 'Profile/EditModal');
+        editModal.open();
+    }
+
+    function searchName()
+    {
+        let search = "?name=" + document.getElementById("Name").value;
+        $(location).prop('href', search);
+    }
+
+    function hiddenOrDisplayConstraintById(id)
+    {
+        let row = $('#' + id);
+        if (row.hasClass('hidden')) {
+            row.removeClass('hidden');
+        }
+        else{
+            row.addClass('hidden');
+        }
+    }
+
+    function hiddenOrDisplayConstraintIconById(id) {
+        let icon = $('#' + id);
+        if (icon.hasClass('fas fa-caret-right')) {
+            icon.removeClass('fas fa-caret-right');
+            icon.addClass('fas fa-caret-down');
+        }
+        else {
+            icon.removeClass('fas fa-caret-down');
+            icon.addClass('fas fa-caret-right');
+        }
+    }
+</script>

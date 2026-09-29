@@ -1,0 +1,108 @@
+@page "{id:Guid}"
+@using KV.Server.Localization
+@using KV.Server.Web.Menus;
+@using Microsoft.Extensions.Localization
+@model KV.Server.Web.Pages.Customers.UpdateCustomerModel
+@inject IStringLocalizer<ServerResource> L
+@inject IPageLayout PageLayout
+@{
+    PageLayout.Content.MenuItemName = ServerMenuContributor.CUSTOMERS;
+}
+@section styles {
+    <abp-style src="/css/new-user.css"/>
+}
+
+@section scripts
+{
+    <abp-script src="/Pages/Customers/UpdateCustomer.js" />
+
+}
+
+<div class="new-customers">
+    <h2>Обновление клиента</h2>
+    <form method="post">
+        <input asp-for="Customer.Id" hidden />
+        <h3>Реквизиты организации</h3>
+        <div class="new-customers__custom-input">
+            <label for="full-name-of-the-organization">Полное наименование организации *</label><br>
+            <input asp-for="Customer.LongName" type="text" id="full-name-of-the-organization"/>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="abbreviated">Сокращенное наименование организации *</label><br>
+                <input asp-for="Customer.ShortName" type="text" id="abbreviated"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="inn">ИНН</label><br>
+                <input asp-for="Customer.INNNumber" type="text" id="inn"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="kpp">КПП</label><br>
+                <input asp-for="Customer.KPPNumber" type="text" id="kpp"/>
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-input">
+                <label for="phone">Телефон</label><br>
+                <input asp-for="Customer.ContractPhoneNumber" type="text" id="phone"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="email">Электронная почта</label><br>
+                <input asp-for="Customer.ContractEmail" type="text" id="email"/>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="web-site">Web-сайт</label><br>
+                <input asp-for="Customer.SiteUrl" type="text" id="web-site"/>
+            </div>
+        </div>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-select new-customers__city-item">
+                <label for="city">Регион</label> <br>
+                <select asp-for="Customer.RegionId" asp-items="@Model.Regions" id="city">
+                    <option value="" selected>Отсутствует</option>
+                </select>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="address">Адрес</label><br>
+                <input asp-for="Customer.Address"type="text" id="address"/>
+            </div>
+        </div>
+
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-select">
+                <label for="contact">Контактное лицо</label><br>
+                <select asp-for="Customer.ContactUserProfileId" asp-items="@Model.ContactUserProfiles" type="text">
+                    <option value="">Отсутствует</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>Дополнительно</h3>
+        <div class="new-customers__input-row">
+            <div class="new-customers__custom-select new-customers__full-name-responsible">
+                <label for="full-name-responsible">ФИО ответственного</label><br>
+                <select asp-for="Customer.ResponsibleId" asp-items="@Model.Responsibles"type="text" id="full-name-responsible">
+                    <option value="">Отсутствует</option>
+                </select>
+            </div>
+            <div class="new-customers__custom-input">
+                <label for="note">Примечание</label><br>
+                <input asp-for="Customer.CommentNotes" type="text" id="note"/>
+            </div>
+        </div>
+        <div style="display: flex; gap: 6px;align-items: center;" class="new-customers__buttons">
+            <button type="submit" class="new-customers__button-save">
+                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                <span>Сохранить</span>
+            </button>
+            <button onclick="window.open('/Customers/Details/@Model.Customer.Id', '_self')" type="button" class="new-customers__button-cancel">
+                <i class="fa fa-times" aria-hidden="true"></i>
+                <span>Отмена</span>
+            </button>
+            <button type="button" class="button btn_red" id="delete-customer" data-id="@Model.Customer.Id">
+                <img src="/img/buttons/delete-white.svg" class="button__icon">
+                <span>Удалить клиента</span>
+            </button>
+        </div>
+    </form>
+</div>

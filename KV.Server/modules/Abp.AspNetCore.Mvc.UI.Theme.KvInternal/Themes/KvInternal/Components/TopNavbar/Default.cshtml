@@ -1,0 +1,62 @@
+﻿@using Abp.AspNetCore.Mvc.UI.Theme.KvInternal.Themes.KvInternal.Components.Toolbar
+@using Volo.Abp.MultiTenancy
+@using Volo.Abp.UI.Navigation
+@using Volo.Abp.Users
+@using KV.Server
+@using Microsoft.Extensions.Localization
+@using KV.Server.Localization
+@inject IStringLocalizer<ServerResource> L
+@inject ICurrentUser CurrentUser
+@inject INotificationAppService NotificationAppService
+@inject ICurrentTenant CurrentTenant
+@{
+    var userName = CurrentUser.UserName;
+    bool isSignIn = !userName.IsNullOrWhiteSpace();
+    var countNotReadMessage = await NotificationAppService.GetCountNotificationAsync(CurrentUser.Id, null, null);
+    var getLastNotifications = (await NotificationAppService.GetListAsync(new()
+    {
+        IdentityUserId = CurrentUser.Id.ToString(),
+        MaxResultCount = 3
+    })).Items.ToList();
+}
+
+@(await Component.InvokeAsync<TopNavbarToolsViewComponent>())
+
+@if(isSignIn)
+{
+    <li class="dropdown">
+        <a class="dropdown-toggle count-info" data-bs-toggle="dropdown" href="#">
+            <i class="fa fa-envelope"></i>
+            <span class="label label-danger">
+                @countNotReadMessage
+            </span>
+        </a>
+        <ul class="dropdown-menu dropdown-alerts">
+            @foreach (var notification in getLastNotifications)
+            {
+                <li>
+                    <a href="/Inbox?id=@notification.Id&handler=Redirect" class="dropdown-item">
+                        <div>
+                            <i class="fa fa-envelope fa-fw"></i> @notification.Title
+                            <span class="float-right text-muted small">@notification.CreationTime.ToString("dd.MM.yyyy H:mm")</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+            }
+            <li>
+                <div class="text-center link-block">
+                    <a href="/Inbox" class="dropdown-item">
+                        <strong>Все уведомления</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a href="~/Account/Logout">
+            <i class="fa fa-sign-out"></i> @L["LogOut"]
+        </a>
+    </li>
+}

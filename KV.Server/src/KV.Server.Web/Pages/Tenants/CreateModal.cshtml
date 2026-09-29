@@ -1,0 +1,28 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.Tenants.CreateModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Tenants/CreateModal">
+    <abp-modal>
+        <abp-modal-header title="@L["TenantProfile:New"]"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="TenantProfile.Id"></abp-input>
+
+            <abp-input asp-for="TenantProfile.ShortName" label="@L["TenantProfile:ShortName"]"></abp-input>
+            <abp-input asp-for="TenantProfile.LongName" label="@L["TenantProfile:LongName"]"></abp-input>
+            <abp-input asp-for="TenantProfile.Address" label="@L["TenantProfile:Address"]"></abp-input>
+            <abp-input asp-for="TenantProfile.AdminEmailAddress" label="@L["TenantProfile:AdminEmailAddress"]"></abp-input>
+            <abp-input asp-for="TenantProfile.AdminPassword" label="@L["TenantProfile:AdminPassword"]"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer>
+            <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+        </abp-modal-footer>
+    </abp-modal>
+</form>

@@ -1,0 +1,343 @@
+﻿@page
+@using Volo.Abp.MultiTenancy
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@model KV.Server.PublicWeb.Pages.Tickets.EditComposeModel
+@inject ICurrentTenant CurrentTenant
+@inject IStringLocalizer<ServerResource> L
+@{
+}
+
+@section styles {
+    <abp-style src="/css/tickets.css"/>
+}
+
+@section scripts {
+    <abp-script src="/js/chat-icon.js"/>
+}
+
+<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet" asp-append-version="true">
+
+<style>
+    .clearfix:after,
+    .clearfix:before,
+    .panel-body:after,
+    .panel-body:before,
+    .row:after,
+    .row:before {
+        content: " ";
+        display: table;
+    }
+
+    .clearfix:after,
+    .panel-body:after,
+    .row:after { clear: both; }
+
+    .file-box-item {
+        background: #F3F3F4;
+        border: 1px solid #DDE4E8;
+        border-radius: 3px;
+        height: 112px;
+        padding: 11px 11px 22px;
+        position: relative;
+        width: 133px;
+    }
+
+    .file-box-item__file-name {
+        color: #253340;
+        font-family: Open Sans, sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        height: 20px;
+        line-height: 20px;
+        max-height: 20px;
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .file-box-item__img {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+    }
+
+    .file-box-item__close {
+        align-items: center;
+        background: #FFF;
+        border: 1px solid #DDE4E8;
+        border-radius: 48px;
+        cursor: pointer;
+        display: flex;
+        flex-shrink: 0;
+        height: 24px;
+        justify-content: center;
+        padding: 4px;
+        position: absolute;
+        right: -22px;
+        top: -41px;
+        width: 24px;
+    }
+
+    .file-box-item__img .file {
+        align-items: center;
+        background: #F3F3F4;
+        border: none;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        margin-top: 17px;
+        width: 100%;
+    }
+
+    .file-box-item__img .corner {
+        position: absolute;
+        right: 31%;
+        top: 5px;
+    }
+
+    .file-box-item__img .format {
+        font-weight: 600;
+        position: absolute;
+        right: 38%;
+        top: 35%;
+    }
+
+    #image_preview {
+        display: flex;
+        gap: 12px;
+    }
+
+    .note-modal-backdrop {
+        display: none !important;    
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="ibox">
+            <div class="ibox-content mailbox-content">
+                <div class="file-manager">
+                    <h5>По статусам</h5>
+                    <ul class="folder-list m-b-md" style="padding: 0;">
+                        <li>
+                            <a href="/tickets?ticketStatusId=@Model.MyTicket.Name&subject=&servicepackageid=" class="active">
+                                <div>
+                                    <i class="@Model.MyTicket.Icon"></i> @L[$"TicketStatus:{Model.MyTicket.Name}"]
+                                </div>
+                                <span class="label float-end @(Model.MyTicket.Count > 0 ? "status_shown" : "status_hidden")">@Model.MyTicket.Count</span>
+                            </a>
+                        </li>
+                        @foreach (var ticketStatus in Model.TicketStatusesView)
+                        {
+                            <li>
+                                <a href="/tickets?ticketStatusId=@ticketStatus.Id&subject=&servicepackageid=">
+                                    <div>
+                                        <i class="fa @ticketStatus.Icon"></i> @L[$"TicketStatus:{ticketStatus.Name}"]
+                                    </div>
+                                    <span class="label float-end @(ticketStatus.Count > 0 ? "status_shown" : "status_hidden")">@ticketStatus.Count</span>
+                                </a>
+                            </li>
+                        }
+                        <li>
+                            <a href="/tickets?ticketStatusId=@Model.FavoriteTicket.Name&subject=&servicepackageid=" class="active tiket_font">
+                                <div>
+                                    <i class="@Model.FavoriteTicket.Icon"></i> @L[$"TicketStatus:{Model.FavoriteTicket.Name}"]
+                                </div>
+                                <span class="label float-end @(Model.MyTicket.Count > 0 ? "status_shown" : "status_hidden")">@Model.FavoriteTicket.Count</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <h5>Активные пакеты услуги</h5>
+                    <ul class="category-list" style="padding: 0;">
+                        @foreach (var ticketServicePackage in Model.TicketActiveServicePackagesView)
+                        {
+                            <li>
+                                <a href="/tickets?ticketStatusId=&subject=&servicepackageid=@ticketServicePackage.Id">
+                                    <i class="fa fa-circle" style="@ticketServicePackage.Style"></i> @ticketServicePackage.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <h5></h5>
+                    <ul class="category-list" style="padding: 0;">
+                        @foreach (var ticketServicePackage in Model.TicketNotActiveServicePackagesView)
+                        {
+                            <li>
+                                <a href="/tickets?ticketStatusId=&subject=&servicepackageid=@ticketServicePackage.Id">
+                                    <i class="fa fa-circle" style="color: gray"></i> @ticketServicePackage.Name
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9 animated fadeInRight tikets-compose">
+        <form method="post" class="ng-untouched ng-pristine ng-valid" enctype="multipart/form-data">
+            <input type="text" hidden class="form-control" asp-for="Ticket.CreatorId">
+            <input asp-for="TicketId" hidden/>
+            <div class="mail-box-header">
+                <h2> Создание заявки </h2>
+            </div>
+            <div class="mail-box">
+                <div class="mail-body">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label tikets-compose-lable-text">Тема:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" asp-for="Ticket.Subject">
+                            <div class="mb-2">
+                                <span>
+                                    Возможно ответ на ваш вопрос уже содержится в библиотеке консультаций. Предлагаем Вам воспользоваться готовым решением, чтобы не дажидаться ответа специалиста.
+                                    <a class="tikets-compose-link" target="_blank" href="https://bk.kv34.ru/">
+                                        Перейти в Библиотеку консультаций
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @if (!Model.UserSelectContractId.IsNullOrWhiteSpace())
+                    {
+                        <input hidden asp-for="UserSelectContractId"/>
+                    }
+                    <select class="form-control" hidden asp-for="UserSelectTicketTypeId" asp-items="Model.SelectListTicketType"></select>
+                </div>
+                <div class="mail-text h-200" style="border: none; padding-top: 0px;">
+                    <!-- <div class="summernote" style="display: none;">
+                        <p>Введите ваш вопрос сюда</p>
+                    </div> -->
+                    <div style="border-top: 1px solid #e7eaec; height: 1px; min-width: 100%;"></div>
+                    <div class="note-editor note-frame card">
+                        <textarea id="summernote" asp-for="Ticket.Description"></textarea>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tikets-compose__rules">
+                    <a class="tikets-compose-link" onclick="openRuleModal()">Правила работы Правового Консалтинга</a>
+                </div>
+                <input asp-for="Ticket.TicketStatusId" hidden/>
+                <div class="mail-body text-right tooltip-demo">
+                    <button type="submit" data-toggle="tooltip" data-placement="top" title="Send" class="btn btn-sm btn-primary mr-1"><i class="fa fa-paper-plane-o"></i> Отправить</button>
+                    <a href="/Tickets" data-toggle="tooltip" data-placement="top" title="Discard" class="btn btn-danger btn-sm mr-1 tikets-compose__cancel-button"><i class="fa fa-times"></i> Отмена</a>
+                    <div class="custom_input">
+                        <label for="images">Прикрепить файл</label>
+                        <input
+                            multiple
+                            style="height: 42px;"
+                            name="images[]"
+                            id="images"
+                            type="file"
+                            asp-for="Ticket.Attachments"/>
+                    </div>
+                    <div class="form-group attachment">
+                        <div id="image_preview" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/lib/summernote/plugin/jquery/jquery-3.4.1.slim.min.js" asp-append-version="true"></script>
+<script src="~/lib/summernote/summernote-lite.min.js" asp-append-version="true"></script>
+<script>
+    function openRuleModal() {
+        let modal = new abp.ModalManager(abp.appPath + 'Tickets/RulesModal');
+        modal.open();
+    }
+</script>
+
+<script>
+    $('#summernote').summernote({
+        placeholder: '',
+        tabsize: 2,
+        height: 200,
+        focus: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['view', ['codeview']],
+            ['picture', ['picture']]
+        ]
+        }).summernote("code", htmlString);
+</script>
+
+<script src="~/lib/jquery-ajax/jquery-ajax.min.js" asp-append-version="true"></script>
+<script src="~/js/global-scripts.js" asp-append-version="true"></script>
+<script>
+    $(document).ready(function () {
+        var fileArr = [];
+
+        $('.note-toolbar button[aria-label="Picture"]').on('click', (e) => {
+            $('button.close').click()
+            $("#images").click();
+        })
+
+        $("#images").change(function () {
+            if (fileArr.length > 0) {
+                fileArr = [];
+            }
+            $('#image_preview').html("");
+            const total_file = document.getElementById("images").files;
+            if (!total_file.length) return;
+            
+            for (var i = 0; i < total_file.length; i++) {
+                let extension = "." + total_file[i].name.split('.').pop();
+                let fileIcon = getIconByFileExtension(extension);
+                // let imageIcon = "<div class='icon'><i class='" + fileIcon + "'></i></div>";
+                //if (total_file[i].size < 1048576) { // this good if make that
+                    //imageIcon = "<img alt='image' class='img-fluid' src='" + URL.createObjectURL(event.target.files[i]) + "'>"
+                //}
+
+                fileArr.push(total_file[i]);
+                // $('#image_preview').append("<div class='file-box'><div class='file'><a href='#'><div class='image'>" + imageIcon + "</div><div class='file-name' style='height: 90px;'>" + total_file[i].name + "<br><small></small></div></a></div></div>");
+                $('#image_preview').append(`<div class="file-box-item">
+                                                <div data-toggle="tooltip" title="${total_file[i].name}" class="file-box-item__file-name">${total_file[i].name}</div>
+                                                <div class="file-box-item__img">
+                                                    ${chatIcon(extension)}
+                                                <div class="file-box-item__close"><i class="fa fa-times" aria-hidden="true"></i></div>
+                                            </div>`);
+            }
+        });
+
+        $('body').on('click', '#action-icon', function (evt) {
+            var divName = this.value;
+            var fileName = $(this).attr('role');
+            $(`#${divName}`).remove();
+
+            for (var i = 0; i < fileArr.length; i++) {
+                if (fileArr[i].name === fileName) {
+                    fileArr.splice(i, 1);
+                }
+            }
+            document.getElementById('images').files = FileListItem(fileArr);
+            evt.preventDefault();
+        });
+
+        function FileListItem(file) {
+            file = [].slice.call(Array.isArray(file) ? file : arguments)
+            for (var c, b = c = file.length, d = !0; b-- && d;) {
+                d = file[b];
+            }
+            if (!d) {
+                throw new TypeError("expected argument to FileList is File or array of File objects");
+            }
+            for (b = (new ClipboardEvent("")).clipboardData || new DataTransfer; c--;) {
+                b.items.add(file[c]);
+            }
+            return b.files
+        }
+    });
+</script>

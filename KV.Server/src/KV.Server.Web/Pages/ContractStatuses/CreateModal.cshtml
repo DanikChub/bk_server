@@ -1,0 +1,20 @@
+﻿@page
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model KV.Server.Web.Pages.ContractStatuses.CreateModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/ContractStatuses/CreateModal">
+    <abp-modal>
+        <abp-modal-header title="@L["ContractStatus:New"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="ContractStatus.Title" label="@L["ContractStatus:Name"]"></abp-input>
+            <abp-input asp-for="ContractStatus.Code" label="@L["ContractStatus:Code"]"></abp-input>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)" title="@L["ContractStatus:Create"]"></abp-modal-footer>
+    </abp-modal>
+</form>

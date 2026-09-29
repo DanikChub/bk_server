@@ -1,0 +1,104 @@
+:root {
+    --table-text-color-anthracite: #253340;
+    --table-text-color-gray: #A7B1C2;
+    --table-font-size: 14px;
+    --table-font-family: Open Sans,  sans-serif;
+}
+
+.card-header {
+    background: white;
+    border: none;
+}
+
+table.dataTable.table-striped > tbody > tr.odd > * { box-shadow: inset 0 0 0 9999px white; }
+
+.dataTable_footer { 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+}
+
+.table * {
+    font-style: normal;
+    line-height: 18px;
+}
+
+.table > caption + thead > tr:first-child > td,
+.table > caption + thead > tr:first-child > th,
+.table > colgroup + thead > tr:first-child > td,
+.table > colgroup + thead > tr:first-child > th,
+.table > thead:first-child > tr:first-child > td,
+.table > thead:first-child > tr:first-child > th {
+    color: var(--table-text-color-anthracite);
+    font-family: var(--table-font-family);
+    font-size: var(--table-font-size);
+
+    font-weight: 600;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    color: var(--table-text-color-anthracite);
+    font-family: var(--table-font-family);
+    font-size: var(--table-font-size);
+    font-weight: 400;
+
+    vertical-align: middle;
+}
+
+.dataTables_wrapper .table__input,
+.dataTables_wrapper .table__select {
+    background: #FFF;
+    border: 1px solid var(--table-text-color-gray);
+    box-sizing: border-box;
+    height: 23px;
+}
+
+.dataTables_wrapper th.sorting { vertical-align: bottom; }
+
+.dataTables_wrapper .icon {
+    bottom: 8%;
+    color: var(--table-text-color-gray);
+    left: 0.35rem;
+    position: absolute;
+}
+
+.dataTables_wrapper .table__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: end;
+}
+
+.dataTables_wrapper .icon_clean-filter {
+    bottom: 15%;
+    color: var(--table-text-color-gray);
+    position: absolute;
+    right: 0.35rem;
+}
+
+.dataTables_wrapper .table__input:focus,
+.dataTables_wrapper .table__select:focus { outline: 1px solid var(--table-text-color-gray); }
+
+.dataTables_wrapper .table__select {
+    color: var(--table-text-color-gray);
+    vertical-align: middle;
+}
+
+.dataTables_wrapper .table__input {
+    padding-left: 0.25rem;
+    padding-right: 1.5rem;
+    width: 100%;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination { margin: 15px 0; }
+
+.tickets-p__table-item .card.mb-3 { border: none; }
+
+.table__field label {
+    cursor: pointer;
+    font-family: var(--table-font-family);
+}

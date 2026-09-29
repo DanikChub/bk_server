@@ -1,0 +1,73 @@
+﻿@page
+@using KV.Server.Localization;
+@using Microsoft.Extensions.Localization;
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal;
+@model KV.Server.Web.Pages.Customers.CreateContractModalModel
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Customers/CreateContractModal">
+    <abp-modal size="Large" >
+        <abp-modal-header title="@L["Contract:New"]"></abp-modal-header>
+        <abp-modal-body>
+            <abp-input asp-for="Contract.Name" label="@L["Contract:Name"]"></abp-input>
+            <abp-input asp-for="Contract.ContractStartDate" label="@L["Contract:ContractStartDate"]"></abp-input>
+            <abp-input asp-for="Contract.ContractFinishDate" label="@L["Contract:ContractFinishDate"]"></abp-input>
+            <abp-select asp-for="Contract.StatusId" asp-items="@Model.StatusList" label="@L["ContractStatus:Label:Item"]">
+                <option value="">@L["Global:Select"]</option>
+            </abp-select>
+            <abp-select asp-for="Contract.ServicePackageId" asp-items="@Model.ServicePacks" label="Пакет услуг">
+            </abp-select>
+            <div class="modal-input-element">
+                <label>
+                    @L["Contract:Tag"]
+                </label>
+                <select style="width: 100%;" class="auto-complete-select inpute-style select2" asp-for="Contract.TagNames" multiple="multiple">
+                    @if (Model.SelectedTags is not null)
+                    {
+                        @foreach (var tag in Model.SelectedTags)
+                        {
+                            <option value="@tag.Name" >@tag.Name</option>
+                        }
+                    }
+                </select>  
+            </div> 
+            <abp-input asp-for="Contract.TenantId" hidden label="@L["ContractClient:Label:Item"]"></abp-input>
+            <abp-input asp-for="Contract.StatusCode" hidden label="@L["ContractClient:Label:Item"]"></abp-input>
+            <div class="create-contract-modal__restrictions">
+                <h5>Ограничения</h5>
+                <div class="restriction-list">
+                    <div>
+                        <label>НПА</label>
+                        <input type="number" asp-for="Contract.NPARange" class="input input_small"></input>
+                    </div>
+                    <div>
+                        <label>Закупки</label>
+                        <input type="number" asp-for="Contract.PurchaseRange" class="input input_small"></input>
+                    </div>
+                    <div>
+                        <label>Торги</label>
+                        <input type="number" asp-for="Contract.TradingRange" class="input input_small"></input>
+                    </div>
+                    <div>
+                        <label>Бухучет</label>
+                        <input type="number" asp-for="Contract.AccountingRange" class="input input_small"></input>
+                    </div>
+                    <div>
+                        <label>Претензия</label>
+                        <input type="number" asp-for="Contract.ClaimRange" class="input input_small"></input>
+                    </div>
+                </div>
+            </div>
+
+        </abp-modal-body>
+        <abp-modal-footer buttons="@(AbpModalButtons.Cancel | AbpModalButtons.Save)"></abp-modal-footer>
+    </abp-modal>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
+</form>

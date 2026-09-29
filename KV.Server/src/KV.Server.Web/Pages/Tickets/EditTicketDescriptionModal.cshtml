@@ -1,0 +1,22 @@
+﻿@page
+@model KV.Server.Web.Pages.Tickets.EditTicketDescriptionModalModel
+@using KV.Server.Localization
+@using Microsoft.Extensions.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@inject IStringLocalizer<ServerResource> L
+@{
+    Layout = null;
+}
+
+<form asp-page="/Tickets/EditTicketDescriptionModal" method="post">
+    <abp-modal size="Large">
+        <abp-modal-header title="Изменить сообщение"></abp-modal-header>
+        <abp-modal-body>
+            <!--hidden input-->
+            <abp-input asp-for="Id" />
+            <textarea id="UpdateTicket_Description" asp-for="@Model.UpdateTicketDescriptionDto.Description"></textarea><br />
+           
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>

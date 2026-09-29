@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>KV.Server</RootNamespace>
+    <UserSecretsId>a068f01a-0cff-488f-881b-3963e9437a33</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;DEBUG;</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;DEBUG;</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="OpenAPIs\BKParser.yaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\BKParser.yaml" CodeGenerator="NSwagCSharp" Namespace="KV.Server.Application.OpenAPIs" ClassName="BkOpenApi" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KV.Server.Domain\KV.Server.Domain.csproj" />
+    <ProjectReference Include="..\KV.Server.Application.Contracts\KV.Server.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.9.11" />
+    <PackageReference Include="EPPlus" Version="7.0.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="itextsharp.xmlworker" Version="5.5.13.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="6.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.16.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Volo.Abp.Account.Application" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.BlobStoring" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.Caching" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.EventBus.RabbitMQ" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.Security" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="8.0.4" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="8.0.4" />
+  </ItemGroup>
+
+</Project>
