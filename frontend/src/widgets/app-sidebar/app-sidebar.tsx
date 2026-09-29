@@ -6,7 +6,7 @@ import { BookOpen } from "lucide-react";
 import { navigation } from "@/shared/config/navigation";
 
 export function AppSidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "/";
   return (
     <aside className="sidebar">
       <div className="sidebar-brand"><span className="sidebar-logo"><BookOpen size={20} /></span><div><strong>Библиотека</strong><small>консультаций</small></div></div>
