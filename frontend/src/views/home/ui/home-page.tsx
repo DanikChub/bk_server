@@ -1,3 +1,4 @@
+import { PageHeading } from "@/shared/ui/page-heading/page-heading";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Calculator, CalendarDays, FileSearch } from "lucide-react";
 
@@ -11,7 +12,7 @@ const apps = [
 export function HomePage() {
   return (
     <div>
-      <div className="page-heading"><div><h1>Главная</h1><p>Рабочее пространство Библиотеки консультаций</p></div></div>
+      <PageHeading title="Главная" />
       <div className="hero-grid">
         <section className="hero-card"><span className="eyebrow">Библиотека консультаций</span><h2>Вся работа с клиентами и обращениями в одном месте</h2><p>Демонстрационная версия нового интерфейса. Данные пока работают на локальных fixtures.</p><Link href="/tickets" className="primary-button">Перейти к обращениям <ArrowRight size={16}/></Link></section>
         <section className="stats-card"><div><strong>24</strong><span>новых обращения</span></div><div><strong>8</strong><span>на сегодня</span></div><div><strong>142</strong><span>активных клиента</span></div></section>

@@ -1,11 +1,11 @@
-import { BriefcaseBusiness, Building2, FileText, Home, Inbox, Ticket, Users } from "lucide-react";
-
 export const navigation = [
-  { title: "Главная", href: "/", icon: Home },
-  { title: "Клиенты", href: "/customers", icon: Building2 },
-  { title: "Сотрудники", href: "/employees", icon: Users },
-  { title: "Обращения", href: "/tickets", icon: Ticket },
-  { title: "Договоры", href: "/contracts", icon: FileText },
-  { title: "Шаблоны ответов", href: "/answer-templates", icon: BriefcaseBusiness },
-  { title: "Уведомления", href: "/inbox", icon: Inbox },
+  { title: "Главная", href: "/", asset: "home", available: true },
+  { title: "Заявки", href: "/tickets", asset: "tickets", available: true },
+  { title: "Клиенты", href: "/customers", asset: "customers", available: true },
+  { title: "Договоры", href: "/contracts", asset: "contracts", available: false },
+] as const;
+
+export const administrationNavigation = [
+  { title: "Сотрудники", href: "/employees", available: true },
+  { title: "Шаблоны ответов", href: "/answer-templates", available: false },
 ] as const;

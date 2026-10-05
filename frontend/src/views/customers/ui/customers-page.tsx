@@ -1,5 +1,6 @@
 "use client";
 
+import { PageHeading } from "@/shared/ui/page-heading/page-heading";
 import { useMemo, useState } from "react";
 import { Download, Filter, Plus, Search } from "lucide-react";
 import { customers } from "@/entities/customer/model/mock";
@@ -10,7 +11,7 @@ export function CustomersPage() {
   const [query, setQuery] = useState("");
   const rows = useMemo(() => customers.filter(c => [c.name,c.inn,c.contact,c.responsible].join(" ").toLowerCase().includes(query.toLowerCase())), [query]);
   return (
-    <div><div className="page-heading"><div><h1>Клиенты <span>{customers.length}</span></h1><p>Клиентские организации и ответственные лица</p></div></div>
+    <div><PageHeading title={`Клиенты (${customers.length})`} breadcrumbs={[{ label: "Клиенты" }]} />
       <section className="panel">
         <div className="toolbar"><div className="toolbar-group"><button className="secondary-button"><Download size={15}/>Открыть в Excel</button><button className="primary-button"><Plus size={15}/>Новый клиент</button><button className="primary-button primary-button--muted">Мои клиенты</button></div><div className="search-box"><button className="icon-button"><Filter size={16}/></button><div><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Поиск"/></div><button className="primary-button">Найти</button></div></div>
         <DataTable rows={rows} href={c=>`/customers/${c.id}`} columns={[

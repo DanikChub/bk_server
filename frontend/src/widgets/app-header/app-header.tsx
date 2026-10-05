@@ -1,16 +1,14 @@
 "use client";
+import { demoUser } from "@/shared/config/demo-user";
+import { DesignIcon } from "@/shared/ui/design-icon/design-icon";
 
-import { Bell, Menu, Search } from "lucide-react";
-
-export function AppHeader() {
-  return (
-    <header className="topbar">
-      <button className="icon-button" aria-label="Меню"><Menu size={18}/></button>
-      <div className="topbar-search"><Search size={16}/><span>Поиск по системе</span></div>
-      <div className="topbar-actions">
-        <button className="notification" aria-label="Уведомления"><Bell size={18}/><span>3</span></button>
-        <div className="user"><div className="avatar">ДС</div><div><strong>Даниил</strong><small>Администратор</small></div></div>
-      </div>
-    </header>
-  );
+export function AppHeader({ collapsed, onToggleMenu }: { collapsed: boolean; onToggleMenu: () => void }) {
+  return <header className="topbar">
+    <button className="sidebar-toggle" onClick={onToggleMenu} aria-label={collapsed ? "Открыть меню" : "Свернуть меню"} aria-controls="app-sidebar" aria-expanded={!collapsed}><DesignIcon name="collapse" /></button>
+    <div className="topbar-actions">
+      <span className="topbar-greeting">Здравствуйте, {demoUser.firstName} {demoUser.lastName}!</span>
+      <button className="notification" disabled title="Уведомления будут подключены на этапе 5" aria-label={`Уведомления: ${demoUser.unreadNotifications} непрочитанных`}><DesignIcon name="bell" /><span>{demoUser.unreadNotifications}</span></button>
+      <button className="logout-button" disabled title="Выход будет доступен после подключения авторизации"><DesignIcon name="logout" /><span>Выйти</span></button>
+    </div>
+  </header>;
 }
