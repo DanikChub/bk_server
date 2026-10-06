@@ -54,11 +54,7 @@ export function selectTickets(tickets: Ticket[], query: TicketQuery, currentSpec
     return (compared || a.id - b.id) * (query.direction === "asc" ? 1 : -1);
   });
 }
-export function paginateTickets(rows: Ticket[], page: number, pageSize: number) {
-  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
-  const currentPage = Math.max(1, Math.min(page, pageCount));
-  return { rows: rows.slice((currentPage - 1) * pageSize, currentPage * pageSize), currentPage, pageCount };
-}
+export { paginateRows as paginateTickets } from "../../../shared/lib/pagination";
 export function specialistWorkload(tickets: Ticket[], specialists: Specialist[], now = Date.now()) {
   const start = now - 30 * 86400000;
   // Legacy API: identify specialists active in the period, then count ALL

@@ -44,13 +44,6 @@
 .ticket-specialists .specialist-idle { color:#a7b1c2; }
 .ticket-specialists .specialist-selected { color:#159b80; font-weight:600; text-decoration:underline; }
 .ticket-specialists .specialists-reset { color:#159b80; margin-bottom:12px; }
-.ticket-pagination { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:30px; color:#828282; font-size:13px; }
-.ticket-pagination label { display:flex; align-items:center; gap:5px; }
-.ticket-pagination select { color:#828282; border:1px solid var(--line); background:#fff; font-size:13px; }
-.ticket-pagination nav { display:flex; }
-.ticket-pagination button { min-width:28px; height:29px; background:#fff; color:#828282; border:1px solid #e7eaec; margin-left:-1px; font-size:13px; }
-.ticket-pagination button[aria-current=page] { color:#fff; background:var(--accent); border-color:var(--accent); }
-.ticket-pagination button:disabled { color:#ccd1d5; cursor:default; }
 .ticket-column-settings,.ticket-filters { border:1px solid var(--line); padding:14px; margin:0 0 20px; display:flex; flex-wrap:wrap; gap:14px 20px; font-size:13px; }
 .ticket-column-settings legend,.ticket-filters legend { padding:0 6px; color:#676a6c; font-weight:600; }
 .ticket-column-settings label { display:flex; align-items:center; gap:5px; }

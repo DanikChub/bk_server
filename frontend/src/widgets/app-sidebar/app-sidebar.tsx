@@ -23,8 +23,8 @@ export function AppSidebar({ collapsed, hidden, onNavigate }: { collapsed: boole
       </div>
       <nav className="sidebar-nav">
         {navigation.map(({ title, href, asset, available }) => {
-          if (employee && href !== "/tickets") return null;
-          const target = href === "/tickets" ? ticketsHref : href;
+          if (employee && href !== "/tickets" && href !== "/notifications") return null;
+          const target = href === "/tickets" ? ticketsHref : href === "/notifications" && employee ? "/employee/notifications" : href;
           const active = target === "/" ? pathname === "/" : pathname.startsWith(target);
           const content = <><DesignIcon name={asset} /><span>{title}</span></>;
           return available ? <Link key={href} href={target} title={collapsed ? title : undefined} aria-current={active ? "page" : undefined} onClick={onNavigate} className={`sidebar-link ${active ? "sidebar-link--active" : ""}`}>{content}</Link>

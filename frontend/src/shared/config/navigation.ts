@@ -1,6 +1,7 @@
 export const navigation = [
   { title: "Главная", href: "/", asset: "home", available: true },
   { title: "Заявки", href: "/tickets", asset: "tickets", available: true },
+  { title: "Уведомления", href: "/notifications", asset: "bell", available: true },
   { title: "Клиенты", href: "/customers", asset: "customers", available: true },
   { title: "Договоры", href: "/contracts", asset: "contracts", available: false },
 ] as const;
