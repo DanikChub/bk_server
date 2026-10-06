@@ -9,3 +9,7 @@
 @media(max-width:1450px){.ticket-details-layout{grid-template-columns:minmax(0,1fr) 260px;gap:20px}.ticket-summary-grid{grid-template-columns:1fr}.ticket-conversation{min-height:600px}.summary-dates{flex-wrap:wrap}.ticket-status-row{gap:7px}.ticket-action-field input,.ticket-action-field select{width:calc(100% - 50px)}}
 @media(max-width:1000px){.ticket-details-layout{grid-template-columns:minmax(0,1fr)}.ticket-actions{background:#fff;padding:20px}.ticket-action-field input,.ticket-action-field select{width:calc(100% - 60px)}.conversation-message{max-width:90%}.ticket-conversation{min-height:450px}.ticket-action-buttons{justify-content:flex-start}}
 @media(max-width:700px){.ticket-summary-box dt{width:110px}.ticket-status-row{flex-wrap:wrap;white-space:normal;padding-bottom:8px}.deadline-track{min-width:100px}.summary-dates strong{display:block;margin-left:0}.conversation-panel{padding:12px}.ticket-conversation{padding:18px 10px}.conversation-message{max-width:95%}.conversation-bubble{padding:10px 12px}.composer-options{gap:10px}.composer-options label{flex-wrap:wrap}.internal-message-panel{margin-top:20px}.ticket-summary-grid{gap:12px}.conversation-author small{font-size:9px}}
+
+.ticket-action-readonly { margin-bottom:20px; display:flex; flex-direction:column; gap:8px; font-size:12px; }
+.ticket-action-readonly strong { font-weight:400; }
+.conversation-event .event-delete { border:0; padding:3px; background:transparent; color:#a7b1c2; }

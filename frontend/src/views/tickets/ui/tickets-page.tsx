@@ -4,7 +4,9 @@ import "@/widgets/tickets-list/ui/tickets-list.css";
 import { useState } from "react";
 import { Download, Filter, Search, SlidersHorizontal, SortAsc, SortDesc } from "lucide-react";
 import { useDemoTicketStore } from "@/entities/ticket/model/use-demo-ticket-store";
-import { demoSpecialistId, initialFavoriteTicketIds, specialists } from "@/entities/ticket/model/mock";
+import { initialFavoriteTicketIds, specialists } from "@/entities/ticket/model/mock";
+import { useDemoTicketSession } from "@/shared/lib/access/demo-ticket-session";
+import { personalTicketKey, ticketAccess } from "@/shared/lib/access/ticket-access";
 import { useStoredValue } from "@/shared/lib/use-stored-value";
 import { PageHeading } from "@/shared/ui/page-heading/page-heading";
 import { Pagination } from "@/shared/ui/pagination/pagination";
@@ -24,17 +26,20 @@ function validFavorites(value: unknown): value is number[] {
 }
 
 export function TicketsPage() {
+  const { session, employee, ticketsHref } = useDemoTicketSession();
+  const access = ticketAccess(session);
+  const initialFavorites = employee ? [] : initialFavoriteTicketIds;
   const { rows: tickets } = useDemoTicketStore();
   const [query, setQuery] = useState(initialQuery);
   const [searchInput, setSearchInput] = useState("");
   const [panel, setPanel] = useState<"filters" | "columns" | null>(null);
-  const [favoriteFallback, setFavoriteFallback] = useState(initialFavoriteTicketIds);
+  const [favoriteFallback, setFavoriteFallback] = useState(initialFavorites);
   const [columnFallback, setColumnFallback] = useState(allColumns);
   const [storageWarning, setStorageWarning] = useState(false);
   const [referenceTime] = useState(() => Date.now());
-  const [favoriteIds, saveFavorites] = useStoredValue(`tickets:favorites:demo:${demoSpecialistId}:v1`, favoriteFallback, validFavorites);
-  const [visibleColumns, saveColumns] = useStoredValue(`tickets:columns:demo:${demoSpecialistId}:v1`, columnFallback, validColumns);
-  const rows = selectTickets(tickets, query, demoSpecialistId, favoriteIds);
+  const [favoriteIds, saveFavorites] = useStoredValue(personalTicketKey(session, "favorites"), favoriteFallback, validFavorites);
+  const [visibleColumns, saveColumns] = useStoredValue(personalTicketKey(session, "columns"), columnFallback, validColumns);
+  const rows = selectTickets(tickets, query, session.specialistId, favoriteIds);
   const pagination = paginateTickets(rows, query.page, query.pageSize);
   const workload = specialistWorkload(tickets, specialists, referenceTime);
   const activeTab = ticketTabs.find(tab => tab.id === query.tab)!;
@@ -60,9 +65,10 @@ export function TicketsPage() {
     updateQuery({ sortBy: column, direction: query.sortBy === column && query.direction === "asc" ? "desc" : "asc" });
   }
 
+  if (!access.read) return <section className="panel"><h1>Нет доступа к заявкам</h1></section>;
   return <div>
-    <PageHeading title={`${activeTab.label} (${rows.length})`} breadcrumbs={[{ label: "Заявки", href: "/tickets" }, { label: activeTab.label }]} />
-    <div className="manager-tickets-layout">
+    <PageHeading title={`${activeTab.label} (${rows.length})`} breadcrumbs={[{ label: "Заявки", href: ticketsHref }, { label: activeTab.label }]} />
+    <div className={`manager-tickets-layout ${employee ? "employee-tickets-layout" : ""}`}>
       <section className="panel manager-tickets-panel" aria-label="Список заявок">
         <div className="manager-ticket-toolbar">
           <div className="toolbar-group">
@@ -81,10 +87,10 @@ export function TicketsPage() {
         <nav className="manager-ticket-tabs" aria-label="Категории заявок">{ticketTabs.map(tab => <button key={tab.id} aria-pressed={query.tab === tab.id} onClick={() => updateQuery({ tab: tab.id })}>{tab.label}</button>)}</nav>
         {hasSearch && <div className="ticket-active-search"><span>Найдено: {rows.length}{query.search && ` · Поиск: «${query.search}»`}{query.specialistId && ` · ${specialists.find(item => item.id === query.specialistId)?.name}`}{activeFilters > 0 && ` · Фильтров: ${activeFilters}`}</span><button onClick={resetSearch}>Сбросить поиск и фильтры</button></div>}
         {storageWarning && <p className="ticket-storage-warning" role="status">Браузер не разрешает сохранять настройки. Изменения действуют до обновления страницы.</p>}
-        <TicketsTable rows={pagination.rows} query={query} visibleColumns={visibleColumns} favoriteIds={favoriteIds} onFavorite={toggleFavorite} onSort={sort} referenceTime={referenceTime} />
+        <TicketsTable rows={pagination.rows} query={query} visibleColumns={visibleColumns} favoriteIds={favoriteIds} onFavorite={toggleFavorite} onSort={sort} referenceTime={referenceTime} ticketsHref={ticketsHref} />
         <Pagination page={pagination.currentPage} pageCount={pagination.pageCount} pageSize={query.pageSize} total={rows.length} onPageChange={page => setQuery(current => ({ ...current, page }))} onPageSizeChange={pageSize => updateQuery({ pageSize })} />
       </section>
-      <SpecialistsList specialists={workload} selectedId={query.specialistId} onSelect={specialistId => updateQuery({ specialistId, tab: specialistId ? "all" : query.tab })} />
+      {!employee && <SpecialistsList specialists={workload} selectedId={query.specialistId} onSelect={specialistId => updateQuery({ specialistId, tab: specialistId ? "all" : query.tab })} />}
     </div>
     <p className="tickets-demo-note">Демонстрационный режим · избранное и настройки колонок сохраняются в этом браузере.</p>
   </div>;

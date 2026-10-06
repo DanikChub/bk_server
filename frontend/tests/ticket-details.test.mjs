@@ -57,3 +57,13 @@ test('Corrupt persisted state is rejected before rendering',()=>{
 test('Deleted tickets cannot accept new replies',()=>{
  assert.throws(()=>model.sendMessage({...detail,deleted:true},input,'deleted',now),/удалена/);
 });
+
+test('Replies and internal notes preserve the actual current employee identity',()=>{
+ const actor={userId:'demo-makarovsky',displayName:'Макаровский Вадим'};
+ for(const internal of [false,true]){
+  const next=model.sendMessage(detail,{...input,internal},'staff-message',now,actor);
+  const message=next.messages.find(m=>m.id==='staff-message');
+  assert.equal(message.author,actor.displayName);assert.equal(message.creatorId,actor.userId);
+  assert.equal(model.isDetailMap({[detail.ticket.id]:next}),true);
+ }
+});
