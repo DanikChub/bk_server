@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { Bookmark, CheckSquare, CircleAlert, X, Zap } from "lucide-react";
+import { Bookmark, CheckSquare, CircleAlert, CircleHelp, X, Zap } from "lucide-react";
 import type { Ticket, TicketStatus } from "@/entities/ticket/model/types";
 import { DataTable, type Column } from "@/shared/ui/data-table/data-table";
 import { isOverdue, ticketColumns, type TicketColumn, type TicketQuery } from "../model/query";
 
-const statusIcons: Record<TicketStatus, typeof Zap> = { "Новая": Zap, "В работе": CheckSquare, "Возобновлённая": CircleAlert, "Закрыта": X };
+const statusIcons: Record<TicketStatus, typeof Zap> = { "Новая": Zap, "В работе": CheckSquare, "Возобновлённая": CircleAlert, "Закрыта": X, "Требует уточнения": CircleHelp };
 function TicketStatusIcon({ status }: { status: TicketStatus }) {
   const Icon = statusIcons[status];
   return <span className={`ticket-status ticket-status--${status === "Закрыта" ? "closed" : status === "Возобновлённая" ? "reopened" : "active"}`} title={status}><Icon size={17} aria-hidden="true" /><span className="sr-only">{status}</span></span>;

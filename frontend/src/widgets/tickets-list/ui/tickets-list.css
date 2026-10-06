@@ -64,7 +64,6 @@
 .ticket-storage-warning { font-size:13px; color:#a86e08; }
 .table-empty { text-align:center; padding:40px 15px !important; }
 .tickets-demo-note { margin:15px 0 0; color:#828282; font-size:12px; }
-.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 @media(max-width:1500px){.manager-ticket-toolbar{flex-wrap:wrap;gap:16px;margin-bottom:30px}.manager-ticket-toolbar .toolbar-group{gap:10px}.manager-ticket-search{margin-left:auto}.ticket-search-input{width:360px}.manager-tickets-layout{gap:20px;grid-template-columns:minmax(0,1fr) 145px}}
 @media(max-width:1100px){.manager-tickets-layout{grid-template-columns:minmax(0,1fr)}.ticket-specialists{display:flex;flex-wrap:wrap;gap:8px 16px}.ticket-specialists button{width:auto}.manager-tickets-panel{min-height:650px}.manager-ticket-search{margin-left:0;width:100%}.ticket-search-input{width:auto;flex:1}.ticket-favorite{opacity:1}}
 @media(max-width:700px){.manager-ticket-toolbar{margin-bottom:24px}.manager-ticket-toolbar .toolbar-group{gap:8px}.manager-ticket-search{gap:10px}.ticket-pagination{flex-wrap:wrap;padding-top:20px;gap:12px}.ticket-results-count{margin-left:auto}.ticket-pagination nav{margin-left:auto}.manager-ticket-tabs button{flex-basis:125px}.ticket-active-search{align-items:flex-start;flex-direction:column}.manager-tickets-panel .data-table{min-width:1000px}}

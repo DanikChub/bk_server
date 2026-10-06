@@ -1,9 +1,54 @@
+"use client";
+import "@/widgets/ticket-details/ui/ticket-details.css";
+import Link from "next/link";
+import { useEffect,useRef,useState } from "react";
+import type { Ticket } from "@/entities/ticket/model/types";
+import { demoSpecialistId,initialFavoriteTicketIds,specialists } from "@/entities/ticket/model/mock";
+import { useDemoTicketStore } from "@/entities/ticket/model/use-demo-ticket-store";
+import { addTicketEvent,createTicketDetail,sendMessage,updateTicketField,type Attachment,type TicketDetail } from "@/entities/ticket/model/detail";
+import { useStoredValue } from "@/shared/lib/use-stored-value";
+import { ConfirmDialog } from "@/shared/ui/confirm-dialog/confirm-dialog";
 import { PageHeading } from "@/shared/ui/page-heading/page-heading";
-import { CalendarClock, MessageSquare, UserRound } from "lucide-react";
-import type { Ticket } from "@/entities/ticket/model/mock";
+import { TicketSummary } from "@/widgets/ticket-details/ui/ticket-summary";
+import { TicketConversation } from "@/widgets/ticket-details/ui/ticket-conversation";
+import { MessageComposer,type ComposeInput } from "@/widgets/ticket-details/ui/message-composer";
+import { TicketActions } from "@/widgets/ticket-details/ui/ticket-actions";
+import { EditMessageDialog } from "@/widgets/ticket-details/ui/edit-message-dialog";
+function validFavorites(value:unknown):value is number[]{return Array.isArray(value)&&value.every(id=>Number.isSafeInteger(id)&&id>0);}
 
-export function TicketDetailsPage({ ticket }: { ticket: Ticket }) {
- return <div><PageHeading title={`Заявка ${ticket.id}`} breadcrumbs={[{label: "Заявки", href: "/tickets"}, {label: `Заявка ${ticket.id}`}]} />
- <div className="detail-columns"><section className="panel"><h2>Информация об обращении</h2><div className="info-list"><div><span>Тема</span><strong>{ticket.subject}</strong></div><div><span>Клиент</span><strong>{ticket.customer}</strong></div><div><span>Создано</span><strong>{ticket.createdAt}</strong></div><div><span>Срок исполнения</span><strong>{ticket.deadline}</strong></div><div><span>Ответственный</span><strong>{ticket.responsible}</strong></div></div><div className="message-box"><MessageSquare size={20}/><div><strong>Описание обращения</strong><p>Клиент просит подготовить консультацию и проверить применимые нормы. Это демонстрационный текст до подключения API.</p></div></div></section>
- <aside className="panel side-panel"><h2>Автор</h2><div className="person"><div className="avatar large"><UserRound size={20}/></div><div><strong>{ticket.author}</strong><span>{ticket.customer}</span></div></div><div className="side-row"><CalendarClock size={17}/><div><span>Срок</span><strong>{ticket.deadline}</strong></div></div><button className="primary-button full">Взять в работу</button><button className="secondary-button full">Изменить ответственного</button></aside></div></div>
+export function TicketDetailsPage({ticket}:{ticket:Ticket}){
+ const {details,saveDetail}=useDemoTicketStore();const detail=details[ticket.id]??createTicketDetail(ticket);
+ const [favorites,saveFavorites]=useStoredValue(`tickets:favorites:demo:${demoSpecialistId}:v1`,initialFavoriteTicketIds,validFavorites);
+ const [notice,setNotice]=useState("");const [confirmation,setConfirmation]=useState<string|null>(null);const [editing,setEditing]=useState<string|null>(null);const [now]=useState(()=>Date.now());const fileUrls=useRef(new Map<string,string>());
+ useEffect(()=>{const urls=fileUrls.current;return()=>{urls.forEach(url=>URL.revokeObjectURL(url));};},[]);
+ function save(next:TicketDetail){const stored=saveDetail(next);setNotice(stored?"Изменения сохранены в демонстрационном режиме.":"Не удалось сохранить в браузере. Изменения доступны до обновления страницы.");}
+ function send(input:ComposeInput):string|null{
+  const id=crypto.randomUUID(),createdAt=new Date().toISOString();
+  const attachments=input.files.map((file,index)=>({id:`${id}-${index}`,name:file.name,size:file.size}));
+  try{const next=sendMessage(detail,{...input,attachments},id,createdAt);input.files.forEach((file,index)=>fileUrls.current.set(attachments[index].id,URL.createObjectURL(file)));save(next);return null;}catch(error){return error instanceof Error?error.message:"Не удалось отправить сообщение.";}
+ }
+ function field(field:"specialist"|"tag"|"type"|"section",value:string){
+  const specialist=specialists.find(s=>s.id===value);
+  const patch=field==="specialist"?{responsibleId:value||null,responsible:specialist?.name??""}:{[field]:value};
+  const text=field==="specialist"?specialist?`Заявка назначена на ${specialist.name}`:"Специалист снят с заявки":`${{tag:"Метка",type:"Тип",section:"Раздел"}[field]}: ${value||"отсутствует"}`;
+  save(updateTicketField(detail,patch,text,crypto.randomUUID(),new Date().toISOString()));
+ }
+ function download(file:Attachment){
+  const existing=fileUrls.current.get(file.id);
+  const url=existing??(file.sampleText!==undefined?URL.createObjectURL(new Blob([file.sampleText],{type:"text/plain;charset=utf-8"})):null);
+  if(!url){setNotice("Файл был прикреплён в предыдущей сессии. В демонстрационном режиме его нужно прикрепить заново.");return;}
+  const anchor=document.createElement("a");anchor.href=url;anchor.download=file.name;anchor.click();if(!existing)setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }
+ function confirmDelete(){
+  if(confirmation==="ticket")save({...detail,deleted:true,updatedAt:new Date().toISOString()});
+  else if(confirmation){const message=detail.messages.find(m=>m.id===confirmation);message?.attachments.forEach(file=>{const url=fileUrls.current.get(file.id);if(url){URL.revokeObjectURL(url);fileUrls.current.delete(file.id);}});save({...detail,messages:detail.messages.filter(m=>m.id!==confirmation),updatedAt:new Date().toISOString()});}
+  setConfirmation(null);
+ }
+ const editMessage=detail.messages.find(message=>message.id===editing);
+ return <div><PageHeading title={`Заявка ${ticket.id.toLocaleString("ru-RU")}`} breadcrumbs={[{label:"Заявки",href:"/tickets"},{label:`Заявка ${ticket.id.toLocaleString("ru-RU")}`}]} />
+ {detail.deleted?<section className="panel deleted-ticket"><h2>Заявка удалена</h2><p>Удаление выполнено только в демонстрационном режиме.</p><button className="secondary-button" onClick={()=>save({...detail,deleted:false})}>Восстановить заявку</button><Link className="primary-button" href="/tickets">К списку заявок</Link></section>:<div className="ticket-details-layout"><div className="ticket-details-main"><TicketSummary detail={detail} now={now}/><section className="panel conversation-panel"><TicketConversation messages={detail.messages} onDownload={download} onDelete={setConfirmation} onEdit={setEditing}/><MessageComposer status={detail.ticket.status} constraints={detail.constraints} onSend={send} onNoAnswer={()=>save(updateTicketField(detail,{},"Не дозвонились клиенту",crypto.randomUUID(),new Date().toISOString()))}/></section><section className="panel internal-message-panel"><h2 className="sr-only">Сообщение коллеге</h2><MessageComposer internal status={detail.ticket.status} constraints={detail.constraints} onSend={send}/></section></div><TicketActions detail={detail} favorite={favorites.includes(ticket.id)} onFavorite={()=>{const next=favorites.includes(ticket.id)?favorites.filter(id=>id!==ticket.id):[...favorites,ticket.id];setNotice(saveFavorites(next)?"Избранное обновлено.":"Не удалось сохранить избранное в браузере.");}} onDelete={()=>setConfirmation("ticket")} onField={field} onEvent={(text,date)=>{try{save(addTicketEvent(detail,text,date,crypto.randomUUID(),new Date().toISOString()));return null;}catch(error){return error instanceof Error?error.message:"Не удалось добавить событие.";}}}/></div>}
+ <p className="ticket-detail-notice" role="status">{notice||"Демонстрационный режим. Изменения сохраняются в этом браузере, прикреплённые файлы доступны до обновления страницы."}</p>
+ <ConfirmDialog open={confirmation!==null} title={confirmation==="ticket"?"Удалить заявку?":"Удалить сообщение?"} description={confirmation==="ticket"?"Заявка исчезнет из демонстрационного списка. Её можно восстановить на этой странице.":"Сообщение будет удалено из демонстрационной переписки."} onCancel={()=>setConfirmation(null)} onConfirm={confirmDelete}/>
+ {editMessage&&<EditMessageDialog key={editMessage.id} message={editMessage} onCancel={()=>setEditing(null)} onSave={text=>{save({...detail,updatedAt:new Date().toISOString(),messages:detail.messages.map(message=>message.id===editing?{...message,text}:message)});setEditing(null);}}/>}
+ </div>;
 }

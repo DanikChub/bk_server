@@ -1,4 +1,4 @@
-export type TicketStatus = "Новая" | "В работе" | "Возобновлённая" | "Закрыта";
+export type TicketStatus = "Новая" | "В работе" | "Возобновлённая" | "Закрыта" | "Требует уточнения";
 
 export type Ticket = {
   id: number;

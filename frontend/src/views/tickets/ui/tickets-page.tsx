@@ -3,7 +3,8 @@
 import "@/widgets/tickets-list/ui/tickets-list.css";
 import { useState } from "react";
 import { Download, Filter, Search, SlidersHorizontal, SortAsc, SortDesc } from "lucide-react";
-import { demoSpecialistId, initialFavoriteTicketIds, specialists, tickets } from "@/entities/ticket/model/mock";
+import { useDemoTicketStore } from "@/entities/ticket/model/use-demo-ticket-store";
+import { demoSpecialistId, initialFavoriteTicketIds, specialists } from "@/entities/ticket/model/mock";
 import { useStoredValue } from "@/shared/lib/use-stored-value";
 import { PageHeading } from "@/shared/ui/page-heading/page-heading";
 import { Pagination } from "@/shared/ui/pagination/pagination";
@@ -23,6 +24,7 @@ function validFavorites(value: unknown): value is number[] {
 }
 
 export function TicketsPage() {
+  const { rows: tickets } = useDemoTicketStore();
   const [query, setQuery] = useState(initialQuery);
   const [searchInput, setSearchInput] = useState("");
   const [panel, setPanel] = useState<"filters" | "columns" | null>(null);

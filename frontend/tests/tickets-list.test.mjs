@@ -1,17 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import ts from 'typescript';
-
-// Compile only the pure model modules; no browser, server or extra dependency needed.
-function loadModel(file) {
-  const unit = { exports: {} };
-  const compiled = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2021 } }).outputText;
-  new Function('require', 'module', 'exports', compiled)(relative => loadModel(path.resolve(path.dirname(file), relative + '.ts')), unit, unit.exports);
-  return unit.exports;
-}
+import { loadModel } from './helpers/load-model.mjs';
 const root = fileURLToPath(new URL('../src', import.meta.url));
 const model = loadModel(path.join(root, 'widgets/tickets-list/model/query.ts'));
 const fixtures = loadModel(path.join(root, 'entities/ticket/model/mock.ts'));
