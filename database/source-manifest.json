@@ -1,0 +1,606 @@
+{
+  "format": 1,
+  "latestMigration": "20240826092427_TenantProfileContractsServicePackagesTrigger",
+  "modelTableCount": 69,
+  "constraints": [
+    "ContractConstraintsByMonths.uc_year_month_constrainttypeid",
+    "ContractTicketsByTicketSectionByMonths.uc_year_month_ticketsectionid",
+    "ContractTicketsByTicketTypeByMonths.uc_year_month_tickettypeid"
+  ],
+  "functions": [
+    "upsert_constraint_monthly_stats_trigger_fn",
+    "upsert_monthly_stats_section_counters_trigger_fn",
+    "upsert_monthly_stats_types_counters_trigger_fn",
+    "update_ticket_service_packages_trigger_fn",
+    "update_contract_service_packages_trigger_fn",
+    "update_contract_service_packages_trigger_delete_fn"
+  ],
+  "triggers": [
+    "TicketHoursSpentHistories.upsert_constraint_monthly_stats_trigger",
+    "Tickets.upsert_sections_monthly_stats_trigger",
+    "Tickets.upsert_types_monthly_stats_trigger",
+    "Tickets.update_ticket_service_packages_trigger",
+    "ContractServicePackages.update_contract_service_packages_trigger",
+    "ContractServicePackages.delete_contract_service_packages_trigger"
+  ],
+  "rawOperations": 32,
+  "transientMigrationOperations": [
+    {
+      "source": "20240426120655_UserEmail",
+      "sql": "ALTER TABLE \"Tickets\" DISABLE TRIGGER update_ticket_service_packages_trigger;\nALTER TABLE \"Tickets\" DISABLE TRIGGER upsert_sections_monthly_stats_trigger;\nALTER TABLE \"Tickets\" DISABLE TRIGGER upsert_types_monthly_stats_trigger;"
+    },
+    {
+      "source": "20240426120655_UserEmail",
+      "sql": "ALTER TABLE \"Tickets\" ENABLE TRIGGER update_ticket_service_packages_trigger;\nALTER TABLE \"Tickets\" ENABLE TRIGGER upsert_sections_monthly_stats_trigger;\nALTER TABLE \"Tickets\" ENABLE TRIGGER upsert_types_monthly_stats_trigger;"
+    },
+    {
+      "source": "20240426181946_UserMails_Part2",
+      "sql": "ALTER TABLE \"TicketHoursSpentHistories\" DISABLE TRIGGER upsert_constraint_monthly_stats_trigger;"
+    },
+    {
+      "source": "20240426181946_UserMails_Part2",
+      "sql": "ALTER TABLE \"TicketHoursSpentHistories\" ENABLE TRIGGER upsert_constraint_monthly_stats_trigger;"
+    },
+    {
+      "source": "20240426182006_UserMails_Part3",
+      "sql": "ALTER TABLE \"ContractSettings\" DISABLE TRIGGER upsert_constraint_monthly_stats_trigger;"
+    },
+    {
+      "source": "20240426182006_UserMails_Part3",
+      "sql": "ALTER TABLE \"ContractSettings\" ENABLE TRIGGER upsert_constraint_monthly_stats_trigger;"
+    },
+    {
+      "source": "20240426182006_UserMails_Part3",
+      "sql": "ALTER TABLE \"Contracts\" DISABLE TRIGGER update_contract_service_packages_trigger;"
+    },
+    {
+      "source": "20240426182006_UserMails_Part3",
+      "sql": "ALTER TABLE \"Contracts\" ENABLE TRIGGER update_contract_service_packages_trigger;"
+    }
+  ],
+  "schemaSource": "PostgreSQL catalog after replaying 67 original migrations; only two transitions for an undefined ContractSettings trigger omitted.",
+  "seedSource": "Latest model HasData: 5 ConstraintTypes, 18 TicketSections, 6 TicketTypes; not a copy of production data.",
+  "historyTable": "Not fabricated: this is a fresh SQL baseline, not an executed EF migration history.",
+  "sourceFiles": [
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20211017123156_Initial.Designer.cs",
+      "sha256": "de41915a0778888c9b03a10ff23ca0f00eaaaff33bedc8923ab6d165129bde52"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20211017123156_Initial.cs",
+      "sha256": "92bafc31f66b1b057672ad81352bd3eeba67066209d6bbfc76237d2b76b0eb15"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20220601112253_Created_Contract_Entity.Designer.cs",
+      "sha256": "fb1cdf49cb7a7ef0358ae5436aab7612fc829527ce3ebcac38ff377e2193634b"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20220601112253_Created_Contract_Entity.cs",
+      "sha256": "d6f32d0dfac6dc9e932cffe59e40c1b8e16c2fed00edaf31e03b107ee42bcd68"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20220602090840_Created_ContratStatus_Entity.Designer.cs",
+      "sha256": "03731d34626fbf3364188fad4e8896273377625f74a79fc20c7aeef58faffb75"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20220602090840_Created_ContratStatus_Entity.cs",
+      "sha256": "9e728d0fd34c0ade8cefa871564399c704c51c16e8fbfe6f2ce728b51ff16b63"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20220602154139_20220602184100_migration.Designer.cs",
+      "sha256": "008473a69d9a297e1be959c2e6e6da47f2ebea235ea86960d4db3648eb37ac72"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20220602154139_20220602184100_migration.cs",
+      "sha256": "73e00d50edc4e82150265510956937590945759d6c18cbda77f6ea408dc85eea"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221026113226_Created_Ticket_And_Customer_Entity.Designer.cs",
+      "sha256": "257314d9cfcfc3a83a65a1fc442b3e99770a29a9ed59937867577eb50c66cae4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221026113226_Created_Ticket_And_Customer_Entity.cs",
+      "sha256": "84c0fdf4bf356dd151b425419f04e02d9c25184f38f49205e58a6a2e582ccbcd"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221114151224_Created_ServicePackage_And_Contract_Entity.Designer.cs",
+      "sha256": "d09e16ded4d1ef49cbd90e4c609ef89a97cc76d2da229dec3392b3ee262fe641"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221114151224_Created_ServicePackage_And_Contract_Entity.cs",
+      "sha256": "0c635dbaac459b7d92c3fdef5b93021d9add57bddf70ddc7958ac7b5ca979473"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221203104309_Updated_Entity.Designer.cs",
+      "sha256": "a6d9f39206824fb059f3087a836256b86698b007fdce3690c4c8e129b9a1b753"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221203104309_Updated_Entity.cs",
+      "sha256": "097e84704861acaa178f7c24a7f43c5544ff29e4acbdbc514bd7219c32e4dd46"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221220231522_Updated_OpenIddict_Entity.Designer.cs",
+      "sha256": "19e487a05a6ba765fba2489e32e48da12f3506d0de246fe19a859af673e8b7d4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20221220231522_Updated_OpenIddict_Entity.cs",
+      "sha256": "f63b556dcfc1306a34e8ed0228b9f258508d7ebdbb6ee4f558ffaaf21ea1f16c"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230417084834_Updated_OpenIddict_Tenants_Entity.Designer.cs",
+      "sha256": "b828b09315d807c6b766e4c2ff05dbfc174f226ef55a785f6f6d0c54ded606f4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230417084834_Updated_OpenIddict_Tenants_Entity.cs",
+      "sha256": "3e258b932d60391efb4d4b6723bdcab49cfa7655ea54d2ccba2eb89f00d868d8"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230430074403_Created_Navigation_Entity.Designer.cs",
+      "sha256": "6b45831897dc6205cfe80320a584c4fa703f192b2dbd363ddadbe1d9e016ded3"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230430074403_Created_Navigation_Entity.cs",
+      "sha256": "5e0a998ebc9064fc5505bf1e0804522b3940f4472ef21bd244fe2dff7c0491b3"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230502131837_Updated_TicketStatus_And_ServicePackage_Entity.Designer.cs",
+      "sha256": "be6e1cd280cc432b7a784aacd780343cd664eff1a333fa5933a6d2ec880fd2f7"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230502131837_Updated_TicketStatus_And_ServicePackage_Entity.cs",
+      "sha256": "134e84c5e5c43a240e5579f769eb9900515fe07d395091584188eec357a00956"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230502132740_Updated_TicketStatus_Entity.Designer.cs",
+      "sha256": "25947c147994d77adbb10bab7075e8ded8bd83e380a88350398c332c413b11e3"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230502132740_Updated_TicketStatus_Entity.cs",
+      "sha256": "3d743f92fc1d0a3d780469a9dc3258239b629f1b0de9edf1cecdbd2450f8408b"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230605105954_Created_IdentityUserDelegation_Entity.Designer.cs",
+      "sha256": "e2a65618c1688979421eb350b4a903ed5fc9f6ed6a1a31833f1754ca2b340ec6"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230605105954_Created_IdentityUserDelegation_Entity.cs",
+      "sha256": "1c2807c1ff47cb484652da90f55d17d85c6b5c0718cb3071b9c5805321ff4c59"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230606102902_Updated_Ticket_Entity.Designer.cs",
+      "sha256": "931816b837d25692a55656771e0cbe45d44cf102c6a39779dc6ded4d63c13643"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230606102902_Updated_Ticket_Entity.cs",
+      "sha256": "8ad48f3a673e5ed06588e8774bbfbe249d19499cfa85f22dc6338d8272a858e0"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230611130818_Updated_TicketStatus_And_TicketHistory_Entity.Designer.cs",
+      "sha256": "9ca813ac3ec407637ccb54ac7b7238ee6581bb17e66c30c65118b822ead3b44e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230611130818_Updated_TicketStatus_And_TicketHistory_Entity.cs",
+      "sha256": "fd0abfc270d73df0f2bb1eb4042f8fdc5dea23b95c88153595ea80b2f5843a5a"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230615093559_Created_UserNotification_Entity.Designer.cs",
+      "sha256": "4acc1615a8e03247cc580e216f5cd13fee20da0b2eb084851c950b6f83c21a05"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230615093559_Created_UserNotification_Entity.cs",
+      "sha256": "16254cc2ec145d3bd00fb1c80f09d02c0f6466e7be51d68007956bbbfa8c4eb5"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230615112247_Created_NotificationStatusAndCategory_Entity.Designer.cs",
+      "sha256": "c15452869f08cbcb6353392ee8a253b4e84215b7239028fd309f4c0dd72e970b"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230615112247_Created_NotificationStatusAndCategory_Entity.cs",
+      "sha256": "fdf94594bcb48edca45b313c7dcb57f3f987d68293f9fc2298b614ece39d8ce2"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230616073951_Updated_UserNotification_Entity.Designer.cs",
+      "sha256": "6ede2b6c9476038a5e87eeaa48c57ba247c514c26eafedc8276831a97b78e1d0"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230616073951_Updated_UserNotification_Entity.cs",
+      "sha256": "2683c9f273304a3561d578b67655c7d88a0c72f96b7afce786b7b0ff85350ef5"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230617153926_Updated_NotificationStatus_Entity.Designer.cs",
+      "sha256": "163ddea7503ed516c23924c44bff6f41d83b8dce18ee00269d3e785539c3d1e4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230617153926_Updated_NotificationStatus_Entity.cs",
+      "sha256": "ff66efe4bac8fb3ceb18b5f9883ce7c11c53f2422248134d5f56a92b37d2dbc1"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230620130551_Created_TenantProfileManager_Entity.Designer.cs",
+      "sha256": "2672e23cf7ae59f1dfdcb41a10ed829316d44b4a16926a9688de917e35d26dfc"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230620130551_Created_TenantProfileManager_Entity.cs",
+      "sha256": "f7b6a22907ab36fc7e81aec8577555624e94e255b39f87e22d2bc6dea4438f55"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230625175646_Updated_TenantProfileAddResponsibleManager_Entity.Designer.cs",
+      "sha256": "211fcca31cb34500006774d422a866877ded7995926966d4e4258af9812e1394"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230625175646_Updated_TenantProfileAddResponsibleManager_Entity.cs",
+      "sha256": "bc382146f729e401448b0df3730b977d182bd7484acb3f1a1bfc6b8773f236ec"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230803193304_Created_TicketMessage_Entity.Designer.cs",
+      "sha256": "5feb02728b89b96b91b906bd090192907d9fa5d4d3507ce85c668f9b6d0f20f5"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230803193304_Created_TicketMessage_Entity.cs",
+      "sha256": "783a138eca6aac726f6b2a4114ab9db9ad9b018b001fac84dd902ccc21e48372"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230806204253_Updated_TicketMessageAddRecipient_Entity.Designer.cs",
+      "sha256": "1f912d437bc04bc8154016d55b0de2bb551022ff5407d843cc889329b830ac56"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230806204253_Updated_TicketMessageAddRecipient_Entity.cs",
+      "sha256": "d0c1c0b76b7d1d59eb171d2ecf09800126a21b5a953fe837933287b88ae5ca14"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230808060203_Update_TicketMessageRemoveRecipient_Entity.Designer.cs",
+      "sha256": "790c4cdc5326e43387cc96b51a752c4d4852b8ed7f28e7d2cc342dd4fd3ed083"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230808060203_Update_TicketMessageRemoveRecipient_Entity.cs",
+      "sha256": "92b5748577f732738d41fe64890d1dd6ad6ad701c7731b2ee3a3db2084d1d28e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230808124929_Updated_TicketAddReadByWithDate_Entity.Designer.cs",
+      "sha256": "8395f279931ca90fea4a527bc7b8317087617e1a37bcd40dfb634b08ba8373e3"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230808124929_Updated_TicketAddReadByWithDate_Entity.cs",
+      "sha256": "ae19b3686ad121ee0476916991d1746c1ced659dbfca9931ea4a4ee134d7f0d6"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230814122413_Created_TemplateAnswer_Entity.Designer.cs",
+      "sha256": "7dccf5263f775cb556def4891f18649e489d4bc689a3157996ca12b10523369c"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230814122413_Created_TemplateAnswer_Entity.cs",
+      "sha256": "bf11ffa14441962fd8fad333fab1caaf5f688a0cd2456765376606f0139b4dfb"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230815101212_Updated_AnswerTemplate_Entity.Designer.cs",
+      "sha256": "ec85722f0b7af5ab57b0ef5c0e567ee51ff99690367cb2e77ddc83f370de396f"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230815101212_Updated_AnswerTemplate_Entity.cs",
+      "sha256": "068da739cf8573cb4c319462b8c2a803794adbd2465fe2dc0820e81d877b23aa"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230818135817_Created_TicketHoursSpentHistory_Entity.Designer.cs",
+      "sha256": "cc29cafff6e21799dd1caa2583811526ed5eb6b98fe3122f2333e48ecede4888"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230818135817_Created_TicketHoursSpentHistory_Entity.cs",
+      "sha256": "708c80317aa3de6215a356f03b21a4ef8f701d2a0210427b5755a1c1e481e922"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230818154951_Updated_TicketHoursSpentHistoryRename_Entity.Designer.cs",
+      "sha256": "384f905e9bb59279d95945bebf4a503074590202cb361c4e2da998ef0edbe152"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230818154951_Updated_TicketHoursSpentHistoryRename_Entity.cs",
+      "sha256": "0f83debbe7647dcc50658e63373269b4b11106424fe996915c2e490b8445212e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230821211146_Created_TicketTag_And_TicketSection_Entity.Designer.cs",
+      "sha256": "8f9b98ad8aa8ca05c4df04f09fccc63761dd8f44b818dae23f804606f4f3f4be"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230821211146_Created_TicketTag_And_TicketSection_Entity.cs",
+      "sha256": "8821915f17da6a8daf72ed6784aa70bc3eab3cf240a6ccda896a3916a749f5e8"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230825090717_Updated_TicketHistoryType_Entity.Designer.cs",
+      "sha256": "95a42f4887dbff033c50c43f08c8d86fcbfa7028f11c0810f567355c1ef35100"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230825090717_Updated_TicketHistoryType_Entity.cs",
+      "sha256": "e4ef848f17ec115fb448f85af5da87000015d22ab693544b56d0497e375c6441"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230830195803_Updated_ContractSetting_And_ConstraintType_Entity.Designer.cs",
+      "sha256": "29e2dd1a4859e24e85e948ea32f0b64ac3b9428d02b3516672a27e9044501639"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230830195803_Updated_ContractSetting_And_ConstraintType_Entity.cs",
+      "sha256": "63676c45486b5a8943b24ba4ffbec7fb7d5ca972efe03af6814c5ac02331ee66"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230906211253_Created_Event_Entity.Designer.cs",
+      "sha256": "627a4e5403d62a53408d753603ee8ba4b70be87a2420272f7e84de4095848223"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230906211253_Created_Event_Entity.cs",
+      "sha256": "e341983143b9ca703462489cd0e8c018252228c9af7c35e2530501dddc057809"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230918073053_Created_TicketFavorite_Entity.Designer.cs",
+      "sha256": "77a63733876e33ea23add5f56239a0c79d0f7a1b1a6635e2a0cc2e93f61bfdf8"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230918073053_Created_TicketFavorite_Entity.cs",
+      "sha256": "bc1267f2a2f3c5673c7ac4c841d9af205513fcd201c95fcc1892b034e0eebc34"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230919211349_Updated_TicketFavorite_Entity.Designer.cs",
+      "sha256": "8d4631b393c28994b4e794bb13b48571beb259a9ec13ae8c11a5cc773fcfb1d5"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230919211349_Updated_TicketFavorite_Entity.cs",
+      "sha256": "4d1ac616b86aeb305e6c27f7e7293ff3765c7be4c5c89798632dae115917171e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230924171315_Updated_ConstraintTypeAddData_Entity.Designer.cs",
+      "sha256": "7ed78ff5edadf8742b73dbf9b0c0645c2fa9281360a5b9d2039c623306f7653e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230924171315_Updated_ConstraintTypeAddData_Entity.cs",
+      "sha256": "d5a5490870f0cf2de0a7573f52d2dcbc64428e7ba608298ded02e615b4edf3a5"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230928103719_Updated_TenantProfileChangeFullAudited_Entity.Designer.cs",
+      "sha256": "989e39b04a3724d52549035e813981a42b1dfc51a0a925bade7633393a927fa8"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20230928103719_Updated_TenantProfileChangeFullAudited_Entity.cs",
+      "sha256": "17731ce5c6f521982e11d9e49a6971c99028ff5634328bf90a6a20d4b5844db6"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231004071257_Updated_TicketTypeAddData_Entity.Designer.cs",
+      "sha256": "885824252fc57c5ab2cd0ba46b8666c8d7cd5feb6de93f1de46e6b53fc855900"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231004071257_Updated_TicketTypeAddData_Entity.cs",
+      "sha256": "13f9e06f7ecc5d229a6a2fe266620b92fa1a91b9e3ab3fbdebfd6e999800871b"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231005103522_Updated_EventAddTicketId_Entity.Designer.cs",
+      "sha256": "2414cb35772faa3fe97e4aba3a12bc7e5ac1c1078e80aac156083c7f3bd85528"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231005103522_Updated_EventAddTicketId_Entity.cs",
+      "sha256": "c18727181004d280f400488ef3dee041507032c251751593a7747d64ba5d73db"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231010091341_Updated_ContractAddTagAndPayer_Entity.Designer.cs",
+      "sha256": "ed94c9739444238f06c12d629b84544b274d273787dbcd77b5bd6b54c62be17a"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231010091341_Updated_ContractAddTagAndPayer_Entity.cs",
+      "sha256": "2644bbeb32ace3129755b0533b0eaec90f8c8f96fcea371cdf25ff314a724d77"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231010114613_Updated_Abp_Entity.Designer.cs",
+      "sha256": "353210ca847ca155d4c1e1d1d2f84e071cd89caa0da87fd8f05e4663b08e9306"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231010114613_Updated_Abp_Entity.cs",
+      "sha256": "fe34921dbcbd4aaf789eaf6c190d545a21059dec50feefefb9efdcb17fac3a09"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231011093804_Updated_TicketType_And_TicketSection_Entity.Designer.cs",
+      "sha256": "ad24a329ace057365d1f46b7a1ab154c68e14d39c911da025dd551ee41c684c5"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231011093804_Updated_TicketType_And_TicketSection_Entity.cs",
+      "sha256": "dc50e48713167e2f87571d1d3847fd525cd8b83b7710271441de42c56a9c0349"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231011094223_Updated_TicketAddDeadline_Entity.Designer.cs",
+      "sha256": "75d12f46d07e6b0689a020e82ab3664bde610415aeea7f6aa879fe5eb1327e22"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231011094223_Updated_TicketAddDeadline_Entity.cs",
+      "sha256": "343983e1ada275184b5369732a8f53ae33782f0210eb6deca442d3218e573483"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231011143943_Updated_TicketDeadline_Entity.Designer.cs",
+      "sha256": "6735e42e9ac2915ef4bd65b1059216609db2abebabd68d9b6a7ec6859df1e2c7"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231011143943_Updated_TicketDeadline_Entity.cs",
+      "sha256": "8b6416b8d9fb446167e204b3fc819695ce36732fbabc2d74b62b312951834bc4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231019102430_Created_ContractByHistory_Entity.Designer.cs",
+      "sha256": "a0059e6b08e301bb5b669014807a2502fe904b6fe917aa06b23eabd1b1001bac"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231019102430_Created_ContractByHistory_Entity.cs",
+      "sha256": "575efde7bc89a0cfd45a8129b44fc8ebe271dc7ed37e32a752424a6a9ad712e6"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231019104309_Created_ContractByHistoryChangeKey_Entity.Designer.cs",
+      "sha256": "b31c1c2155c954c29da7a62eb0e7f8cad44bf6d5d621e5b248f6e005a00bc94a"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231019104309_Created_ContractByHistoryChangeKey_Entity.cs",
+      "sha256": "97859c403f58991d14d32f8e33ac0468b1e953012af95e38c576ba24a16b68b4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231101111419_Updated_StoryGroupName_Entity.Designer.cs",
+      "sha256": "2392d3198c517dc099d3dbb3f7482ebcd3eab3767a133ff5064365719c781d69"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231101111419_Updated_StoryGroupName_Entity.cs",
+      "sha256": "6cc5b8142195230bbf51bec981029ae1ddd2b3259e267f64d01263a18aab600a"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231223145309_Updated_ContractConstraintIndexAdded.Designer.cs",
+      "sha256": "7a4efea0e80e7e5c327dcc5fc57676cc369e35269f56d3e90146500385814b88"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231223145309_Updated_ContractConstraintIndexAdded.cs",
+      "sha256": "28568e2c42aaaec0066b5c41fa8ed76420a8f1e5900672f5ba6adde6b0719cb6"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231225072529_Updated_ConstraintsTriggers.Designer.cs",
+      "sha256": "e5534ce62b8ae20375e1d3c5782798add90eab801f27bec8d49ba5007d5f3312"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231225072529_Updated_ConstraintsTriggers.cs",
+      "sha256": "7dbbac5fa37528774195e74adb01f69674824a1dbeae9531a730addbf3796cc7"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231228162358_removeIsUniqueFromContractStatuses.Designer.cs",
+      "sha256": "10593ea436f8e96da2ce7f8e9b669da6eecd1e9224f0e60b344267f7d4a81b2d"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20231228162358_removeIsUniqueFromContractStatuses.cs",
+      "sha256": "844d16feae3710fb02d1cce77b6401c6363b864498ca79e1a86a8ac4d6171d93"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240111152513_UpgradeToAbp8.Designer.cs",
+      "sha256": "3ba212fb0a7d7314b54982254a783304ccf296638e29378f565ca4231c8ee7f4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240111152513_UpgradeToAbp8.cs",
+      "sha256": "e38c2e39e6d33b2a4adccbfadd68171e52202d757d9afb673ad74b01e6858ced"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240119103333_UpgradeToV8.Designer.cs",
+      "sha256": "453c6bbbf30090daedc29d9a58af0329152c555056972a823e8e1357224c3193"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240119103333_UpgradeToV8.cs",
+      "sha256": "f3de6d8aa5e2b6c7cf7625c085f39631f052e88bd12941c4485bd7e09d2e0aea"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240123080922_Added_ContractServicePackagesData.Designer.cs",
+      "sha256": "e5b3f4e1a3fba3551169efacc803abc4361134e32584f67efb171cfe99001975"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240123080922_Added_ContractServicePackagesData.cs",
+      "sha256": "2d6d88fa639e93a71a2d859c4b25e7394d16e65197dae4dec7f44c5f10f4d475"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240124130603_AddEmployeeProfile.Designer.cs",
+      "sha256": "9d36c898354b6e119f88cc6c9dd5a48e3d071522e5dd605a7c80a8cc77f2f089"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240124130603_AddEmployeeProfile.cs",
+      "sha256": "1bb6cdd02e8558931058697845a0b0b6dbf82b5979788b4d379151f31630aa03"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240125131704_editEmployeeProfile.Designer.cs",
+      "sha256": "e9da53250116a9746ea619a7b2c9ec682d72ee8165f9b5baa7c2e579a742c4c4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240125131704_editEmployeeProfile.cs",
+      "sha256": "f9bf4d943f26a72f6e5166003cc659a8f8d02af93ff0fc9fb49c72d2570cb7ef"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240126095127_updateTicketHistoryEntity.Designer.cs",
+      "sha256": "6130048a72e5b8382262fe7cfae2c0f2ae61e3846a77212c04a4f0508a31c00c"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240126095127_updateTicketHistoryEntity.cs",
+      "sha256": "c93db8d8a2be4d87a7119c31de8e9cb8fe998926e8e9995697c2a0b7b34d2c08"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240131113008_addedPhoneInEmployeeEntity.Designer.cs",
+      "sha256": "7240a2613374bdaba2ec9b682239f40b84cc9e8f726faee7e9586c9a258ad78b"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240131113008_addedPhoneInEmployeeEntity.cs",
+      "sha256": "b1b90b874e3f0365e758884c8af2b8151fb39438412c59bb7c70e11b948f059e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240131113221_UpdatePhoneInEmployeeEntity.Designer.cs",
+      "sha256": "5e4966e48d2e8d7a8c7903cda39e1db56a0ce292e5faa5789742795dedf52577"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240131113221_UpdatePhoneInEmployeeEntity.cs",
+      "sha256": "d45aeb4966cbd547cba26b00fbe88f211caf4f9a9a2e048cfa25db162a945385"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240320172621_changeOnEmployeeProfile.Designer.cs",
+      "sha256": "4df8751ae476eb1e8b0f4e6c79d9b389991cfe2c02b2b8eacadd7351178ee655"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240320172621_changeOnEmployeeProfile.cs",
+      "sha256": "5a3e6f49de3529c2a4eeb1483d8f54573e5e38d7e7176bb32d174be8ba3dbf44"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240426120655_UserEmail.Designer.cs",
+      "sha256": "e3b31ad48291256561c1c1f2750fbaffae7d44450babeeadb192483d59c7bc73"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240426120655_UserEmail.cs",
+      "sha256": "d8e74db6cab118e5b3c36b0a9cce7bd980c7642392e5a5c5f43768bd9b5454f4"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240426181946_UserMails_Part2.Designer.cs",
+      "sha256": "63d06b44c01c9b837ae7672624650b2749cfe0576074a9aa29cb52a0ad4a4704"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240426181946_UserMails_Part2.cs",
+      "sha256": "2f010e5a5b11174ca6c199cde1c5efcb6209d498d2355f69c2b15647fd2edd36"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240426182006_UserMails_Part3.Designer.cs",
+      "sha256": "f1c7d1ca0f8776c07595d76611fa75a929ebbf6c9dae14919aafa709ce848a0a"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240426182006_UserMails_Part3.cs",
+      "sha256": "062c6a6625601b522f71ac97c7f89845ea0bb2bc26ed58e44ad5b2baf9156459"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240522094630_Add_ServicePackagesData.Designer.cs",
+      "sha256": "b95df8f2516c27a1cc545a0d629b9f6b65b1879356a799a30a49fa7a80b4d7dd"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240522094630_Add_ServicePackagesData.cs",
+      "sha256": "66745890925ad230c239a12398b54c1e0bc06d8778c084b8c87cd9a9cd406d23"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240527135752_Packagesdata.Designer.cs",
+      "sha256": "3d1891a1e3150ecfac02a72ed80b38c7ae9da2cc0a574ce0f690c59537c9b3bc"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240527135752_Packagesdata.cs",
+      "sha256": "b2a0a3f70335bf87e7c9731741129064f5c053a0685eec3912aed63316d265fa"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240529134246_ContractOwner.Designer.cs",
+      "sha256": "711fc36ae05bdc4fc903d172c9a6daf5afe8d90bdafb40447a5ccc9ada5407ae"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240529134246_ContractOwner.cs",
+      "sha256": "a66f16f04576dc737d1facd83b284b034460b376b1e40f74ab969634be86de50"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240812133613_CustomerDetails.Designer.cs",
+      "sha256": "5970d1c7e45c4886e978471e3ee43fb05c9a34bc31c12aa595dde1720802086b"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240812133613_CustomerDetails.cs",
+      "sha256": "e9c067f88282144f7a7f5910f6901f09820998556439833df775602a223a1fd6"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240826092427_TenantProfileContractsServicePackagesTrigger.Designer.cs",
+      "sha256": "daed13e6b16dd1ab566e8690135c37e72a950c478e730136218cba2dda46fa2e"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/20240826092427_TenantProfileContractsServicePackagesTrigger.cs",
+      "sha256": "d1943ea10b04c4cddb96d56c2b7c3a3e9a2cda52889fdeb29170ae99b93de7c9"
+    },
+    {
+      "path": "KV.Server/src/KV.Server.EntityFrameworkCore/Migrations/ServerDbContextModelSnapshot.cs",
+      "sha256": "9ec2a38fed93c942ab7f7f40569f2048ce6bfa7bd3a7d80007d8016b8e4536ff"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+*.sql text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.cs text eol=lf
+*.csproj text eol=lf
+*.md text eol=lf
+*.config text eol=lf
+# Original migration function bodies are retained verbatim, including trailing spaces.
+init.sql whitespace=-blank-at-eol
+migrations/002_legacy_sql_objects.sql whitespace=-blank-at-eol

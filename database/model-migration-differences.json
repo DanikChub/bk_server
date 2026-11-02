@@ -1,0 +1,632 @@
+{
+  "columns": [
+    {
+      "table": "AbpAuditLogs",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpAuditLogs",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpBackgroundJobs",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpBackgroundJobs",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpClaimTypes",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpClaimTypes",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpOrganizationUnits",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpOrganizationUnits",
+      "column": "EntityVersion",
+      "changes": {
+        "default": {
+          "migrations": "0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpOrganizationUnits",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpRoles",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpRoles",
+      "column": "EntityVersion",
+      "changes": {
+        "default": {
+          "migrations": "0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpRoles",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpSecurityLogs",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpSecurityLogs",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpTenants",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpTenants",
+      "column": "EntityVersion",
+      "changes": {
+        "default": {
+          "migrations": "0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpTenants",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpUsers",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpUsers",
+      "column": "EntityVersion",
+      "changes": {
+        "default": {
+          "migrations": "0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpUsers",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpUsers",
+      "column": "IsActive",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "AbpUsers",
+      "column": "ShouldChangePasswordOnNextLogin",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Contracts",
+      "column": "ContractFinishDate",
+      "changes": {
+        "default": {
+          "migrations": "'-infinity'::timestamp with time zone",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Contracts",
+      "column": "IsArchive",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Contracts",
+      "column": "IsDraft",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Contracts",
+      "column": "StatusId",
+      "changes": {
+        "default": {
+          "migrations": "'00000000-0000-0000-0000-000000000000'::uuid",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "CustomerUserProfiles",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "CustomerUserProfiles",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "NotificationStatuses",
+      "column": "Status",
+      "changes": {
+        "default": {
+          "migrations": "0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictApplications",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictApplications",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictAuthorizations",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictAuthorizations",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictScopes",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictScopes",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictTokens",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "OpenIddictTokens",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TenantProfiles",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TenantProfiles",
+      "column": "CreationTime",
+      "changes": {
+        "default": {
+          "migrations": "'2021-01-01 03:00:00+03'::timestamp with time zone",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TenantProfiles",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TenantProfiles",
+      "column": "IsActive",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "CreationTime",
+      "changes": {
+        "type": {
+          "migrations": "timestamp with time zone",
+          "model": "timestamp without time zone"
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "DeletionTime",
+      "changes": {
+        "type": {
+          "migrations": "timestamp with time zone",
+          "model": "timestamp without time zone"
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "IsInternal",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "LastModificationTime",
+      "changes": {
+        "type": {
+          "migrations": "timestamp with time zone",
+          "model": "timestamp without time zone"
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "ReadByClientDate",
+      "changes": {
+        "type": {
+          "migrations": "timestamp with time zone",
+          "model": "timestamp without time zone"
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "ReadBySpecialistDate",
+      "changes": {
+        "type": {
+          "migrations": "timestamp with time zone",
+          "model": "timestamp without time zone"
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "TicketStatusId",
+      "changes": {
+        "default": {
+          "migrations": "'00000000-0000-0000-0000-000000000000'::uuid",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TicketHistory",
+      "column": "Type",
+      "changes": {
+        "default": {
+          "migrations": "0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TicketMessages",
+      "column": "CreatorCustomerUserProfileId",
+      "changes": {
+        "default": {
+          "migrations": "'00000000-0000-0000-0000-000000000000'::uuid",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TicketStatuses",
+      "column": "IsPublic",
+      "changes": {
+        "default": {
+          "migrations": "false",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "TicketTypes",
+      "column": "SLATime",
+      "changes": {
+        "default": {
+          "migrations": "'00:00:00'::interval",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Tickets",
+      "column": "ConcurrencyStamp",
+      "changes": {
+        "default": {
+          "migrations": "''::character varying",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Tickets",
+      "column": "DueDate",
+      "changes": {
+        "default": {
+          "migrations": "'-infinity'::timestamp with time zone",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Tickets",
+      "column": "ExtraProperties",
+      "changes": {
+        "default": {
+          "migrations": "''::text",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "Tickets",
+      "column": "Rating",
+      "changes": {
+        "default": {
+          "migrations": "0.0",
+          "model": null
+        }
+      }
+    },
+    {
+      "table": "UploadedFiles",
+      "column": "CreationTime",
+      "changes": {
+        "default": {
+          "migrations": "'-infinity'::timestamp with time zone",
+          "model": null
+        }
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "migrations": {
+        "name": "FK_AbpOrganizationUnits_AbpOrganizationUnits_ParentId",
+        "type": "f",
+        "table": "AbpOrganizationUnits",
+        "deferred": false,
+        "validated": true,
+        "deferrable": false,
+        "definition": "FOREIGN KEY (\"ParentId\") REFERENCES \"AbpOrganizationUnits\"(\"Id\") ON DELETE RESTRICT"
+      },
+      "model": {
+        "name": "FK_AbpOrganizationUnits_AbpOrganizationUnits_ParentId",
+        "type": "f",
+        "table": "AbpOrganizationUnits",
+        "deferred": false,
+        "validated": true,
+        "deferrable": false,
+        "definition": "FOREIGN KEY (\"ParentId\") REFERENCES \"AbpOrganizationUnits\"(\"Id\")"
+      }
+    },
+    {
+      "migrations": {
+        "name": "uc_year_month_constrainttypeid",
+        "type": "u",
+        "table": "ContractConstraintsByMonths",
+        "deferred": false,
+        "validated": true,
+        "deferrable": false,
+        "definition": "UNIQUE (\"ContractId\", \"ConstraintTypeId\", \"Year\", \"Month\")"
+      },
+      "model": null
+    },
+    {
+      "migrations": {
+        "name": "uc_year_month_ticketsectionid",
+        "type": "u",
+        "table": "ContractTicketsByTicketSectionByMonths",
+        "deferred": false,
+        "validated": true,
+        "deferrable": false,
+        "definition": "UNIQUE (\"ContractId\", \"TicketSectionId\", \"Year\", \"Month\")"
+      },
+      "model": null
+    },
+    {
+      "migrations": {
+        "name": "uc_year_month_tickettypeid",
+        "type": "u",
+        "table": "ContractTicketsByTicketTypeByMonths",
+        "deferred": false,
+        "validated": true,
+        "deferrable": false,
+        "definition": "UNIQUE (\"ContractId\", \"TicketTypeId\", \"Year\", \"Month\")"
+      },
+      "model": null
+    }
+  ]
+}
