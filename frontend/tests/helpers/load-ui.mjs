@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 const require = createRequire(import.meta.url);
-const src = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../src');
+const src = fileURLToPath(new URL('../../src/', import.meta.url));
 const cache = new Map();
 export function loadUI(file) {
  if (cache.has(file)) return cache.get(file).exports;

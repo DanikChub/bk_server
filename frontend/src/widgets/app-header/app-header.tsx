@@ -13,6 +13,8 @@ export function AppHeader({ collapsed, onToggleMenu }: { collapsed: boolean; onT
   return <header className="topbar">
     <button className="sidebar-toggle" onClick={onToggleMenu} aria-label={collapsed ? "Открыть меню" : "Свернуть меню"} aria-controls="app-sidebar" aria-expanded={!collapsed}><DesignIcon name="collapse" /></button>
     <div className="topbar-actions">
+      <Link className="demo-view-switch" href="/screens">Экраны Figma</Link>
+      <Link className="demo-view-switch" href="/client">Кабинет клиента</Link>
       <Link className="demo-view-switch" href={switchHref} title="Переключить демонстрационный вариант">{employee ? "Вариант руководителя" : "Вариант сотрудника"}</Link>
       <span className="topbar-greeting">Здравствуйте, {session.displayName.split(" ").reverse().join(" ")}!</span>
       <Link className="notification" href={employee ? "/employee/notifications" : "/notifications"} title="Мои уведомления" aria-label={`Уведомления: ${counts.unread} непрочитанных`}><DesignIcon name="bell" />{counts.unread > 0 && <span>{counts.unread}</span>}</Link>

@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { figmaScreens } from "@/shared/config/figma-screens";
+import { PageHeading } from "@/shared/ui/page-heading/page-heading";
+const labels = { review: "Добавлено · на проверку", existing: "Реализовано ранее · сверить", partial: "Частично", waiting: "Ожидает переноса" };
+export default function Page() {
+  return <div><PageHeading title="Экраны Figma" actions={<Link href="/client" className="primary-button">Кабинет клиента</Link>} /><p>Реестр обеих групп макетов и отдельных состояний. Отсутствующие страницы остаются в списке до завершения переноса. Для неполученных макетов Figma вернула лимит Starter-плана.</p>{(["original", "adapted"] as const).map(version => <section className="panel" key={version} style={{ marginTop: 20 }}><h2>{version === "original" ? "Наша версия" : "Адаптированная"}</h2><div className="table-scroll"><table className="data-table"><thead><tr><th>Макет / состояние</th><th>Состояние переноса</th><th>Просмотр</th><th>Источник</th></tr></thead><tbody>{figmaScreens.filter(screen => screen.version === version).map(screen => <tr key={screen.id}><td>{screen.name}</td><td>{labels[screen.status]}</td><td>{screen.href ? <Link className="primary-button" href={screen.href}>Открыть</Link> : "—"}</td><td><a href={`https://www.figma.com/design/za0k2COvn1jIYRdQudeRcl/ЛК?node-id=${screen.id.replace(":", "-")}`} target="_blank" rel="noreferrer">Figma ↗</a></td></tr>)}</tbody></table></div></section>)}</div>;
+}

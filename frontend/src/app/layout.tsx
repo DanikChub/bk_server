@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/views/client-portal/ui/client-portal.css";
 import { AppShell } from "@/widgets/app-shell/app-shell";
 
 export const metadata: Metadata = {

@@ -1,0 +1,2 @@
+import { PortalLink } from "@/shared/lib/client-design";
+export default function Page() { return <section className="portal-about"><h1>ИПС Консалтинг</h1><p>Личный кабинет для работы с консультациями, заявками и договорами.</p><p>Горячая линия: <a href="tel:88005505690">8 800 550 5690</a></p><p>Сейчас доступен демонстрационный режим. Данные хранятся в этом браузере.</p><PortalLink href="/client" className="portal-accent-link">Вернуться на главную</PortalLink></section>; }
