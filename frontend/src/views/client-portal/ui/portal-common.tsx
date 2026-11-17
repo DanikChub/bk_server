@@ -9,7 +9,7 @@ import { PortalLink } from "@/shared/lib/client-design";
 export function PortalIcon({ file }: { file: string }) { return <span className="portal-icon"><img src={`/design/client/${file}`} alt="" /></span>; }
 export function PortalBadge({ status }: { status: PortalTicket["status"] }) { return <span className={`portal-badge portal-badge--${status === "Требует уточнения" ? "red" : status === "Новая" ? "orange" : status === "В работе" ? "green" : "gray"}`}>{status}</span>; }
 export function PortalTitle({ children, actions }: { children: ReactNode; actions?: ReactNode }) { return <header className="portal-page-title"><h1>{children}</h1>{actions}</header>; }
-export function date(value: string) { return new Date(value).toLocaleDateString("ru-RU", { timeZone: "Europe/Moscow" }); }
+export function date(value: string) { if(!value)return "Не указана"; return new Date(value).toLocaleDateString("ru-RU", { timeZone: "Europe/Moscow" }); }
 export function dateTime(value: string) { return new Date(value).toLocaleString("ru-RU", { timeZone: "Europe/Moscow", dateStyle: "short", timeStyle: "short" }); }
 const tabs = [["all", "Мои заявки", "19a0f.svg"], ["work", "В работе", "558a6.svg"], ["clarification", "Требуется уточнение", "cf927.svg"], ["favorites", "Избранное", "fb934.svg"], ["drafts", "Черновики", "25eb4.svg"], ["closed", "Закрытые", "03ca3.svg"]] as const;
 export function PortalTicketLayout({ children }: { children: ReactNode }) {

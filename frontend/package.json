@@ -4,26 +4,48 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "node scripts/generate-legacy-schema.mjs",
+    "db:migrate": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/migrate-runtime.ts",
+    "db:bootstrap": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/bootstrap.ts",
+    "worker": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx src/server/jobs/worker.ts",
+    "test:backend": "node --conditions=react-server --import tsx --test --test-concurrency=1 tests/backend-*.test.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1169.0",
+    "@aws-sdk/s3-request-presigner": "^3.1169.0",
+    "amqplib": "^2.3.1",
+    "archiver": "^8.0.0",
+    "cron-parser": "^5.10.6",
+    "drizzle-orm": "^0.45.4",
+    "exceljs": "^4.4.0",
     "lucide-react": "^1.48.0",
-    "next": "16.3.7",
+    "next": "^16.4.6",
+    "pdfkit": "^0.20.2",
+    "pg": "^8.23.1",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/amqplib": "^0.10.8",
+    "@types/archiver": "^8.0.0",
     "@types/node": "^20",
+    "@types/pdfkit": "^0.17.7",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.3.7",
+    "eslint-config-next": "^16.4.6",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

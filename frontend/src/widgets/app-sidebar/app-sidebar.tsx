@@ -9,8 +9,12 @@ import { usePathname } from "next/navigation";
 import { administrationNavigation, navigation } from "@/shared/config/navigation";
 import { demoUser } from "@/shared/config/demo-user";
 import { DesignIcon } from "@/shared/ui/design-icon/design-icon";
+import { LiveSidebar } from '@/views/backend/ui/live-shell';
 
 export function AppSidebar({ collapsed, hidden, onNavigate }: { collapsed: boolean; hidden: boolean; onNavigate: () => void }) {
+  return process.env.NEXT_PUBLIC_DATA_MODE==='demo'?<DemoAppSidebar collapsed={collapsed} hidden={hidden} onNavigate={onNavigate}/>:<LiveSidebar collapsed={collapsed} hidden={hidden} onNavigate={onNavigate}/>;
+}
+function DemoAppSidebar({ collapsed, hidden, onNavigate }: { collapsed: boolean; hidden: boolean; onNavigate: () => void }) {
   const { session, employee, ticketsHref } = useDemoTicketSession();
   const showAdministration = hasPolicy(session, "TicketSection") || hasPolicy(session, "ContractStatuses");
   const pathname = usePathname() ?? "/";

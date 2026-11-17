@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:17
+    command: [postgres, -c, timezone=Europe/Moscow]
+    environment:
+      POSTGRES_DB: consulting_lk
+      POSTGRES_USER: consulting
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - consulting_pg:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/001-legacy.sql:ro
+      - ./database/migrations/004_next_runtime.sql:/docker-entrypoint-initdb.d/004-runtime.sql:ro
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U consulting -d consulting_lk]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+  rabbitmq:
+    image: rabbitmq:4-management
+    environment:
+      RABBITMQ_DEFAULT_USER: consulting
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?Set RABBITMQ_PASSWORD}
+    volumes:
+      - consulting_rabbit:/var/lib/rabbitmq
+    restart: unless-stopped
+  app:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: app
+    env_file: ${APP_ENV_FILE:-.env}
+    environment:
+      NODE_ENV: production
+    ports:
+      - 127.0.0.1:3000:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  worker:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: worker
+    env_file: ${APP_ENV_FILE:-.env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    restart: unless-stopped
+volumes:
+  consulting_pg:
+  consulting_rabbit:

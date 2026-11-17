@@ -1,0 +1,49 @@
+import 'server-only';
+import { rows, one, insert, transaction, update } from '../db';
+import type { Session } from '../auth/session';
+import { requirePermission, requireStaff, scopeTicket } from '../auth/session';
+import { scopeCustomer } from './customers';
+import { z } from 'zod';
+import { assert } from '../errors';
+export async function customerStatistics(s:Session,customerId:string) {
+  await scopeCustomer(s,customerId);
+  const sections=await rows(`SELECT m."Year",m."Month",t."Name",sum(m."Count")::integer AS "Count" FROM "ContractTicketsByTicketSectionByMonths" m JOIN "Contracts" c ON c."Id"=m."ContractId" JOIN "TicketSections" t ON t."Id"=m."TicketSectionId" WHERE c."TenantId"=$1 AND NOT c."IsDeleted" GROUP BY m."Year",m."Month",t."Name"`,[customerId]);
+  const types=await rows(`SELECT m."Year",m."Month",t."Name",sum(m."Count")::integer AS "Count" FROM "ContractTicketsByTicketTypeByMonths" m JOIN "Contracts" c ON c."Id"=m."ContractId" JOIN "TicketTypes" t ON t."Id"=m."TicketTypeId" WHERE c."TenantId"=$1 AND NOT c."IsDeleted" GROUP BY m."Year",m."Month",t."Name"`,[customerId]);
+  const constraints=await rows(`SELECT m."Year",m."Month",t."Name",m."MaxCount",sum(m."Sum")::integer AS "Sum" FROM "ContractConstraintsByMonths" m JOIN "Contracts" c ON c."Id"=m."ContractId" JOIN "ConstraintTypes" t ON t."Id"=m."ConstraintTypeId" WHERE c."TenantId"=$1 AND NOT c."IsDeleted" GROUP BY m."Year",m."Month",t."Name",m."MaxCount"`,[customerId]);
+  const dictionary=await rows(`SELECT "Name" FROM "ConstraintTypes" ORDER BY "Name"`),months=[];
+  const now=new Date();
+  for(let year=2023;year<=now.getUTCFullYear();year++)for(let month=1;month<=12;month++) {
+    if(year===now.getUTCFullYear() && month>now.getUTCMonth()+1)break;
+    const inMonth=(r:Record<string,unknown>)=>r.Year===year && r.Month===month;
+    const spent=constraints.filter(inMonth);
+    months.push({Year:year,Month:month,TicketSectionsByMonths:sections.filter(inMonth),TicketTypesByMonths:types.filter(inMonth),ConstraintsByMonths:[...spent,...dictionary.filter(t=>!spent.some(r=>r.Name===t.Name)).map(t=>({Name:t.Name,MaxCount:0,Sum:0}))]});
+  }
+  return months.reverse();
+}
+export async function workload(s:Session,query:URLSearchParams) {
+  requireStaff(s);requirePermission(s,'Ticket.Get');
+  const start=z.string().datetime({offset:true}).parse(query.get('start')),end=z.string().datetime({offset:true}).parse(query.get('end'));
+  assert(Date.parse(end)>=Date.parse(start),400,'Проверьте период');
+  return rows(`SELECT e."Id",e."FirstName",e."LastName",e."MiddleName",count(t."Id")::integer AS "CountTicketTake" FROM "EmployeeProfiles" e JOIN "Tickets" t ON t."ResponsibleId"=e."Id" JOIN "TicketStatuses" st ON st."Id"=t."TicketStatusId" WHERE NOT t."IsDeleted" AND st."Name"='InProgress' AND EXISTS(SELECT 1 FROM "Tickets" recent WHERE recent."ResponsibleId"=e."Id" AND recent."TicketStatusId"=st."Id" AND NOT recent."IsDeleted" AND recent."CreationTime">$1 AND recent."CreationTime"<$2) GROUP BY e."Id" ORDER BY "CountTicketTake" DESC`,[start,end]);
+}
+export async function spentTime(s:Session,ticketId:string,body:unknown) {
+  requireStaff(s);requirePermission(s,'TicketHoursSpentHistory.Create');
+  const data=z.object({historyId:z.string().uuid(),constraintTypeId:z.string().uuid(),spent:z.number().int().min(0).max(1_000_000)}).strict().parse(body);
+  return transaction(async db=>{
+    await scopeTicket(s,ticketId,db,true);assert(await one(`SELECT "Id" FROM "TicketHistory" WHERE "Id"=$1 AND "TicketId"=$2 AND NOT "IsDeleted"`,[data.historyId,ticketId],db),404,'Запись истории не найдена');
+    return insert('TicketHoursSpentHistories',{TicketHistoryId:data.historyId,ConstraintTypeId:data.constraintTypeId,Spent:data.spent},db,s.userId);
+  });
+}
+export async function readHistory(s:Session,ticketId:string,historyId:string) {
+  z.string().uuid().parse(historyId);
+  return transaction(async db=>{
+    await scopeTicket(s,ticketId,db);
+    const history=await one(`SELECT * FROM "TicketHistory" WHERE "Id"=$1 AND "TicketId"=$2 AND NOT "IsDeleted"`,[historyId,ticketId],db);assert(history,404,'Запись не найдена');
+    if(s.tenantId)assert(!history.IsInternal && history.Type!==5,404,'Запись не найдена');
+    return update('TicketHistory',historyId,{[s.tenantId?'ReadByClientDate':'ReadBySpecialistDate']:new Date()},db,s.userId);
+  });
+}
+export async function statusCounts(s:Session) {
+  if(!s.tenantId){requireStaff(s);requirePermission(s,'Ticket.Get');}
+  return rows(`SELECT st."Id",st."Name",st."DisplayNameMany",count(t."Id")::integer AS count FROM "TicketStatuses" st LEFT JOIN "Tickets" t ON t."TicketStatusId"=st."Id" AND NOT t."IsDeleted" ${s.tenantId?'AND t."TenantId"=$1 AND ((st."IsPublic" AND st."Name"<>\'Draft\') OR t."CreatorId"=$2)':''} GROUP BY st."Id" ORDER BY st."Name"`,s.tenantId?[s.tenantId,s.userId]:[]);
+}

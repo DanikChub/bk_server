@@ -6,7 +6,7 @@ export type PortalProfile = {
 export type PortalAttachment = { id: string; name: string; size: number; type: string };
 export type PortalMessage = { id: string; author: string; text: string; createdAt: string; attachments: PortalAttachment[] };
 export type PortalTicket = {
-  id: string; subject: string; description: string; status: "Черновик" | "Новая" | "В работе" | "Требует уточнения" | "Закрыта";
+  id: string; subject: string; description: string; status: "Черновик" | "Новая" | "В работе" | "Требует уточнения" | "Закрыта" | "Возобновленная" | "Ожидание ответа";
   section: string; createdAt: string; specialist: string; favorite: boolean; rating: number | null;
   attachments: PortalAttachment[]; messages: PortalMessage[];
 };
@@ -19,7 +19,7 @@ export type PortalContent = {
   news: { id: string; title: string; body: string }[];
   articles: { id: string; title: string; body: string; icon: string }[];
 };
-export type PortalSnapshot = { profile: PortalProfile; tickets: PortalTicket[]; contracts: PortalContract[]; events: PortalEvent[]; content: PortalContent };
+export type PortalSnapshot = { profile: PortalProfile; tickets: PortalTicket[]; contracts: PortalContract[]; events: PortalEvent[]; content: PortalContent; contentError?:string };
 export type SaveQuestion = { id?: string; subject: string; description: string; section: string; draft: boolean; files: File[]; existingAttachments: PortalAttachment[] };
 
 // UI contract. A Nest HTTP adapter can implement this without changing the views.

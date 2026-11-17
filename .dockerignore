@@ -1,0 +1,8 @@
+.git
+**/node_modules
+**/.next
+**/.local
+**/.env*
+**/*.log
+KV.Server
+docs

@@ -1,6 +1,7 @@
 import { PageHeading } from "@/shared/ui/page-heading/page-heading";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Calculator, CalendarDays, FileSearch } from "lucide-react";
+import { LiveHome } from '@/views/backend/ui/live-shell';
 
 const apps = [
   { title: "Калькуляторы", icon: Calculator },
@@ -10,6 +11,7 @@ const apps = [
 ];
 
 export function HomePage() {
+  if(process.env.NEXT_PUBLIC_DATA_MODE!=='demo')return <LiveHome/>;
   return (
     <div>
       <PageHeading title="Главная" />

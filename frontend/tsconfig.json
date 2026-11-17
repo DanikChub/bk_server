@@ -17,6 +17,8 @@
     "paths": { "@/*": ["./src/*"] }
   },
   "include": [
+    "src/server/**/*.ts",
+    "scripts/**/*.ts",
     "next-env.d.ts",
     "src/app/**/*.ts",
     "src/app/**/*.tsx",

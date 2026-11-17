@@ -12,8 +12,12 @@ import { Pagination } from "@/shared/ui/pagination/pagination";
 import { paginateRows } from "@/shared/lib/pagination";
 import { NotificationFilters, notificationStatusTabs } from "@/widgets/notifications/ui/notification-filters";
 import { NotificationsTable } from "@/widgets/notifications/ui/notifications-table";
+import { LiveNotifications } from '@/views/backend/ui/live-staff';
 const ticketIds = tickets.map(ticket => ticket.id);
 export function NotificationsPage() {
+  return process.env.NEXT_PUBLIC_DATA_MODE==='demo'?<DemoNotificationsPage/>:<LiveNotifications/>;
+}
+function DemoNotificationsPage() {
   const { session, employee } = useDemoTicketSession();
   const { rows, counts, markRead } = useDemoNotifications(session.userId);
   const [query, setQuery] = useState(initialNotificationQuery);

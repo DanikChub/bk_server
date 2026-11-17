@@ -6,6 +6,8 @@ import ts from 'typescript';
 const require = createRequire(import.meta.url);
 const src = fileURLToPath(new URL('../../src/', import.meta.url));
 const cache = new Map();
+// These snapshots exercise the explicitly retained demo screens and fixtures.
+process.env.NEXT_PUBLIC_DATA_MODE = 'demo';
 export function loadUI(file) {
  if (cache.has(file)) return cache.get(file).exports;
  const unit = {exports:{}};cache.set(file,unit);

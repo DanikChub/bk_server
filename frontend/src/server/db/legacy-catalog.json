@@ -1,0 +1,5547 @@
+{
+  "tables": [
+    "AbpAuditLogActions",
+    "AbpAuditLogs",
+    "AbpBackgroundJobs",
+    "AbpClaimTypes",
+    "AbpEntityChanges",
+    "AbpEntityPropertyChanges",
+    "AbpFeatureGroups",
+    "AbpFeatureValues",
+    "AbpFeatures",
+    "AbpLinkUsers",
+    "AbpOrganizationUnitRoles",
+    "AbpOrganizationUnits",
+    "AbpPermissionGrants",
+    "AbpPermissionGroups",
+    "AbpPermissions",
+    "AbpRoleClaims",
+    "AbpRoles",
+    "AbpSecurityLogs",
+    "AbpSettingDefinitions",
+    "AbpSettings",
+    "AbpTenantConnectionStrings",
+    "AbpTenants",
+    "AbpUserClaims",
+    "AbpUserDelegations",
+    "AbpUserLogins",
+    "AbpUserOrganizationUnits",
+    "AbpUserRoles",
+    "AbpUserTokens",
+    "AbpUsers",
+    "AnswerTemplates",
+    "ConstraintTypes",
+    "ContractConstraintsByMonths",
+    "ContractServicePackages",
+    "ContractSettings",
+    "ContractStatuses",
+    "ContractTags",
+    "ContractTicketsByTicketSectionByMonths",
+    "ContractTicketsByTicketTypeByMonths",
+    "Contracts",
+    "CustomerUserProfiles",
+    "EmployeeProfiles",
+    "Events",
+    "NotificationCategories",
+    "NotificationStatuses",
+    "OpenIddictApplications",
+    "OpenIddictAuthorizations",
+    "OpenIddictScopes",
+    "OpenIddictTokens",
+    "Regions",
+    "ServicePackages",
+    "Slides",
+    "Stories",
+    "Tags",
+    "TenantProfileManagers",
+    "TenantProfiles",
+    "TicketAttachments",
+    "TicketClientFavorites",
+    "TicketHistory",
+    "TicketHistoryAttachments",
+    "TicketHoursSpentHistories",
+    "TicketMessages",
+    "TicketSections",
+    "TicketSpecialistFavorites",
+    "TicketStatuses",
+    "TicketTags",
+    "TicketTypes",
+    "Tickets",
+    "UploadedFiles",
+    "UserNotifications"
+  ],
+  "columns": [
+    {
+      "name": "AuditLogId",
+      "type": "uuid",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExecutionDuration",
+      "type": "integer",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExecutionTime",
+      "type": "timestamp without time zone",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "MethodName",
+      "type": "character varying(128)",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Parameters",
+      "type": "character varying(2000)",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ServiceName",
+      "type": "character varying(256)",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpAuditLogActions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ApplicationName",
+      "type": "character varying(96)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "BrowserInfo",
+      "type": "character varying(512)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientId",
+      "type": "character varying(64)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientIpAddress",
+      "type": "character varying(64)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientName",
+      "type": "character varying(128)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Comments",
+      "type": "character varying(256)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpAuditLogs",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CorrelationId",
+      "type": "character varying(64)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Exceptions",
+      "type": "text",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExecutionDuration",
+      "type": "integer",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExecutionTime",
+      "type": "timestamp without time zone",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpAuditLogs",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "HttpMethod",
+      "type": "character varying(16)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "HttpStatusCode",
+      "type": "integer",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ImpersonatorTenantId",
+      "type": "uuid",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ImpersonatorTenantName",
+      "type": "character varying(64)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ImpersonatorUserId",
+      "type": "uuid",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ImpersonatorUserName",
+      "type": "character varying(256)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantName",
+      "type": "character varying(64)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Url",
+      "type": "character varying(256)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserName",
+      "type": "character varying(256)",
+      "table": "AbpAuditLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpBackgroundJobs",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpBackgroundJobs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpBackgroundJobs",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpBackgroundJobs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsAbandoned",
+      "type": "boolean",
+      "table": "AbpBackgroundJobs",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "JobArgs",
+      "type": "character varying(1048576)",
+      "table": "AbpBackgroundJobs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "JobName",
+      "type": "character varying(128)",
+      "table": "AbpBackgroundJobs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastTryTime",
+      "type": "timestamp without time zone",
+      "table": "AbpBackgroundJobs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "NextTryTime",
+      "type": "timestamp without time zone",
+      "table": "AbpBackgroundJobs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Priority",
+      "type": "smallint",
+      "table": "AbpBackgroundJobs",
+      "default": "15",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TryCount",
+      "type": "smallint",
+      "table": "AbpBackgroundJobs",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpClaimTypes",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "character varying(256)",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpClaimTypes",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsStatic",
+      "type": "boolean",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(256)",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Regex",
+      "type": "character varying(512)",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RegexDescription",
+      "type": "character varying(128)",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Required",
+      "type": "boolean",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ValueType",
+      "type": "integer",
+      "table": "AbpClaimTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "AuditLogId",
+      "type": "uuid",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ChangeTime",
+      "type": "timestamp without time zone",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ChangeType",
+      "type": "smallint",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityId",
+      "type": "character varying(128)",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityTenantId",
+      "type": "uuid",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityTypeFullName",
+      "type": "character varying(128)",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpEntityChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityChangeId",
+      "type": "uuid",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "NewValue",
+      "type": "character varying(512)",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "OriginalValue",
+      "type": "character varying(512)",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PropertyName",
+      "type": "character varying(128)",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PropertyTypeFullName",
+      "type": "character varying(64)",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpEntityPropertyChanges",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "character varying(256)",
+      "table": "AbpFeatureGroups",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpFeatureGroups",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpFeatureGroups",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpFeatureGroups",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpFeatureValues",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpFeatureValues",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderKey",
+      "type": "character varying(64)",
+      "table": "AbpFeatureValues",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderName",
+      "type": "character varying(64)",
+      "table": "AbpFeatureValues",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Value",
+      "type": "character varying(128)",
+      "table": "AbpFeatureValues",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "AllowedProviders",
+      "type": "character varying(256)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DefaultValue",
+      "type": "character varying(256)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "character varying(256)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "character varying(256)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "GroupName",
+      "type": "character varying(128)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsAvailableToHost",
+      "type": "boolean",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsVisibleToClients",
+      "type": "boolean",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ParentName",
+      "type": "character varying(128)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ValueType",
+      "type": "character varying(2048)",
+      "table": "AbpFeatures",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpLinkUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SourceTenantId",
+      "type": "uuid",
+      "table": "AbpLinkUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SourceUserId",
+      "type": "uuid",
+      "table": "AbpLinkUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TargetTenantId",
+      "type": "uuid",
+      "table": "AbpLinkUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TargetUserId",
+      "type": "uuid",
+      "table": "AbpLinkUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpOrganizationUnitRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnitRoles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "OrganizationUnitId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnitRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RoleId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnitRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnitRoles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Code",
+      "type": "character varying(95)",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpOrganizationUnits",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "character varying(128)",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityVersion",
+      "type": "integer",
+      "table": "AbpOrganizationUnits",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpOrganizationUnits",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "AbpOrganizationUnits",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ParentId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpPermissionGrants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpPermissionGrants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderKey",
+      "type": "character varying(64)",
+      "table": "AbpPermissionGrants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderName",
+      "type": "character varying(64)",
+      "table": "AbpPermissionGrants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpPermissionGrants",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "character varying(256)",
+      "table": "AbpPermissionGroups",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpPermissionGroups",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpPermissionGroups",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpPermissionGroups",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "character varying(256)",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "GroupName",
+      "type": "character varying(128)",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsEnabled",
+      "type": "boolean",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "MultiTenancySide",
+      "type": "smallint",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ParentName",
+      "type": "character varying(128)",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Providers",
+      "type": "character varying(128)",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "StateCheckers",
+      "type": "character varying(256)",
+      "table": "AbpPermissions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClaimType",
+      "type": "character varying(256)",
+      "table": "AbpRoleClaims",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClaimValue",
+      "type": "character varying(1024)",
+      "table": "AbpRoleClaims",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpRoleClaims",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RoleId",
+      "type": "uuid",
+      "table": "AbpRoleClaims",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpRoleClaims",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpRoles",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityVersion",
+      "type": "integer",
+      "table": "AbpRoles",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpRoles",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDefault",
+      "type": "boolean",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsPublic",
+      "type": "boolean",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsStatic",
+      "type": "boolean",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(256)",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "NormalizedName",
+      "type": "character varying(256)",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpRoles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Action",
+      "type": "character varying(96)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ApplicationName",
+      "type": "character varying(96)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "BrowserInfo",
+      "type": "character varying(512)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientId",
+      "type": "character varying(64)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientIpAddress",
+      "type": "character varying(64)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpSecurityLogs",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CorrelationId",
+      "type": "character varying(64)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpSecurityLogs",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Identity",
+      "type": "character varying(96)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantName",
+      "type": "character varying(64)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserName",
+      "type": "character varying(256)",
+      "table": "AbpSecurityLogs",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DefaultValue",
+      "type": "character varying(2048)",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "character varying(512)",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "character varying(256)",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsEncrypted",
+      "type": "boolean",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsInherited",
+      "type": "boolean",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsVisibleToClients",
+      "type": "boolean",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Providers",
+      "type": "character varying(1024)",
+      "table": "AbpSettingDefinitions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderKey",
+      "type": "character varying(64)",
+      "table": "AbpSettings",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderName",
+      "type": "character varying(64)",
+      "table": "AbpSettings",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Value",
+      "type": "character varying(2048)",
+      "table": "AbpSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(64)",
+      "table": "AbpTenantConnectionStrings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpTenantConnectionStrings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Value",
+      "type": "character varying(1024)",
+      "table": "AbpTenantConnectionStrings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpTenants",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityVersion",
+      "type": "integer",
+      "table": "AbpTenants",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpTenants",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "AbpTenants",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(64)",
+      "table": "AbpTenants",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClaimType",
+      "type": "character varying(256)",
+      "table": "AbpUserClaims",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClaimValue",
+      "type": "character varying(1024)",
+      "table": "AbpUserClaims",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpUserClaims",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUserClaims",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpUserClaims",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EndTime",
+      "type": "timestamp without time zone",
+      "table": "AbpUserDelegations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpUserDelegations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SourceUserId",
+      "type": "uuid",
+      "table": "AbpUserDelegations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "StartTime",
+      "type": "timestamp without time zone",
+      "table": "AbpUserDelegations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TargetUserId",
+      "type": "uuid",
+      "table": "AbpUserDelegations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUserDelegations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LoginProvider",
+      "type": "character varying(64)",
+      "table": "AbpUserLogins",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderDisplayName",
+      "type": "character varying(128)",
+      "table": "AbpUserLogins",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ProviderKey",
+      "type": "character varying(196)",
+      "table": "AbpUserLogins",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUserLogins",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpUserLogins",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpUserOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "AbpUserOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "OrganizationUnitId",
+      "type": "uuid",
+      "table": "AbpUserOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUserOrganizationUnits",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpUserOrganizationUnits",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RoleId",
+      "type": "uuid",
+      "table": "AbpUserRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUserRoles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpUserRoles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LoginProvider",
+      "type": "character varying(64)",
+      "table": "AbpUserTokens",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(128)",
+      "table": "AbpUserTokens",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUserTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserId",
+      "type": "uuid",
+      "table": "AbpUserTokens",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Value",
+      "type": "text",
+      "table": "AbpUserTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "AccessFailedCount",
+      "type": "integer",
+      "table": "AbpUsers",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "AbpUsers",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Email",
+      "type": "character varying(256)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EmailConfirmed",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EntityVersion",
+      "type": "integer",
+      "table": "AbpUsers",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "AbpUsers",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsActive",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsExternal",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastPasswordChangeTime",
+      "type": "timestamp with time zone",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LockoutEnabled",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LockoutEnd",
+      "type": "timestamp with time zone",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(64)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "NormalizedEmail",
+      "type": "character varying(256)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "NormalizedUserName",
+      "type": "character varying(256)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PasswordHash",
+      "type": "character varying(256)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PhoneNumber",
+      "type": "character varying(16)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PhoneNumberConfirmed",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SecurityStamp",
+      "type": "character varying(256)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ShouldChangePasswordOnNextLogin",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Surname",
+      "type": "character varying(64)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TwoFactorEnabled",
+      "type": "boolean",
+      "table": "AbpUsers",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserName",
+      "type": "character varying(256)",
+      "table": "AbpUsers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "text",
+      "table": "AnswerTemplates",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "AnswerTemplates",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Title",
+      "type": "text",
+      "table": "AnswerTemplates",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "ConstraintTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "ConstraintTypes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConstraintTypeId",
+      "type": "uuid",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "bigint",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "d",
+      "generated": ""
+    },
+    {
+      "name": "MaxCount",
+      "type": "integer",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Month",
+      "type": "integer",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Sum",
+      "type": "integer",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Year",
+      "type": "integer",
+      "table": "ContractConstraintsByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractFinishDate",
+      "type": "timestamp without time zone",
+      "table": "ContractServicePackages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "ContractServicePackages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractStartDate",
+      "type": "timestamp without time zone",
+      "table": "ContractServicePackages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ServicePackageId",
+      "type": "uuid",
+      "table": "ContractServicePackages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConstraintTypeId",
+      "type": "uuid",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Max",
+      "type": "integer",
+      "table": "ContractSettings",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Code",
+      "type": "character varying(256)",
+      "table": "ContractStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "ContractStatuses",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "ContractStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Title",
+      "type": "text",
+      "table": "ContractStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "ContractTags",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TagId",
+      "type": "uuid",
+      "table": "ContractTags",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "ContractTicketsByTicketSectionByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Count",
+      "type": "integer",
+      "table": "ContractTicketsByTicketSectionByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "bigint",
+      "table": "ContractTicketsByTicketSectionByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "d",
+      "generated": ""
+    },
+    {
+      "name": "Month",
+      "type": "integer",
+      "table": "ContractTicketsByTicketSectionByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketSectionId",
+      "type": "uuid",
+      "table": "ContractTicketsByTicketSectionByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Year",
+      "type": "integer",
+      "table": "ContractTicketsByTicketSectionByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "ContractTicketsByTicketTypeByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Count",
+      "type": "integer",
+      "table": "ContractTicketsByTicketTypeByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "bigint",
+      "table": "ContractTicketsByTicketTypeByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "d",
+      "generated": ""
+    },
+    {
+      "name": "Month",
+      "type": "integer",
+      "table": "ContractTicketsByTicketTypeByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketTypeId",
+      "type": "uuid",
+      "table": "ContractTicketsByTicketTypeByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Year",
+      "type": "integer",
+      "table": "ContractTicketsByTicketTypeByMonths",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractFinishDate",
+      "type": "timestamp without time zone",
+      "table": "Contracts",
+      "default": "'-infinity'::timestamp with time zone",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractPayer",
+      "type": "text",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractStartDate",
+      "type": "timestamp without time zone",
+      "table": "Contracts",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "Contracts",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "Contracts",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsArchive",
+      "type": "boolean",
+      "table": "Contracts",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "Contracts",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDraft",
+      "type": "boolean",
+      "table": "Contracts",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ServicePackagesData",
+      "type": "text",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "StatusId",
+      "type": "uuid",
+      "table": "Contracts",
+      "default": "'00000000-0000-0000-0000-000000000000'::uuid",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "Contracts",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "City",
+      "type": "character varying(256)",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "CustomerUserProfiles",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Country",
+      "type": "character varying(256)",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DateOfBirthDay",
+      "type": "timestamp without time zone",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Email",
+      "type": "text",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "CustomerUserProfiles",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "FirstName",
+      "type": "character varying(256)",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IdentityUserId",
+      "type": "uuid",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "JobPost",
+      "type": "text",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastName",
+      "type": "character varying(256)",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "MiddleName",
+      "type": "character varying(256)",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Note",
+      "type": "text",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Street",
+      "type": "character varying(512)",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserAvatarFileId",
+      "type": "uuid",
+      "table": "CustomerUserProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Birthday",
+      "type": "timestamp without time zone",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Email",
+      "type": "text",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "FirstName",
+      "type": "character varying(256)",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IdentityUserId",
+      "type": "uuid",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "JobPost",
+      "type": "text",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastName",
+      "type": "character varying(256)",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "MiddleName",
+      "type": "character varying(256)",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Phone",
+      "type": "text",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UserAvatarFileId",
+      "type": "uuid",
+      "table": "EmployeeProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "Events",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "text",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EventDate",
+      "type": "timestamp without time zone",
+      "table": "Events",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "EventType",
+      "type": "integer",
+      "table": "Events",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "Events",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "Events",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Title",
+      "type": "text",
+      "table": "Events",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "NotificationCategories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "NotificationCategories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Style",
+      "type": "text",
+      "table": "NotificationCategories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "text",
+      "table": "NotificationStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayNameMany",
+      "type": "text",
+      "table": "NotificationStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Icon",
+      "type": "text",
+      "table": "NotificationStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "NotificationStatuses",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "NotificationStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Status",
+      "type": "integer",
+      "table": "NotificationStatuses",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Style",
+      "type": "text",
+      "table": "NotificationStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ApplicationType",
+      "type": "character varying(50)",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientId",
+      "type": "character varying(100)",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientSecret",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientType",
+      "type": "character varying(50)",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientUri",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "OpenIddictApplications",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConsentType",
+      "type": "character varying(50)",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayNames",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "OpenIddictApplications",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "JsonWebKeySet",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LogoUri",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Permissions",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PostLogoutRedirectUris",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Properties",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RedirectUris",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Requirements",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Settings",
+      "type": "text",
+      "table": "OpenIddictApplications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ApplicationId",
+      "type": "uuid",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "OpenIddictAuthorizations",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationDate",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "OpenIddictAuthorizations",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "OpenIddictAuthorizations",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Properties",
+      "type": "text",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Scopes",
+      "type": "text",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Status",
+      "type": "character varying(50)",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Subject",
+      "type": "character varying(400)",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Type",
+      "type": "character varying(50)",
+      "table": "OpenIddictAuthorizations",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "OpenIddictScopes",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Descriptions",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayNames",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "OpenIddictScopes",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "character varying(200)",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Properties",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Resources",
+      "type": "text",
+      "table": "OpenIddictScopes",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ApplicationId",
+      "type": "uuid",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "AuthorizationId",
+      "type": "uuid",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "OpenIddictTokens",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationDate",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExpirationDate",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "OpenIddictTokens",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "OpenIddictTokens",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Payload",
+      "type": "text",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Properties",
+      "type": "text",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RedemptionDate",
+      "type": "timestamp without time zone",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ReferenceId",
+      "type": "character varying(100)",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Status",
+      "type": "character varying(50)",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Subject",
+      "type": "character varying(400)",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Type",
+      "type": "character varying(50)",
+      "table": "OpenIddictTokens",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Code",
+      "type": "character varying(256)",
+      "table": "Regions",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "Regions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "Regions",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "ServicePackages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "ServicePackages",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Style",
+      "type": "text",
+      "table": "ServicePackages",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "Slides",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "Slides",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "Slides",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ImageUrl",
+      "type": "text",
+      "table": "Slides",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "Slides",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "Slides",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "OrderIndex",
+      "type": "integer",
+      "table": "Slides",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "StoryId",
+      "type": "uuid",
+      "table": "Slides",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CoverImageUrl",
+      "type": "text",
+      "table": "Stories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "Stories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "Stories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "GroupName",
+      "type": "text",
+      "table": "Stories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "Stories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "Stories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "Stories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "Stories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "OrderIndex",
+      "type": "integer",
+      "table": "Stories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Status",
+      "type": "integer",
+      "table": "Stories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "Tags",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "Tags",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ManagerId",
+      "type": "uuid",
+      "table": "TenantProfileManagers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantProfileId",
+      "type": "uuid",
+      "table": "TenantProfileManagers",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Address",
+      "type": "character varying(2000)",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CommentNotes",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "TenantProfiles",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContactUserProfileId",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "TenantProfiles",
+      "default": "'2021-01-01 03:00:00+03'::timestamp with time zone",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Email",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "INNNumber",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsActive",
+      "type": "boolean",
+      "table": "TenantProfiles",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "TenantProfiles",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "KPPNumber",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LongName",
+      "type": "character varying(2000)",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "PhoneNumber",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "RegionId",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ResponsibleManagerId",
+      "type": "uuid",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ServicePackagesData",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ShortName",
+      "type": "character varying(1000)",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SiteUrl",
+      "type": "text",
+      "table": "TenantProfiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "TicketAttachments",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UploadedFileId",
+      "type": "uuid",
+      "table": "TicketAttachments",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ClientId",
+      "type": "uuid",
+      "table": "TicketClientFavorites",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "TicketClientFavorites",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp with time zone",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp with time zone",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "text",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "TicketHistory",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsInternal",
+      "type": "boolean",
+      "table": "TicketHistory",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp with time zone",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ReadByClientDate",
+      "type": "timestamp with time zone",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ReadBySpecialistDate",
+      "type": "timestamp with time zone",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketHoursSpentHistoryId",
+      "type": "uuid",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "TicketHistory",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketStatusId",
+      "type": "uuid",
+      "table": "TicketHistory",
+      "default": "'00000000-0000-0000-0000-000000000000'::uuid",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Type",
+      "type": "integer",
+      "table": "TicketHistory",
+      "default": "0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketHistoryId",
+      "type": "uuid",
+      "table": "TicketHistoryAttachments",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "UploadedFileId",
+      "type": "uuid",
+      "table": "TicketHistoryAttachments",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConstraintTypeId",
+      "type": "uuid",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Spent",
+      "type": "integer",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketHistoryId",
+      "type": "uuid",
+      "table": "TicketHoursSpentHistories",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Comment",
+      "type": "text",
+      "table": "TicketMessages",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "TicketMessages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorCustomerUserProfileId",
+      "type": "uuid",
+      "table": "TicketMessages",
+      "default": "'00000000-0000-0000-0000-000000000000'::uuid",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TicketMessages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "TicketMessages",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TicketSections",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "TicketSections",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CustomerUserProfileId",
+      "type": "uuid",
+      "table": "TicketSpecialistFavorites",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SpecialistId",
+      "type": "uuid",
+      "table": "TicketSpecialistFavorites",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "TicketSpecialistFavorites",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayName",
+      "type": "text",
+      "table": "TicketStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DisplayNameMany",
+      "type": "text",
+      "table": "TicketStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Icon",
+      "type": "text",
+      "table": "TicketStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TicketStatuses",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IsPublic",
+      "type": "boolean",
+      "table": "TicketStatuses",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "TicketStatuses",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Style",
+      "type": "text",
+      "table": "TicketStatuses",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TagId",
+      "type": "uuid",
+      "table": "TicketTags",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketId",
+      "type": "bigint",
+      "table": "TicketTags",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "TicketTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Name",
+      "type": "text",
+      "table": "TicketTypes",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SLATime",
+      "type": "interval",
+      "table": "TicketTypes",
+      "default": "'00:00:00'::interval",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "AttachmentsCount",
+      "type": "integer",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ConcurrencyStamp",
+      "type": "character varying(40)",
+      "table": "Tickets",
+      "default": "''::character varying",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContractId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CustomerUserProfileId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeleterId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DeletionTime",
+      "type": "timestamp without time zone",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Description",
+      "type": "text",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "DueDate",
+      "type": "timestamp without time zone",
+      "table": "Tickets",
+      "default": "'-infinity'::timestamp with time zone",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ExtraProperties",
+      "type": "text",
+      "table": "Tickets",
+      "default": "''::text",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "bigint",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "d",
+      "generated": ""
+    },
+    {
+      "name": "IsDeleted",
+      "type": "boolean",
+      "table": "Tickets",
+      "default": "false",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Rating",
+      "type": "double precision",
+      "table": "Tickets",
+      "default": "0.0",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ReadByClientDate",
+      "type": "timestamp without time zone",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ReadBySpecialistDate",
+      "type": "timestamp without time zone",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ResponsibleId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ServicePackages",
+      "type": "text",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Subject",
+      "type": "text",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TenantId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketSectionId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketStatusId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "TicketTypeId",
+      "type": "uuid",
+      "table": "Tickets",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "ContentType",
+      "type": "character varying(1024)",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "UploadedFiles",
+      "default": "'-infinity'::timestamp with time zone",
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "FileName",
+      "type": "character varying(1024)",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "OriginalFileName",
+      "type": "character varying(1024)",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "SizeInBytes",
+      "type": "bigint",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "StorageProvider",
+      "type": "character varying(100)",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Title",
+      "type": "text",
+      "table": "UploadedFiles",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreationTime",
+      "type": "timestamp without time zone",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "CreatorId",
+      "type": "uuid",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Id",
+      "type": "uuid",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "IdentityUserId",
+      "type": "uuid",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": true,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModificationTime",
+      "type": "timestamp without time zone",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "LastModifierId",
+      "type": "uuid",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "NotificationCategoryId",
+      "type": "uuid",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Seen",
+      "type": "timestamp without time zone",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Title",
+      "type": "text",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    },
+    {
+      "name": "Url",
+      "type": "text",
+      "table": "UserNotifications",
+      "default": null,
+      "notNull": false,
+      "identity": "",
+      "generated": ""
+    }
+  ]
+}

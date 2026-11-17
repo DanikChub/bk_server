@@ -4,8 +4,12 @@ import Link from "next/link";
 import { useDemoTicketSession } from "@/shared/lib/access/demo-ticket-session";
 import { useDemoNotifications } from "@/entities/notification/model/use-demo-notifications";
 import { DesignIcon } from "@/shared/ui/design-icon/design-icon";
+import { LiveHeader } from '@/views/backend/ui/live-shell';
 
 export function AppHeader({ collapsed, onToggleMenu }: { collapsed: boolean; onToggleMenu: () => void }) {
+  return process.env.NEXT_PUBLIC_DATA_MODE==='demo'?<DemoAppHeader collapsed={collapsed} onToggleMenu={onToggleMenu}/>:<LiveHeader collapsed={collapsed} onToggleMenu={onToggleMenu}/>;
+}
+function DemoAppHeader({ collapsed, onToggleMenu }: { collapsed: boolean; onToggleMenu: () => void }) {
   const pathname = usePathname() ?? "/tickets";
   const switchHref = pathname.startsWith("/employee/") ? pathname.replace("/employee", "") : /^\/(tickets|notifications)(\/|$)/.test(pathname) ? `/employee${pathname}` : "/employee/tickets";
   const { session, employee } = useDemoTicketSession();

@@ -6,8 +6,12 @@ import { Download, Filter, Plus, Search } from "lucide-react";
 import { customers } from "@/entities/customer/model/mock";
 import { DataTable } from "@/shared/ui/data-table/data-table";
 import { StatusBadge } from "@/shared/ui/status-badge/status-badge";
+import { LiveCustomers } from '@/views/backend/ui/live-directories';
 
 export function CustomersPage() {
+  return process.env.NEXT_PUBLIC_DATA_MODE==='demo'?<DemoCustomersPage/>:<LiveCustomers/>;
+}
+function DemoCustomersPage() {
   const [query, setQuery] = useState("");
   const rows = useMemo(() => customers.filter(c => [c.name,c.inn,c.contact,c.responsible].join(" ").toLowerCase().includes(query.toLowerCase())), [query]);
   return (

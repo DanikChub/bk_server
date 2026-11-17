@@ -43,6 +43,7 @@ KV.Server/modules/Abp.AspNetCore.Mvc.UI.Theme.KvInternal/wwwroot/
 # Local/secrets
 **/.env
 **/.env.*
+!.env.example
 **/.npmrc
 **/.yarnrc
 *.pfx

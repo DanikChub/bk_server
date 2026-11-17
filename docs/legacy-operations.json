@@ -1,0 +1,2975 @@
+{
+  "description": "Source inventory, not a claim of completed parity. Inherited ABP APIs, Razor/JS conditions and private workflows also require review.",
+  "operations": [
+    {
+      "source": "KV.Server/src/KV.Server.Application/Bk/Articles/ArticlesAppService.cs",
+      "line": 36,
+      "method": "GetArticleListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Bk/News/NewsAppService.cs",
+      "line": 36,
+      "method": "GetNewsListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/DefaultS3BlobNameCalculator.cs",
+      "line": 13,
+      "method": "Calculate",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/DefaultS3ClientFactory.cs",
+      "line": 8,
+      "method": "GetS3Client",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3BlobNamingNormalizer.cs",
+      "line": 12,
+      "method": "NormalizeContainerName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3BlobNamingNormalizer.cs",
+      "line": 57,
+      "method": "NormalizeBlobName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3CompatibleBlobContainerConfigurationExtensions.cs",
+      "line": 6,
+      "method": "GetS3Configuration",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3CompatibleBlobContainerConfigurationExtensions.cs",
+      "line": 8,
+      "method": "UseS3Storage",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3CompatibleBlobProvider.cs",
+      "line": 26,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3CompatibleBlobProvider.cs",
+      "line": 44,
+      "method": "ExistsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3CompatibleBlobProvider.cs",
+      "line": 55,
+      "method": "GetOrNullAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/BlobStorage/S3CompatibleBlobProvider.cs",
+      "line": 73,
+      "method": "SaveAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Calendars/WorkCalendarAppService.cs",
+      "line": 29,
+      "method": "GetCountDaysAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Calendars/WorkCalendarAppService.cs",
+      "line": 48,
+      "method": "GetHolidaysAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ConstraintAppService.cs",
+      "line": 26,
+      "method": "GetConstraintTypeBySettingContractIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ConstraintAppService.cs",
+      "line": 45,
+      "method": "GetConstraintTypesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 45,
+      "method": "GetContractListByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 91,
+      "method": "GetContractAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 103,
+      "method": "GetServicePackagesByContractIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 114,
+      "method": "GetCountContractsByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 126,
+      "method": "GetListContractByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 144,
+      "method": "GetListActiveServicePackagesByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 169,
+      "method": "GetListNotActiveServicePackagesByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 191,
+      "method": "GetContractByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 214,
+      "method": "CreateContractServicePackageAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 228,
+      "method": "GetFirstActiveContractAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 247,
+      "method": "GetListActiveContractByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsAppService.cs",
+      "line": 260,
+      "method": "GetListServicePackagesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsPublicAppService.cs",
+      "line": 28,
+      "method": "GetFirstActiveContractAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/ContractsPublicAppService.cs",
+      "line": 46,
+      "method": "GetListActiveContractByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 50,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 180,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 188,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 191,
+      "method": "UpdateDetailsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 220,
+      "method": "UpdateMaxConstraintAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 236,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 239,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 284,
+      "method": "CreateTagByContractIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 310,
+      "method": "GetTagListByContractIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractService.cs",
+      "line": 322,
+      "method": "DeleteTagByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 17,
+      "method": "base",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 22,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 25,
+      "method": "GetByCodeAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 32,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 35,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 38,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 41,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 42,
+      "method": "GetContractStatusesListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 76,
+      "method": "GetContractStatusesByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudContractStatusService.cs",
+      "line": 88,
+      "method": "GetByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 30,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 33,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 36,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 39,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 42,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 44,
+      "method": "ToListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 59,
+      "method": "GetListServicePacakageAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 69,
+      "method": "GetListServicePackageByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Contracts/CrudServicePackageService.cs",
+      "line": 115,
+      "method": "DeleteServicePackageByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/ContractConstraintsByMonthDtoComparer.cs",
+      "line": 6,
+      "method": "Equals",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/ContractConstraintsByMonthDtoComparer.cs",
+      "line": 10,
+      "method": "GetHashCode",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 109,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 130,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 154,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 203,
+      "method": "GetStatisticsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 306,
+      "method": "GetStatisticsConstraintByContractIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 353,
+      "method": "GetCustomerEventsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 409,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 420,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 446,
+      "method": "GetContractsByCustomerIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 490,
+      "method": "UpdateResponsibleManagerByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 504,
+      "method": "UpdateContactUserProfileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 517,
+      "method": "FirstOrDefaultByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 526,
+      "method": "GetActiveCustomerServicePackagesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 558,
+      "method": "GetCountResponsibleManagerByCustomerUserProfileIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 583,
+      "method": "GetActiveServicePackagesByContractIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 613,
+      "method": "GetListCustomersBySearchAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Customers/CrudCustomerAppService.cs",
+      "line": 674,
+      "method": "CreateClientRoleAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserManagerAppService.cs",
+      "line": 26,
+      "method": "GetListByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserManagerAppService.cs",
+      "line": 48,
+      "method": "AddManagerByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserManagerAppService.cs",
+      "line": 61,
+      "method": "DeleteManagerByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 72,
+      "method": "CreateWithIdentityUserAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 134,
+      "method": "UploadAvatarAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 157,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 182,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 193,
+      "method": "CreateByIdentityIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 208,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 226,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 299,
+      "method": "GetCustomerDateOfBirthdayUsersAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 327,
+      "method": "GetCustomerUserProfileListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 340,
+      "method": "GetSpecialistsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 351,
+      "method": "GetCustomerByUserNameAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 362,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 377,
+      "method": "GetUserPasswordAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 397,
+      "method": "GetCustomerByIdentityUserIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 408,
+      "method": "GetColleaguesByIdentityUserIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 428,
+      "method": "GetIdentityUsersByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 440,
+      "method": "GetRolesByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 453,
+      "method": "GetIdentityUserByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/CustomerUserProfilesAppService.cs",
+      "line": 466,
+      "method": "ResetUserPasswordByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 59,
+      "method": "CreateEmployeeAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 108,
+      "method": "GetEmployeeByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 116,
+      "method": "GetEmployeeByUserNameAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 122,
+      "method": "GetAvatarByEmployeeIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 137,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 188,
+      "method": "GetRoleNamesByEmployeeIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 195,
+      "method": "UploadEmployeeAvatarAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 216,
+      "method": "UpdateEmployeeAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 258,
+      "method": "GetEmployeePasswordAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 277,
+      "method": "GetAllEmployeeAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 287,
+      "method": "GetActiveEmployeesListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/EmployeeProfileAppService.cs",
+      "line": 295,
+      "method": "GetEmployeeByIdentityIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Employees/IdentityUserExtensions.cs",
+      "line": 6,
+      "method": "SetTenantId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Events/EventAppService.cs",
+      "line": 33,
+      "method": "GetListEventsByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Events/EventAppService.cs",
+      "line": 46,
+      "method": "CreateEventAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Events/EventAppService.cs",
+      "line": 54,
+      "method": "GetListEventsByPeriodAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Events/EventAppService.cs",
+      "line": 69,
+      "method": "GetListEventsByPeriodCurrentUserAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Extensions/DateTimeExtensions.cs",
+      "line": 6,
+      "method": "MonthRangeTo",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Extensions/DateTimeExtensions.cs",
+      "line": 19,
+      "method": "RangeTo",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Extensions/DateTimeExtensions.cs",
+      "line": 32,
+      "method": "RangeFrom",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/GenerateTables/ExcelTableAppService.cs",
+      "line": 48,
+      "method": "GenerateTicketTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/GenerateTables/ExcelTableAppService.cs",
+      "line": 92,
+      "method": "GenerateContractTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/GenerateTables/ExcelTableAppService.cs",
+      "line": 147,
+      "method": "GenerateCustomerTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/GenerateTables/ExcelTableAppService.cs",
+      "line": 179,
+      "method": "GenerateUserTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/GenerateTables/ExcelTableAppService.cs",
+      "line": 218,
+      "method": "GenerateStatisticsTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/GenerateTables/ExcelTableAppService.cs",
+      "line": 284,
+      "method": "GenerateCustomerUserProfileTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 34,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 87,
+      "method": "GetCountNotificationAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 110,
+      "method": "GetNotificationCategoriesListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 120,
+      "method": "GetNotificationStatusInfosListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 139,
+      "method": "SendNotificationAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 145,
+      "method": "GetFindNotificationCategoryByContainsLowerCaseNameAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 152,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Inbox/NotificationAppService.cs",
+      "line": 159,
+      "method": "MakeReadNotificationAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Posts/PostsAppService.cs",
+      "line": 39,
+      "method": "GetArticlesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Posts/PostsAppService.cs",
+      "line": 59,
+      "method": "GetNewsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Regions/RegionsAppService.cs",
+      "line": 27,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/ServerApplicationModule.cs",
+      "line": 38,
+      "method": "ConfigureServices",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesClientAppService.cs",
+      "line": 36,
+      "method": "GetStoriesListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesClientAppService.cs",
+      "line": 57,
+      "method": "GetListStories",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesClientAppService.cs",
+      "line": 76,
+      "method": "GetDownloadAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesClientAppService.cs",
+      "line": 88,
+      "method": "GetSlidesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesClientAppService.cs",
+      "line": 97,
+      "method": "GetListActiveStoryByGroupNameAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 40,
+      "method": "CreateStoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 54,
+      "method": "UpdateStoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 74,
+      "method": "CreateSlideAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 87,
+      "method": "UpdateSlideAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 103,
+      "method": "GetStoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 115,
+      "method": "DeleteStoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 140,
+      "method": "DeleteSlideAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 154,
+      "method": "GetStoriesListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 173,
+      "method": "GetSlidesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 186,
+      "method": "GetSlidersListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 211,
+      "method": "UploadAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 226,
+      "method": "GetListStoriesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 245,
+      "method": "GetSliderBySliderIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Stories/StoriesManagementAppService.cs",
+      "line": 258,
+      "method": "GetDownloadAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/SubscribeEventHandlers/TenantCreatedDistributedEventHandler.cs",
+      "line": 47,
+      "method": "HandleEventAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/SubscribeEventHandlers/TenantDeletedDistributedEventHandler.cs",
+      "line": 21,
+      "method": "HandleEventAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tags/TagsAppService.cs",
+      "line": 26,
+      "method": "GetPopularByTicketTagAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tags/TagsAppService.cs",
+      "line": 34,
+      "method": "CreateTagAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tags/TagsAppService.cs",
+      "line": 43,
+      "method": "DeleteTagInTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tags/TagsAppService.cs",
+      "line": 46,
+      "method": "InsertTagInTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 17,
+      "method": "base",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 22,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 25,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 28,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 31,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 34,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Template/CrudAnswerTemplateService.cs",
+      "line": 35,
+      "method": "ToListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/TenantProfile/CRUDTenantProfileAppService.cs",
+      "line": 29,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/TenantProfile/CRUDTenantProfileAppService.cs",
+      "line": 32,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/TenantProfile/CRUDTenantProfileAppService.cs",
+      "line": 35,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/TenantProfile/CRUDTenantProfileAppService.cs",
+      "line": 38,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/TenantProfile/CRUDTenantProfileAppService.cs",
+      "line": 41,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/TenantProfile/CRUDTenantProfileAppService.cs",
+      "line": 44,
+      "method": "GetTenantProfileListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 15,
+      "method": "base",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 20,
+      "method": "CreateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 23,
+      "method": "GetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 26,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 29,
+      "method": "DeleteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 32,
+      "method": "UpdateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/CrudTicketSectionAppService.cs",
+      "line": 33,
+      "method": "GetListTicketSectionsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 33,
+      "method": "SetFavoriteClientAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 54,
+      "method": "DeleteFavoriteClientAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 68,
+      "method": "GetFavoritesClientAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 86,
+      "method": "SetFavoriteSpecialistAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 103,
+      "method": "DeleteFavoriteSpecialistAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 115,
+      "method": "GetFavoritesSpecialistAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFavoriteAppService.cs",
+      "line": 130,
+      "method": "GetIsFavoriteClientByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 60,
+      "method": "GetPrivateTicketAttachmentsListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 69,
+      "method": "GetPrivateDownloadZipByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 78,
+      "method": "GetTicketAttachmentsListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 97,
+      "method": "GetDownloadZipByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 133,
+      "method": "UploadTicketAttachmentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 163,
+      "method": "GetTicketHistoryAttachmentsListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 182,
+      "method": "GetDownloadAttachmentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 192,
+      "method": "UploadTicketHistoryAttachmentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 220,
+      "method": "GetDownloadZipByTicketHistoryIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 262,
+      "method": "GetDownloadAllFileInZipByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 315,
+      "method": "UploadPublicTicketHistoryAttachmentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 342,
+      "method": "GetPublicDownloadAttachmentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 352,
+      "method": "GetPublicDownloadZipByTicketHistoryIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 388,
+      "method": "GetPublicDownloadAllFileInZipByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 437,
+      "method": "GetPdfFileStreamAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 487,
+      "method": "CopyToAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 496,
+      "method": "Dispose",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketFileAppService.cs",
+      "line": 501,
+      "method": "GetStream",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 62,
+      "method": "GetTicketHistoryListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 90,
+      "method": "GetTicketHistoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 101,
+      "method": "UpdateTicketHistoryDescriptionAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 113,
+      "method": "CreateTicketHistoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 137,
+      "method": "CreateNotPickUpTicketHistoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 164,
+      "method": "CreateAdminTicketHistoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 214,
+      "method": "MakeReadTicketHistoryByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHistoryAppService.cs",
+      "line": 225,
+      "method": "GetCountTicketHistoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHoursSpentHistoryAppService.cs",
+      "line": 39,
+      "method": "SetSpentTimeAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHoursSpentHistoryAppService.cs",
+      "line": 48,
+      "method": "ToListDisplayConstraintTypesContractId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHoursSpentHistoryAppService.cs",
+      "line": 111,
+      "method": "ToListConstraintTypesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketHoursSpentHistoryAppService.cs",
+      "line": 118,
+      "method": "ToListTicketRangeByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketMessageAppService.cs",
+      "line": 29,
+      "method": "SendMessageAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketMessageAppService.cs",
+      "line": 39,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketMessageAppService.cs",
+      "line": 69,
+      "method": "GetCountTicketMessageAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketMessageAppService.cs",
+      "line": 79,
+      "method": "ExistAnyTicketMessageAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 101,
+      "method": "GetTicketsListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 376,
+      "method": "DeleteTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 384,
+      "method": "DeleteTicketHistoryRecordByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 392,
+      "method": "UpdateTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 409,
+      "method": "UpdateTicketDescriptionAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 419,
+      "method": "UpdateTicketTypeByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 450,
+      "method": "UpdateTicketSectionByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 475,
+      "method": "UpdateTicketStatusByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 488,
+      "method": "UpdateTicketConstraintByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 522,
+      "method": "AssignedSpecialistAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 568,
+      "method": "RemoveAssignedSpecialistAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 587,
+      "method": "GetSpecialistByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 599,
+      "method": "GetTicketDetailsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 651,
+      "method": "CreateTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 680,
+      "method": "MakeReadTicketByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsAppService.cs",
+      "line": 692,
+      "method": "GetResponsibleWithTicketCountByPeriodAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketSectionAppService.cs",
+      "line": 16,
+      "method": "GetTicketSectionsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 84,
+      "method": "GetTicketsListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 252,
+      "method": "GetTicketDetailsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 287,
+      "method": "GetTicketRatingAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 296,
+      "method": "UpdateTicketDraftAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 356,
+      "method": "CreateTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 407,
+      "method": "MakeReadTicketByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 420,
+      "method": "GetSpecialistByTicketIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 435,
+      "method": "SetRatingTicketAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketsPublicAppService.cs",
+      "line": 492,
+      "method": "CreateTicketHistoryAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketStatusAppService.cs",
+      "line": 46,
+      "method": "GetListStatusesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketStatusAppService.cs",
+      "line": 56,
+      "method": "GetTicketStatusByCreatorIdAndTenantAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketStatusAppService.cs",
+      "line": 94,
+      "method": "GetMyTicketStatusByResponsibleIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketStatusAppService.cs",
+      "line": 132,
+      "method": "GetTicketFavoriteInfoAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketStatusAppService.cs",
+      "line": 167,
+      "method": "GetCountTicketByTicketStatusAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketTypeAppService.cs",
+      "line": 12,
+      "method": "base",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Tickets/TicketTypeAppService.cs",
+      "line": 15,
+      "method": "GetTicketTypesAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Users/UsersAppService.cs",
+      "line": 46,
+      "method": "GetListAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Users/UsersAppService.cs",
+      "line": 183,
+      "method": "BlockUserAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Users/UsersAppService.cs",
+      "line": 195,
+      "method": "DeleteUserAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Users/UsersAppService.cs",
+      "line": 210,
+      "method": "CreateUserByTenantIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Users/UsersAppService.cs",
+      "line": 238,
+      "method": "UnBlockUserAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Application/Users/UsersAppService.cs",
+      "line": 251,
+      "method": "GetUserByIdAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/BusinessExceptions/ExistingUserException.cs",
+      "line": 10,
+      "method": "base",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Contracts/ContractSeederContributor.cs",
+      "line": 37,
+      "method": "SeedAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Contracts/ContractServicePackage.cs",
+      "line": 32,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Contracts/ContractStatus.cs",
+      "line": 26,
+      "method": "SetStatusId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Contracts/ContractTag.cs",
+      "line": 20,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Data/NullServerDbSchemaMigrator.cs",
+      "line": 9,
+      "method": "MigrateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Data/ServerDbMigrationService.cs",
+      "line": 40,
+      "method": "MigrateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/OpenIddict/OpenIddictDataSeedContributor.cs",
+      "line": 40,
+      "method": "SeedAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 125,
+      "method": "SetAddress",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 138,
+      "method": "WriteNote",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 146,
+      "method": "SetFullName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 165,
+      "method": "SetDateOfBirthday",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 175,
+      "method": "SetJobPost",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 185,
+      "method": "SetAvatar",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 190,
+      "method": "SetEmail",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/CustomerUserProfile.cs",
+      "line": 196,
+      "method": "GetShortFullName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 66,
+      "method": "UpdateProfileImage",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 73,
+      "method": "SetJobPost",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 79,
+      "method": "SetUserId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 85,
+      "method": "SetAvatar",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 91,
+      "method": "SetFullName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 104,
+      "method": "SetDateOfBirthday",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 109,
+      "method": "SetPhone",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 115,
+      "method": "SetEmail",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Profiles/EmployeeProfile.cs",
+      "line": 121,
+      "method": "GetShortFullName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/ServerDomainModule.cs",
+      "line": 35,
+      "method": "ConfigureServices",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Settings/ServerSettingDefinitionProvider.cs",
+      "line": 5,
+      "method": "Define",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tenants/TenantProfileManager.cs",
+      "line": 23,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tenants/TenantProfileSeederContributor.cs",
+      "line": 10,
+      "method": "SeedAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 168,
+      "method": "SetTenant",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 177,
+      "method": "UpdateStatus",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 191,
+      "method": "SetDeadLine",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 197,
+      "method": "AddAttachment",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 207,
+      "method": "RemoveAttachment",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 217,
+      "method": "AssignResponsible",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 223,
+      "method": "SetRating",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 229,
+      "method": "UpdateTicketType",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 230,
+      "method": "UpdateTicketSection",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 232,
+      "method": "SetDescription",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/Ticket.cs",
+      "line": 234,
+      "method": "SetDueDate",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketAttachment.cs",
+      "line": 23,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketClientFavorite.cs",
+      "line": 23,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketHistory.cs",
+      "line": 21,
+      "method": "SetDescription",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketHistory.cs",
+      "line": 23,
+      "method": "SetInternal",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketHistory.cs",
+      "line": 75,
+      "method": "SetType",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketHistory.cs",
+      "line": 82,
+      "method": "WriteDescription",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketHistoryAttachment.cs",
+      "line": 20,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketSpecialistFavorite.cs",
+      "line": 23,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Domain/Tickets/TicketTag.cs",
+      "line": 23,
+      "method": "GetKeys",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/About/Index.cshtml.cs",
+      "line": 7,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/AnswerTemplates/CreateModal.cshtml.cs",
+      "line": 17,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/AnswerTemplates/EditModal.cshtml.cs",
+      "line": 22,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/AnswerTemplates/EditModal.cshtml.cs",
+      "line": 28,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/AnswerTemplates/Index.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Contracts/CreateContractModal.cshtml.cs",
+      "line": 46,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Contracts/CreateContractModal.cshtml.cs",
+      "line": 70,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Contracts/EditContractModal.cshtml.cs",
+      "line": 35,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Contracts/EditContractModal.cshtml.cs",
+      "line": 45,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Contracts/Index.cshtml.cs",
+      "line": 35,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Contracts/Index.cshtml.cs",
+      "line": 71,
+      "method": "OnGetExcelTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/ContractStatuses/CreateModal.cshtml.cs",
+      "line": 18,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/ContractStatuses/EditModal.cshtml.cs",
+      "line": 22,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/ContractStatuses/EditModal.cshtml.cs",
+      "line": 28,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/ContractStatuses/Index.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/ChangePasswordModal.cshtml.cs",
+      "line": 24,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/ChangePasswordModal.cshtml.cs",
+      "line": 30,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateContractModal.cshtml.cs",
+      "line": 57,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateContractModal.cshtml.cs",
+      "line": 81,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateCustomer.cshtml.cs",
+      "line": 83,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateCustomer.cshtml.cs",
+      "line": 87,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateCustomer.cshtml.cs",
+      "line": 210,
+      "method": "Validate",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateCustomerModal.cshtml.cs",
+      "line": 42,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateCustomerModal.cshtml.cs",
+      "line": 44,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateCustomerModal.cshtml.cs",
+      "line": 104,
+      "method": "Validate",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateEmployeeModal.cshtml.cs",
+      "line": 24,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateEmployeeModal.cshtml.cs",
+      "line": 33,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateEventModal.cshtml.cs",
+      "line": 18,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateEventModal.cshtml.cs",
+      "line": 27,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateManagerModal.cshtml.cs",
+      "line": 31,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateManagerModal.cshtml.cs",
+      "line": 44,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateServicePackageModal.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateServicePackageModal.cshtml.cs",
+      "line": 44,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateTagModal.cshtml.cs",
+      "line": 19,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateTagModal.cshtml.cs",
+      "line": 26,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateTicketModal.cshtml.cs",
+      "line": 42,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/CreateTicketModal.cshtml.cs",
+      "line": 67,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Details.cshtml.cs",
+      "line": 58,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Details.cshtml.cs",
+      "line": 98,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Details.cshtml.cs",
+      "line": 142,
+      "method": "OnGetExcelTableStatisticsAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Details.cshtml.cs",
+      "line": 150,
+      "method": "OnGetExcelTableCustomerAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Details.cshtml.cs",
+      "line": 156,
+      "method": "OnGetExcelTableContractAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/DetailsEmployee.cshtml.cs",
+      "line": 39,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/DetailsEmployee.cshtml.cs",
+      "line": 68,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/EditContract.cshtml.cs",
+      "line": 52,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/EditContract.cshtml.cs",
+      "line": 99,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/EditCustomerModal.cshtml.cs",
+      "line": 22,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/EditCustomerModal.cshtml.cs",
+      "line": 30,
+      "method": "OnPost",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/EditEmployeeModal.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/EditEmployeeModal.cshtml.cs",
+      "line": 37,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Index.cshtml.cs",
+      "line": 25,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/Index.cshtml.cs",
+      "line": 29,
+      "method": "OnGetExcelTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/UpdateCustomer.cshtml.cs",
+      "line": 41,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/UpdateCustomer.cshtml.cs",
+      "line": 77,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Customers/UpdateCustomer.cshtml.cs",
+      "line": 144,
+      "method": "Validate",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Employees/CreateEmployee.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Employees/CreateEmployee.cshtml.cs",
+      "line": 35,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Employees/Details.cshtml.cs",
+      "line": 15,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Employees/EditEmployee.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Employees/EditEmployee.cshtml.cs",
+      "line": 48,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Employees/Index.cshtml.cs",
+      "line": 7,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Inbox/Index.cshtml.cs",
+      "line": 38,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Inbox/Index.cshtml.cs",
+      "line": 58,
+      "method": "OnGetRedirectAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Index.cshtml.cs",
+      "line": 13,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Index.cshtml.cs",
+      "line": 18,
+      "method": "OnGetFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/CreateSliderModal.cshtml.cs",
+      "line": 24,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/CreateSliderModal.cshtml.cs",
+      "line": 29,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/CreateStoryModal.cshtml.cs",
+      "line": 24,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/CreateStoryModal.cshtml.cs",
+      "line": 37,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/EditSliderModal.cshtml.cs",
+      "line": 27,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/EditSliderModal.cshtml.cs",
+      "line": 34,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/EditStoryModal.cshtml.cs",
+      "line": 32,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/EditStoryModal.cshtml.cs",
+      "line": 47,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/Index.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Stories/Sliders.cshtml.cs",
+      "line": 9,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tenants/CreateModal.cshtml.cs",
+      "line": 22,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tenants/CreateModal.cshtml.cs",
+      "line": 24,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tenants/EditModal.cshtml.cs",
+      "line": 23,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tenants/EditModal.cshtml.cs",
+      "line": 31,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tenants/Index.cshtml.cs",
+      "line": 7,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/CreateTicketTagModal.cshtml.cs",
+      "line": 20,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/CreateTicketTagModal.cshtml.cs",
+      "line": 25,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 243,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 248,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 294,
+      "method": "OnPostRightNavMenuAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 331,
+      "method": "OnGetSetFavoriteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 345,
+      "method": "OnGetDeleteFavoriteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 358,
+      "method": "OnGetTakeResponsibleAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 376,
+      "method": "OnGetDropResponsibleAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 385,
+      "method": "OnGetDownloadAllFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 398,
+      "method": "OnGetDownloadFileTicketZipAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 417,
+      "method": "OnGetDownloadTicketHistoryZipFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Details.cshtml.cs",
+      "line": 430,
+      "method": "OnGetDownloadOneFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/DetailsMessage.cshtml.cs",
+      "line": 52,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/DetailsMessage.cshtml.cs",
+      "line": 82,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditModal.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditModal.cshtml.cs",
+      "line": 41,
+      "method": "OnPost",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketDescriptionModal.cshtml.cs",
+      "line": 23,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketDescriptionModal.cshtml.cs",
+      "line": 33,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketHistoryModal.cshtml.cs",
+      "line": 22,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketHistoryModal.cshtml.cs",
+      "line": 29,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketSectionModal.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketSectionModal.cshtml.cs",
+      "line": 48,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketTypeModal.cshtml.cs",
+      "line": 30,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/EditTicketTypeModal.cshtml.cs",
+      "line": 40,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/GiveTicketModal.cshtml.cs",
+      "line": 31,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/GiveTicketModal.cshtml.cs",
+      "line": 45,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Index.cshtml.cs",
+      "line": 45,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/Index.cshtml.cs",
+      "line": 88,
+      "method": "OnGetExcelTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/TicketHistoryListPartialView.cshtml.cs",
+      "line": 4,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/WriteMessagePreviewModal.cshtml.cs",
+      "line": 35,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Tickets/WriteMessagePreviewModal.cshtml.cs",
+      "line": 51,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/TicketSections/CreateModal.cshtml.cs",
+      "line": 17,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/TicketSections/EditModal.cshtml.cs",
+      "line": 22,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/TicketSections/EditModal.cshtml.cs",
+      "line": 28,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/TicketSections/Index.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Users/Birthdays.cshtml.cs",
+      "line": 4,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Users/CreateUser.cshtml.cs",
+      "line": 23,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Users/CreateUser.cshtml.cs",
+      "line": 31,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Users/Index.cshtml.cs",
+      "line": 22,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Web/Pages/Users/Index.cshtml.cs",
+      "line": 26,
+      "method": "OnGetExcelTableAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/About/Index.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Calendar/Index.cshtml.cs",
+      "line": 15,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Inbox/Index.cshtml.cs",
+      "line": 39,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Inbox/Index.cshtml.cs",
+      "line": 59,
+      "method": "OnGetRedirectAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Index.cshtml.cs",
+      "line": 11,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Index.cshtml.cs",
+      "line": 16,
+      "method": "OnPostLoginAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Profile/EditModal.cshtml.cs",
+      "line": 14,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Profile/EditModal.cshtml.cs",
+      "line": 17,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Profile/Index.cshtml.cs",
+      "line": 41,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Compose.cshtml.cs",
+      "line": 76,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Compose.cshtml.cs",
+      "line": 170,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/ComposeModal.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 73,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 170,
+      "method": "OnGetDownloadAllFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 183,
+      "method": "OnGetDownloadFileTicketZipAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 202,
+      "method": "OnGetDownloadTicketHistoryZipFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 215,
+      "method": "OnGetDownloadOneFileAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 228,
+      "method": "OnGetSetFavoriteAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Details.cshtml.cs",
+      "line": 242,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/DetailsPreview.cshtml.cs",
+      "line": 59,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/EditCompose.cshtml.cs",
+      "line": 69,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/EditCompose.cshtml.cs",
+      "line": 169,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/Index.cshtml.cs",
+      "line": 48,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/PreviewTicketPrintModal.cshtml.cs",
+      "line": 6,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/RatingModal.cshtml.cs",
+      "line": 15,
+      "method": "OnGetAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/RatingModal.cshtml.cs",
+      "line": 26,
+      "method": "OnPostAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/RatingSuccessModal.cshtml.cs",
+      "line": 4,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/RulesModal.cshtml.cs",
+      "line": 4,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.PublicWeb/Pages/Tickets/TicketHistoryListPartialView.cshtml.cs",
+      "line": 4,
+      "method": "OnGet",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.HttpApi/Controllers/ContentFileController.cs",
+      "line": 28,
+      "method": "GetAvatarImage",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.HttpApi/Controllers/ContentFileController.cs",
+      "line": 35,
+      "method": "GetPublicAvatarImage",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.HttpApi/Controllers/ContentFileController.cs",
+      "line": 42,
+      "method": "GetStoryFileContentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.HttpApi/Controllers/EmployeeAvatarController.cs",
+      "line": 24,
+      "method": "Index",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.HttpApi/Controllers/EmployeeAvatarController.cs",
+      "line": 33,
+      "method": "Avatar",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/CustomerAvatar/Avatar.cs",
+      "line": 19,
+      "method": "UploadTicketHistoryAttachmentAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/ContractExtensions.cs",
+      "line": 6,
+      "method": "SetCreationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/ContractExtensions.cs",
+      "line": 11,
+      "method": "SetCreatorId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/ContractStatusExtensions.cs",
+      "line": 6,
+      "method": "SetId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/CustomerUserProfileExtensions.cs",
+      "line": 7,
+      "method": "SetCreationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/CustomerUserProfileExtensions.cs",
+      "line": 8,
+      "method": "SetLastModificationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/IdentityUserExtensions.cs",
+      "line": 6,
+      "method": "SetPasswordHash",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketExtensions.cs",
+      "line": 7,
+      "method": "SetCreationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketExtensions.cs",
+      "line": 8,
+      "method": "SetLastModificationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketExtensions.cs",
+      "line": 10,
+      "method": "SetDueDate",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketExtensions.cs",
+      "line": 16,
+      "method": "SetTenantId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketExtensions.cs",
+      "line": 22,
+      "method": "SetAttachmentsCount",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketHistoryExtensions.cs",
+      "line": 7,
+      "method": "SetCreationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketHistoryExtensions.cs",
+      "line": 12,
+      "method": "SetLastModificationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketHistoryExtensions.cs",
+      "line": 18,
+      "method": "SetCreatorId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketStatusExtensions.cs",
+      "line": 7,
+      "method": "SetId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/TicketTypeExtensions.cs",
+      "line": 7,
+      "method": "SetId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/UploadedFileExtensions.cs",
+      "line": 7,
+      "method": "SetCreationTime",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Extensions/UploadedFileExtensions.cs",
+      "line": 12,
+      "method": "SetCreatorId",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Helpers/UtilsMigration.cs",
+      "line": 13,
+      "method": "MediaFileSplitDisplayName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Helpers/UtilsMigration.cs",
+      "line": 37,
+      "method": "HdProfileFixFirstLastMiddleName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Helpers/UtilsMigration.cs",
+      "line": 55,
+      "method": "GetNullIfNullOrWhiteSpace",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Helpers/UtilsMigration.cs",
+      "line": 62,
+      "method": "GetFioByFullName",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/KvMigrationService.cs",
+      "line": 931,
+      "method": "MigrateAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/MigrationHostedService.cs",
+      "line": 22,
+      "method": "StartAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/MigrationHostedService.cs",
+      "line": 30,
+      "method": "StopAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/MigrationModule.cs",
+      "line": 30,
+      "method": "OnApplicationInitializationAsync",
+      "status": "requires-parity-review"
+    },
+    {
+      "source": "KV.Server/src/KV.Server.Migration/Program.cs",
+      "line": 16,
+      "method": "Main",
+      "status": "requires-parity-review"
+    }
+  ]
+}

@@ -16,6 +16,7 @@ import { ColumnSettings } from "@/widgets/tickets-list/ui/column-settings";
 import { SpecialistsList } from "@/widgets/tickets-list/ui/specialists-list";
 import { TicketFiltersPanel } from "@/widgets/tickets-list/ui/ticket-filters";
 import { TicketsTable } from "@/widgets/tickets-list/ui/tickets-table";
+import { LiveTicketsPage } from '@/views/backend/ui/live-staff';
 
 const allColumns = ticketColumns.map(column => column.id);
 function validColumns(value: unknown): value is TicketColumn[] {
@@ -26,6 +27,9 @@ function validFavorites(value: unknown): value is number[] {
 }
 
 export function TicketsPage() {
+  return process.env.NEXT_PUBLIC_DATA_MODE==='demo'?<DemoTicketsPage/>:<LiveTicketsPage/>;
+}
+function DemoTicketsPage() {
   const { session, employee, ticketsHref } = useDemoTicketSession();
   const access = ticketAccess(session);
   const initialFavorites = employee ? [] : initialFavoriteTicketIds;
