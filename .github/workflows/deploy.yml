@@ -1,0 +1,87 @@
+name: Verify and deploy main
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consulting-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: backend_test
+          POSTGRES_PASSWORD: backend_test
+          POSTGRES_DB: backend_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U backend_test -d backend_test"
+          --health-interval 5s --health-timeout 5s --health-retries 15
+    env:
+      BACKEND_TEST_DATABASE_URL: postgresql://backend_test:backend_test@127.0.0.1:5432/backend_test
+      DATABASE_URL: postgresql://backend_test:backend_test@127.0.0.1:5432/backend_test
+      PGPASSWORD: backend_test
+      NEXT_TELEMETRY_DISABLED: '1'
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - name: Initialize isolated verification database
+        run: |
+          psql -X -h 127.0.0.1 -U backend_test -d backend_test -v ON_ERROR_STOP=1 -f ../database/init.sql > /tmp/consulting-schema.log
+          npm run db:migrate
+      - run: npm run test:backend
+      - run: npm run build
+      - run: node scripts/verify-http.mjs
+
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: showcase
+    steps:
+      - name: Deploy the verified commit
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          REVISION: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_KEY"
+          test -n "$DEPLOY_KNOWN_HOSTS"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/consulting_deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/consulting_deploy ~/.ssh/known_hosts
+          trap 'rm -f ~/.ssh/consulting_deploy' EXIT
+          ssh -T -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=20 -o ServerAliveInterval=30 -o ServerAliveCountMax=10 \
+            -i ~/.ssh/consulting_deploy root@103.74.92.127 "deploy $REVISION"
+      - name: Verify public HTTPS
+        run: curl --fail --silent --show-error --retry 10 --retry-delay 3 --retry-all-errors https://consulting-lk.103-74-92-127.sslip.io/api/ready
