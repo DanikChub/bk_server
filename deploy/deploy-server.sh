@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 umask 077
 revision=${1:?Verified revision required}
 source_dir=${2:?Source checkout required}
@@ -20,6 +20,7 @@ switched=false
 rollback() {
   status=$?
   trap - ERR
+  set +e
   echo "Deployment failed; restoring previous images. Backup: $backup" >&2
   docker tag consulting-lk-app:rollback consulting-lk-app:latest
   docker tag consulting-lk-worker:rollback consulting-lk-worker:latest

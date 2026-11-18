@@ -1,9 +1,9 @@
 FROM node:24-bookworm-slim AS build
 WORKDIR /app/frontend
-COPY frontend/package.json frontend/package-lock.json ./
+COPY --chown=node:node frontend/package.json frontend/package-lock.json ./
 RUN npm ci
-COPY frontend/ ./
-COPY database/ /app/database/
+COPY --chown=node:node frontend/ ./
+COPY --chown=node:node database/ /app/database/
 RUN npm run build
 
 FROM node:24-bookworm-slim AS app
