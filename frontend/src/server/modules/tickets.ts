@@ -78,11 +78,15 @@ export async function ticketDetails(s:Session,id:string):Promise<Row & {history:
   const status=await one(`SELECT * FROM "TicketStatuses" WHERE "Id"=$1`,[ticket.TicketStatusId]);
   const type=await one(`SELECT * FROM "TicketTypes" WHERE "Id"=$1`,[ticket.TicketTypeId]);
   const section=ticket.TicketSectionId?await one(`SELECT * FROM "TicketSections" WHERE "Id"=$1`,[ticket.TicketSectionId]):null;
-  const creator=await one(`SELECT "Name","Surname","Email","PhoneNumber" FROM "AbpUsers" WHERE "Id"=$1`,[ticket.CreatorId]);
+  const creator=await one(`SELECT u."Name",u."Surname",u."Email",u."PhoneNumber",coalesce(c."JobPost",e."JobPost") AS "JobPost" FROM "AbpUsers" u LEFT JOIN "CustomerUserProfiles" c ON c."IdentityUserId"=u."Id" LEFT JOIN "EmployeeProfiles" e ON e."IdentityUserId"=u."Id" WHERE u."Id"=$1`,[ticket.CreatorId]);
   const customer=ticket.TenantId?await one(`SELECT "ShortName","LongName" FROM "TenantProfiles" WHERE "Id"=$1 AND NOT "IsDeleted"`,[ticket.TenantId]):null;
   const specialist=ticket.ResponsibleId?await one(`SELECT "FirstName","LastName","MiddleName","JobPost" FROM "EmployeeProfiles" WHERE "Id"=$1`,[ticket.ResponsibleId]):null;
   const limits=ticket.ContractId?await rows(`SELECT c."Id",c."Name",coalesce(m."Sum",0) AS used,coalesce(m."MaxCount",s."Max",0) AS max FROM "ConstraintTypes" c LEFT JOIN LATERAL (SELECT x."Max" FROM "ContractSettings" x WHERE x."ConstraintTypeId"=c."Id" AND x."ContractId"=$1 ORDER BY x."CreationTime" DESC,x."Id" DESC LIMIT 1) s ON true LEFT JOIN "ContractConstraintsByMonths" m ON m."ConstraintTypeId"=c."Id" AND m."ContractId"=$1 AND m."Year"=extract(year FROM now()) AND m."Month"=extract(month FROM now())`,[ticket.ContractId]):[];
-  return {...ticket,history,attachments,historyAttachments,status,type,section,creator,customer,specialist,limits};
+  const packages=ticket.ContractId?await rows(`SELECT p."Id",p."Name" FROM "ContractServicePackages" l JOIN "ServicePackages" p ON p."Id"=l."ServicePackageId" WHERE l."ContractId"=$1 ORDER BY p."Name"`,[ticket.ContractId]):[];
+  const tags=await rows(`SELECT t."Id",t."Name" FROM "TicketTags" l JOIN "Tags" t ON t."Id"=l."TagId" WHERE l."TicketId"=$1 ORDER BY t."Name"`,[id]);
+  const owner=s.tenantId?(await one(`SELECT "Id" FROM "CustomerUserProfiles" WHERE "IdentityUserId"=$1 AND "TenantId"=$2`,[s.userId,s.tenantId]))?.Id:s.specialistId;
+  const favorite=owner?Boolean(await one(`SELECT 1 FROM "${s.tenantId?'TicketClientFavorites':'TicketSpecialistFavorites'}" WHERE "TicketId"=$1 AND "${s.tenantId?'ClientId':'SpecialistId'}"=$2`,[id,owner])):false;
+  return {...ticket,history,attachments,historyAttachments,status,type,section,creator,customer,specialist,limits,packages,tags,favorite};
 }
 export async function createTicket(s:Session,body:unknown,options:{allowExpiredContract?:boolean}={}) {
   const input=createInput.parse(body);
@@ -148,7 +152,11 @@ export async function mutateTicket(s:Session,id:string,action:string,body:unknow
       else await db.query(`DELETE FROM "${table}" WHERE "TicketId"=$1 AND "${column}"=$2`,[id,owner]);
       return {favorite};
     }
-    if(action==='read') return update('Tickets',id,{[s.tenantId?'ReadByClientDate':'ReadBySpecialistDate']:new Date()},db,s.userId);
+    if(action==='read') {
+      const column=s.tenantId?'ReadByClientDate':'ReadBySpecialistDate';
+      await db.query(`UPDATE "TicketHistory" SET "${column}"=COALESCE("${column}",NOW()) WHERE "TicketId"=$1 AND NOT "IsDeleted" ${s.tenantId?'AND NOT "IsInternal" AND "Type"<>5':''}`,[id]);
+      return (await db.query(`UPDATE "Tickets" SET "${column}"=COALESCE("${column}",NOW()) WHERE "Id"=$1 RETURNING *`,[id])).rows[0];
+    }
     if(action==='rating') {
       assert(s.tenantId,403,'Оценка доступна клиенту');
       const {rating}=z.object({rating:z.number().min(0).max(5)}).strict().parse(body);

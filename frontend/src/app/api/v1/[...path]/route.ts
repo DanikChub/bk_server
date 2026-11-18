@@ -4,6 +4,7 @@ import { assert } from '@/server/errors';
 import { listTickets, ticketDetails, createTicket, mutateTicket, deleteTicket, editHistory, historyPage } from '@/server/modules/tickets';
 import { contracts } from '@/server/modules/contracts';
 import { customers } from '@/server/modules/customers';
+import { customerEditor } from '@/server/modules/customer-editor';
 import { users, profile, revealPassword, birthdays, changeOwnPassword, identityUsers } from '@/server/modules/users';
 import { resource } from '@/server/modules/resources';
 import { events } from '@/server/modules/events';
@@ -38,11 +39,11 @@ const handler=api(async(req,s)=>{
   if(['contracts','customers','users','employees','roles'].includes(module)) {
     assert(!child,404,'Маршрут не найден');
     if(!id)permitted(['GET','POST']);
-    else if(!action)permitted(['GET','PATCH','DELETE']);
+    else if(!action)permitted(module==='customers'&&id==='new'?['POST']:['GET','PATCH','DELETE']);
     else {
       const operations:Record<string,Record<string,string[]>>={
         contracts:{statistics:['GET'],packages:['GET','POST','DELETE'],'replace-package':['POST'],limits:['POST'],tags:['GET','POST','DELETE']},
-        customers:{statistics:['GET'],users:['GET'],events:['GET'],packages:['GET'],managers:['GET'],manager:['POST','DELETE'],contacts:['POST']},
+        customers:{statistics:['GET'],users:['GET'],events:['GET'],packages:['GET'],managers:['GET'],manager:['POST','DELETE'],contacts:['POST'],'edit-form':['GET','PATCH']},
         users:{profile:['GET','POST','PATCH'],password:['POST'],roles:['POST'],active:['POST'],avatar:['GET','POST'],'reveal-password':['POST']},employees:{profile:['GET','POST','PATCH'],password:['POST'],roles:['POST'],active:['POST'],avatar:['GET','POST'],'reveal-password':['POST']},roles:{permissions:['POST']},
       };
       const methods=operations[module]?.[action];assert(methods,404,'Операция не найдена');permitted(methods);
@@ -105,6 +106,8 @@ const handler=api(async(req,s)=>{
     else if(!child && method==='POST')return mutateTicket(s,id,action,body);
     assert(false,405,'Метод не поддерживается');
   }
+  if(module==='customers' && id==='new' && !action && method==='POST')return customerEditor(s,undefined,method,body);
+  if(module==='customers' && id && action==='edit-form' && ['GET','PATCH'].includes(method))return customerEditor(s,id,method,body);
   if(module==='portal') {
     if(!id && method==='GET')return portalSnapshot(s);
     if(id==='profile' && method==='PATCH')return portalProfile(s,body);

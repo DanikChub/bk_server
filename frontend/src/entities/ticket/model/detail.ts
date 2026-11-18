@@ -1,7 +1,7 @@
 import type { Ticket, TicketStatus } from "@/entities/ticket/model/types";
 export type Attachment = { id: string; name: string; size: number; sampleText?: string };
 export type MessageKind = "client" | "reply" | "internal" | "event";
-export type TicketMessage = { id: string; kind: MessageKind; author: string; text: string; createdAt: string; attachments: Attachment[]; creatorId?: string };
+export type TicketMessage = { id: string; kind: MessageKind; author: string; text: string; createdAt: string; attachments: Attachment[]; creatorId?: string; read?: boolean };
 export type Constraint = { name: string; used: number; limit: number };
 export type TicketDetail = { ticket: Ticket; updatedAt: string; messages: TicketMessage[]; constraints: Constraint[]; events: { id: string; text: string; date: string }[]; deleted: boolean };
 export const ticketStatuses: TicketStatus[] = ["Новая", "В работе", "Возобновлённая", "Закрыта", "Требует уточнения"];

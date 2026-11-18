@@ -2,6 +2,7 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { bootstrap } from '../src/server/bootstrap';
 import { pool, one, rows, transaction, insert, update } from '../src/server/db';
+import { customerEditor } from '../src/server/modules/customer-editor';
 import { customers } from '../src/server/modules/customers';
 import { users } from '../src/server/modules/users';
 import { contracts } from '../src/server/modules/contracts';
@@ -407,4 +408,28 @@ test('tenant event handlers accept both serializer cases and deduplicate broker 
   assert.equal((await one(`SELECT "ShortName" FROM "TenantProfiles" WHERE "Id"=$1`,[id]))!.ShortName,'Из события');
   await applyTenantEvent('deleted',{Entity:{Id:id}},randomUUID());
   assert.equal((await one(`SELECT "IsDeleted" FROM "TenantProfiles" WHERE "Id"=$1`,[id]))!.IsDeleted,true);
+});
+
+
+test('NEW customer editor commits company and contact together, preserves passwords and rolls back failures',{skip:!enabled},async()=>{
+  const input={company:{LongName:'Editor integration company',ShortName:'Editor test'},meta:{organizationType:'education',networkEdition:'Network edition',subordinateIds:[],bitrixUrl:''},contact:{fullName:'Editor Contact Person',email:'editor@example.test',userName:'editor-contact',password:'Editor-Password!'},responsibleManagerId:null};
+  const created=await customerEditor(admin,undefined,'POST',input) as {id:string};
+  const saved=await customerEditor(admin,created.id,'GET',undefined) as {company:Record<string,unknown>;meta:Record<string,unknown>;contact:Record<string,unknown>};
+  assert.equal(saved.company.ShortName,'Editor test');assert.equal(saved.meta.organizationType,'education');assert.equal(saved.contact.password,'');assert.equal(saved.contact.userName,'editor-contact');
+  const user=await one(`SELECT "PasswordHash" FROM "AbpUsers" WHERE "TenantId"=$1 AND "UserName"='editor-contact'`,[created.id]);
+  await customerEditor(admin,created.id,'PATCH',{company:{...saved.company,ShortName:'Edited'},meta:saved.meta,responsibleManagerId:null,contact:{...saved.contact,jobPost:'Director',password:''}});
+  const edited=await customerEditor(admin,created.id,'GET',undefined) as {company:Record<string,unknown>;meta:Record<string,unknown>;contact:Record<string,unknown>};
+  assert.equal(edited.company.ShortName,'Edited');assert.equal(edited.contact.jobPost,'Director');assert.equal((await one(`SELECT "PasswordHash" FROM "AbpUsers" WHERE "TenantId"=$1 AND "UserName"='editor-contact'`,[created.id]))!.PasswordHash,user!.PasswordHash);
+  await assert.rejects(()=>customerEditor(client,created.id,'GET',undefined));
+  const count=await one(`SELECT count(*) AS n FROM "TenantProfiles"`);
+  await assert.rejects(()=>customerEditor(admin,undefined,'POST',{...input,contact:{...input.contact,password:'short'}}),/8/);
+  assert.equal((await one(`SELECT count(*) AS n FROM "TenantProfiles"`))!.n,count!.n);
+});
+
+test('read receipts preserve first read and do not expose internal notes to clients',{skip:!enabled},async()=>{
+  await mutateTicket(client,ticketId,'read',{});
+  const first=await one(`SELECT "ReadByClientDate" FROM "Tickets" WHERE "Id"=$1`,[ticketId]);
+  await mutateTicket(client,ticketId,'read',{});
+  assert.equal(String((await one(`SELECT "ReadByClientDate" FROM "Tickets" WHERE "Id"=$1`,[ticketId]))!.ReadByClientDate),String(first!.ReadByClientDate));
+  assert.equal((await rows(`SELECT "Id" FROM "TicketHistory" WHERE "TicketId"=$1 AND NOT "IsDeleted" AND NOT "IsInternal" AND "Type"<>5 AND "ReadByClientDate" IS NULL`,[ticketId])).length,0);
 });

@@ -4,11 +4,12 @@ export type PortalProfile = {
   colleagues: { id: string; name: string }[];
 };
 export type PortalAttachment = { id: string; name: string; size: number; type: string };
-export type PortalMessage = { id: string; author: string; text: string; createdAt: string; attachments: PortalAttachment[] };
+export type PortalMessage = { id: string; author: string; text: string; createdAt: string; attachments: PortalAttachment[]; kind?:'client'|'reply'|'event';creatorId?:string;read?:boolean };
 export type PortalTicket = {
   id: string; subject: string; description: string; status: "Черновик" | "Новая" | "В работе" | "Требует уточнения" | "Закрыта" | "Возобновленная" | "Ожидание ответа";
   section: string; createdAt: string; specialist: string; favorite: boolean; rating: number | null;
   attachments: PortalAttachment[]; messages: PortalMessage[];
+  updatedAt?:string;dueDate?:string;type?:string;authorName?:string;specialistJob?:string;specialistPhone?:string;packages?:string[];
 };
 export type PortalContract = {
   id: string; number: string; package: string; startsAt: string; endsAt: string; progress: number; active: boolean;
@@ -25,7 +26,7 @@ export type SaveQuestion = { id?: string; subject: string; description: string; 
 // UI contract. A Nest HTTP adapter can implement this without changing the views.
 // The server must derive identity, organization and permissions from its session.
 export interface PortalRepository {
-  load(signal?: AbortSignal): Promise<PortalSnapshot>;
+  load(signal?: AbortSignal, options?: {includeContent?:boolean}): Promise<PortalSnapshot>;
   saveQuestion(input: SaveQuestion): Promise<PortalTicket>;
   reply(ticketId: string, text: string, files: File[]): Promise<PortalTicket>;
   setFavorite(ticketId: string, favorite: boolean): Promise<PortalTicket>;

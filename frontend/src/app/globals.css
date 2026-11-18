@@ -12,6 +12,8 @@ button { cursor:pointer; }
 
 .app-shell { min-height:100vh; }
 .sidebar { background:var(--sidebar); color:var(--light,#a7b1c2); display:flex; flex-direction:column; position:fixed; inset:0 auto 0 0; width:var(--sidebar-width); overflow-y:auto; z-index:30; }
+.new-design-icon{display:inline-block;flex-shrink:0;max-width:none;vertical-align:middle}
+.live-staff-sidebar{background:#293846}.live-sidebar-avatar{display:flex;width:48px;height:48px;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;background:#d9edf7;color:#334557;font-size:22px}.live-sidebar-avatar img{object-fit:cover}.live-staff-sidebar .sidebar-profile strong{max-width:165px}.live-staff-sidebar .sidebar-link{gap:12px}.live-staff-sidebar .sidebar-footer{padding-left:24px}.live-staff-sidebar .sidebar-hotline{font-size:14px}.live-staff-sidebar .sidebar-hotline img{flex-shrink:0}
 .sidebar-profile { min-height:175px; padding:33px 25px 25px; }
 .sidebar-profile img { display:block; border-radius:50%; object-fit:cover; }
 .sidebar-profile strong { display:block; color:#fff; font-size:13px; font-weight:600; line-height:18px; margin-top:15px; }

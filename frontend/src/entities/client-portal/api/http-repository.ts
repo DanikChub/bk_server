@@ -7,8 +7,9 @@ export async function backend<T>(path:string,method='GET',body?:unknown,signal?:
 }
 let snapshot:PortalSnapshot|null=null;
 const materialCache=new Map<string,{expires:number;value:Promise<PromiseSettledResult<{data:Record<string,unknown>[]}>[]>}>();
-async function load(signal?:AbortSignal){
+async function load(signal?:AbortSignal,options?:{includeContent?:boolean}){
   const value=await backend<PortalSnapshot>('portal','GET',undefined,signal);
+  if(options?.includeContent===false){snapshot=value;return value;}
   let cached=materialCache.get(value.profile.id);
   if(!cached||cached.expires<Date.now()){
     const timeout=AbortSignal.timeout(5000);
@@ -23,7 +24,7 @@ async function load(signal?:AbortSignal){
   if(results.some(r=>r.status==='rejected'))value.contentError='Материалы библиотеки временно недоступны.';
   snapshot=value;return value;
 }
-async function ticket(id:string):Promise<PortalTicket>{const value=(await load()).tickets.find(t=>t.id===id);if(!value)throw new Error('Заявка не найдена');return value;}
+async function ticket(id:string):Promise<PortalTicket>{const value=(await load(undefined,{includeContent:false})).tickets.find(t=>t.id===id);if(!value)throw new Error('Заявка не найдена');return value;}
 export async function command<T>(path:string,data:unknown,files:File[]):Promise<T>{
   if(!files.length)return backend<T>(path,'POST',data);
   const form=new FormData();form.set('data',JSON.stringify(data));for(const file of files)form.append('files',file);
