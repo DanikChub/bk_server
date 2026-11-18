@@ -6,6 +6,7 @@ import { assert, AppError } from '../errors';
 import { verifyPassword } from './password';
 import { verifyAuthenticatorCode } from './totp';
 import { rotatePassword } from './change-password';
+import { emailMfa } from './recovery';
 
 export const sessionCookie = 'consulting_session';
 export type Session = { userId: string; tenantId: string | null; userName: string; roles: string[]; permissions: string[]; specialistId: string | null };
@@ -50,10 +51,10 @@ export async function login(userName: string, password: string, tenantName: stri
     }
     if(user.TwoFactorEnabled){
       const key=await one(`SELECT "Value" FROM "AbpUserTokens" WHERE "UserId"=$1 AND "LoginProvider"='[AspNetUserStore]' AND "Name"='AuthenticatorKey'`,[user.Id],db);
-      if(!key?.Value)return {error:new AppError(409,'Для аккаунта требуется дополнительный способ подтверждения входа','mfa_provider_required')};
-      if(!authenticatorCode || !verifyAuthenticatorCode(String(key.Value),authenticatorCode)){
+      const validMfa=key?.Value?Boolean(authenticatorCode&&verifyAuthenticatorCode(String(key.Value),authenticatorCode)):await emailMfa(db,user,authenticatorCode);
+      if(!validMfa){
         if(authenticatorCode)await db.query(`UPDATE "AbpUsers" SET "AccessFailedCount"="AccessFailedCount"+1,"LockoutEnd"=CASE WHEN "LockoutEnabled" AND "AccessFailedCount">=4 THEN now()+interval '5 minutes' ELSE "LockoutEnd" END WHERE "Id"=$1`,[user.Id]);
-        return {error:new AppError(401,'Введите действующий код из приложения аутентификации','mfa_required')};
+        return {error:new AppError(401,key?.Value?'Введите действующий код из приложения аутентификации':authenticatorCode?'Введите действующий код из письма':'Код входа отправлен на подтверждённую почту','mfa_required')};
       }
     }
     if(user.ShouldChangePasswordOnNextLogin){

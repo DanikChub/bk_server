@@ -24,7 +24,17 @@ export async function rows<T extends QueryResultRow = Row>(text: string, values:
 export async function one<T extends QueryResultRow = Row>(text: string, values: unknown[] = [], db: Executor = executor()): Promise<T | undefined> {
   return (await rows<T>(text, values, db))[0];
 }
-export async function transaction<T>(fn: (db: PoolClient) => Promise<T>): Promise<T> {
+export async function transaction<T>(fn:(db:PoolClient)=>Promise<T>):Promise<T>{
+  const parent=transactionContext.getStore();if(parent)return fn(parent.db);
+  for(let attempt=0;;attempt++){
+    try{return await transactionAttempt(fn);}catch(error){
+      const code=(error as {code?:string}).code;
+      if(attempt>=2||!['40001','40P01'].includes(code??''))throw error;
+      await new Promise(resolve=>setTimeout(resolve,20*(attempt+1)));
+    }
+  }
+}
+async function transactionAttempt<T>(fn: (db: PoolClient) => Promise<T>): Promise<T> {
   const parent=transactionContext.getStore();if(parent)return fn(parent.db);
   const db = await pool().connect();
   const state={db,rollbackHooks:[] as (()=>Promise<void>)[]};let released=false;

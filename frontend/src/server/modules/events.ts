@@ -7,11 +7,12 @@ const input=z.object({title:z.string().min(1).max(500),description:z.string().ma
 export async function events(s:Session,id:string|undefined,method:string,body:unknown,query:URLSearchParams) {
   if(method==='GET') {
     requirePermission(s,'Event.Get');
-    if(id){z.string().uuid().parse(id);const event=await one(`SELECT * FROM "Events" WHERE "Id"=$1 AND "TenantId" IS NOT DISTINCT FROM $2::uuid AND NOT "IsDeleted"`,[id,s.tenantId]);assert(event,404,'Событие не найдено');return event;}
+    if(id){z.string().uuid().parse(id);const event=await one(`SELECT * FROM "Events" WHERE "Id"=$1 AND ("TenantId" IS NOT DISTINCT FROM $2::uuid OR "CreatorId"=$3) AND NOT "IsDeleted"`,[id,s.tenantId,s.userId]);assert(event,404,'Событие не найдено');return event;}
     if(query.get('ticketId')) {await scopeTicket(s,query.get('ticketId')!,pool());return rows(`SELECT * FROM "Events" WHERE "TicketId"=$1 AND NOT "IsDeleted" ORDER BY "EventDate"`,[query.get('ticketId')]);}
     const start=z.string().datetime({offset:true}).parse(query.get('start')),end=z.string().datetime({offset:true}).parse(query.get('end'));
     assert(Date.parse(end)>Date.parse(start),400,'Проверьте период');
-    return rows(`SELECT * FROM "Events" WHERE NOT "IsDeleted" AND "TenantId" IS NOT DISTINCT FROM $1::uuid AND "EventDate">$2 AND "EventDate"<$3 ${query.get('mine')==='true'?'AND "CreatorId"=$4':''} ORDER BY "EventDate"`,query.get('mine')==='true'?[s.tenantId,start,end,s.userId]:[s.tenantId,start,end]);
+    if(query.get('mine')==='true')return rows(`SELECT * FROM "Events" WHERE NOT "IsDeleted" AND "CreatorId"=$1 AND "EventDate">$2 AND "EventDate"<$3 ORDER BY "EventDate"`,[s.userId,start,end]);
+    return rows(`SELECT * FROM "Events" WHERE NOT "IsDeleted" AND "TenantId" IS NOT DISTINCT FROM $1::uuid AND "EventDate">$2 AND "EventDate"<$3 ORDER BY "EventDate"`,[s.tenantId,start,end]);
   }
   return transaction(async db=> {
     if(!id) {
@@ -21,7 +22,7 @@ export async function events(s:Session,id:string|undefined,method:string,body:un
       return insert('Events',{Title:data.title,Description:data.description,EventDate:data.date,EventType:data.type,TicketId:data.ticketId,TenantId:ticket?.TenantId??s.tenantId},db,s.userId);
     }
     z.string().uuid().parse(id);requirePermission(s,method==='DELETE'?'Calendar.Delete':'Calendar.Edit');
-    const event=await one(`SELECT * FROM "Events" WHERE "Id"=$1 AND NOT "IsDeleted" AND "TenantId" IS NOT DISTINCT FROM $2::uuid FOR UPDATE`,[id,s.tenantId],db);assert(event,404,'Событие не найдено');
+    const event=await one(`SELECT * FROM "Events" WHERE "Id"=$1 AND NOT "IsDeleted" AND ("TenantId" IS NOT DISTINCT FROM $2::uuid OR "CreatorId"=$3) FOR UPDATE`,[id,s.tenantId,s.userId],db);assert(event,404,'Событие не найдено');
     if(method==='DELETE')return update('Events',id,{IsDeleted:true,DeletionTime:new Date(),DeleterId:s.userId},db,s.userId);
     const data=input.partial().parse(body);
     if(data.ticketId)await scopeTicket(s,data.ticketId,db);

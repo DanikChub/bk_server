@@ -28,8 +28,17 @@ try{
   assert.equal((await request('/api/v1/tickets?sort=Id%3BDROP%20TABLE%20Tickets',{cookie:adminCookie})).status,400);
   const clientLogin=await request('/api/auth/login',{method:'POST',body:{userName:'client',password:'Client-Password!',tenant:'Тест'}});assert.equal(clientLogin.status,200,await clientLogin.text());
   const clientCookie=clientLogin.headers.get('set-cookie').split(';')[0];
+  assert.equal((await request('/api/v1/permissions',{cookie:adminCookie})).status,200);
+  assert.equal((await request('/api/v1/permissions',{cookie:clientCookie})).status,403);
+  assert.equal((await request('/client/forgot-password')).status,200);
+  assert.equal((await request('/client/reset-password')).status,200);
   assert.equal((await request('/api/v1/users',{cookie:clientCookie})).status,403);
   const details=await request(`/api/v1/tickets/${id}`,{cookie:clientCookie});assert.equal(details.status,200);const ticket=await details.json();assert.ok(ticket.history.every(h=>!h.IsInternal && h.Type!==5));assert.equal(ticket.Description,'Описание');
+  const historyPage=await request(`/api/v1/tickets/${id}/history?take=1`,{cookie:clientCookie});assert.equal(historyPage.status,200);const history=await historyPage.json();assert.equal(history.items.length,1);assert.ok(history.totalCount>1);
+  const edited=await request(`/api/v1/tickets/${id}`,{cookie:adminCookie,method:'PATCH',body:{subject:'HTTP parity edit'}});assert.equal(edited.status,200);
+  assert.equal((await request(`/api/v1/tickets/${id}`,{cookie:adminCookie,method:'PATCH',body:{subject:'Вопрос'}})).status,200);
+  assert.equal((await request(`/api/v1/tickets/${id}/reply`,{cookie:adminCookie,method:'POST',body:{description:'HTTP parity reply'}})).status,200);
+  const inbox=await request('/api/v1/notifications',{cookie:clientCookie});assert.equal(inbox.status,200);assert.ok((await inbox.json()).items.some(n=>n.Title===`Ответ по заявке ${id}`));
   assert.equal((await request(`/api/v1/tickets/${id}/reply`,{cookie:clientCookie,method:'POST',body:{description:'forged',internal:true}})).status,403);
   assert.equal((await request(`/api/v1/tickets/${id}/read`,{cookie:clientCookie,method:'POST',body:{}})).status,200);
   const pdf=await request(`/api/v1/tickets/${id}/pdf`,{cookie:clientCookie});assert.equal(pdf.status,200);assert.equal(Buffer.from(await pdf.arrayBuffer()).subarray(0,4).toString(),'%PDF');

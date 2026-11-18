@@ -6,9 +6,10 @@ import { requirePermission, requireStaff, scopeTicket, type Session } from '../a
 import { enqueue } from '../jobs/queue';
 import { productionCalendar } from '../integrations/calendar';
 import { legacyDeadline } from './deadline';
+import { managerIds, managedTenantSql } from './manager-scope';
 
 const uuid = z.string().uuid();
-const createInput = z.object({subject:z.string().trim().min(1).max(10000),description:z.string().max(1_000_000),ticketTypeId:uuid,ticketSectionId:uuid.nullable().default(null),contractId:uuid.nullable().default(null),tenantId:uuid.nullable().default(null),draft:z.boolean().default(false)}).strict();
+const createInput = z.object({subject:z.string().trim().min(1).max(10000),description:z.string().max(1_000_000),ticketTypeId:uuid,ticketSectionId:uuid.nullable().default(null),contractId:uuid.nullable().default(null),tenantId:uuid.nullable().default(null),draft:z.boolean().default(false),statusId:uuid.optional(),onBehalfOfUserId:uuid.optional()}).strict();
 const historyTypes = { customer:0, specialist:1, responsible:2, notPickUp:3, limit:4, internal:5, status:6 };
 export async function addHistory(db: Executor, s: Session, ticket: Row, description: string, type: number, internal=false) {
   return insert('TicketHistory',{TicketId:ticket.Id,TicketStatusId:ticket.TicketStatusId,Description:description,Type:type,IsInternal:internal},db,s.userId);
@@ -30,6 +31,8 @@ export async function listTickets(s: Session, query: URLSearchParams) {
   const args: unknown[] = [];
   const param = (v:unknown) => {args.push(v);return '$'+args.length;};
   const conditions = ['NOT t."IsDeleted"'];
+  const managers=await managerIds(s,query.get('managerId'));
+  if(managers)conditions.push(managedTenantSql('t."TenantId"',param(managers)));
   if(s.tenantId) {
     conditions.push(`t."TenantId"=${param(s.tenantId)}`);
     conditions.push(`((st."IsPublic" AND st."Name"<>'Draft') OR t."CreatorId"=${param(s.userId)})`);
@@ -44,7 +47,9 @@ export async function listTickets(s: Session, query: URLSearchParams) {
   if(query.get('tagId'))conditions.push(`EXISTS(SELECT 1 FROM "TicketTags" tag WHERE tag."TicketId"=t."Id" AND tag."TagId"=${param(uuid.parse(query.get('tagId')))})`);
   if(query.get('packageId'))conditions.push(`EXISTS(SELECT 1 FROM "ContractServicePackages" p WHERE p."ContractId"=t."ContractId" AND p."ServicePackageId"=${param(uuid.parse(query.get('packageId')))})`);
   if(query.get('unassigned')==='true')conditions.push('t."ResponsibleId" IS NULL');
-  if(query.get('mine')==='true') conditions.push(`t."ResponsibleId"=${param(s.specialistId)}`);
+  if(query.get('ticketId'))conditions.push(`t."Id"=${param(z.string().regex(/^\d+$/).parse(query.get('ticketId')))}`);
+  if(query.get('creatorId'))conditions.push(`t."CreatorId"=${param(uuid.parse(query.get('creatorId')))}`);
+  if(query.get('mine')==='true') conditions.push(s.tenantId?`t."CreatorId"=${param(s.userId)}`:`t."ResponsibleId"=${param(s.specialistId)}`);
   if(query.get('status')) conditions.push(`lower(st."Name")=lower(${param(query.get('status'))})`);
   if(query.get('favorite')==='true') {
     const table = s.tenantId ? 'TicketClientFavorites' : 'TicketSpecialistFavorites';
@@ -76,24 +81,34 @@ export async function ticketDetails(s:Session,id:string):Promise<Row & {history:
   const creator=await one(`SELECT "Name","Surname","Email","PhoneNumber" FROM "AbpUsers" WHERE "Id"=$1`,[ticket.CreatorId]);
   const customer=ticket.TenantId?await one(`SELECT "ShortName","LongName" FROM "TenantProfiles" WHERE "Id"=$1 AND NOT "IsDeleted"`,[ticket.TenantId]):null;
   const specialist=ticket.ResponsibleId?await one(`SELECT "FirstName","LastName","MiddleName","JobPost" FROM "EmployeeProfiles" WHERE "Id"=$1`,[ticket.ResponsibleId]):null;
-  const limits=ticket.ContractId?await rows(`SELECT c."Id",c."Name",coalesce(m."Sum",0) AS used,coalesce(m."MaxCount",s."Max",0) AS max FROM "ConstraintTypes" c LEFT JOIN "ContractSettings" s ON s."ConstraintTypeId"=c."Id" AND s."ContractId"=$1 LEFT JOIN "ContractConstraintsByMonths" m ON m."ConstraintTypeId"=c."Id" AND m."ContractId"=$1 AND m."Year"=extract(year FROM now()) AND m."Month"=extract(month FROM now())`,[ticket.ContractId]):[];
+  const limits=ticket.ContractId?await rows(`SELECT c."Id",c."Name",coalesce(m."Sum",0) AS used,coalesce(m."MaxCount",s."Max",0) AS max FROM "ConstraintTypes" c LEFT JOIN LATERAL (SELECT x."Max" FROM "ContractSettings" x WHERE x."ConstraintTypeId"=c."Id" AND x."ContractId"=$1 ORDER BY x."CreationTime" DESC,x."Id" DESC LIMIT 1) s ON true LEFT JOIN "ContractConstraintsByMonths" m ON m."ConstraintTypeId"=c."Id" AND m."ContractId"=$1 AND m."Year"=extract(year FROM now()) AND m."Month"=extract(month FROM now())`,[ticket.ContractId]):[];
   return {...ticket,history,attachments,historyAttachments,status,type,section,creator,customer,specialist,limits};
 }
 export async function createTicket(s:Session,body:unknown,options:{allowExpiredContract?:boolean}={}) {
   const input=createInput.parse(body);
   if(!s.tenantId) {requireStaff(s);requirePermission(s,'Ticket.Create');}
   return transaction(async db=> {
-    const tenantId=s.tenantId??input.tenantId;
+    let tenantId=s.tenantId??input.tenantId;
+    let creatorId=s.userId;
+    if(input.onBehalfOfUserId){
+      requireStaff(s);const author=await one(`SELECT "Id","TenantId" FROM "AbpUsers" WHERE "Id"=$1 AND "IsActive" AND NOT "IsDeleted"`,[input.onBehalfOfUserId],db);assert(author,400,'Автор не найден');
+      if(tenantId)assert(author.TenantId===tenantId,400,'Автор должен принадлежать организации заявки');
+      tenantId=author.TenantId as string|null;creatorId=String(author.Id);
+    }
     let contract:Row|undefined;
-    if(input.contractId) contract=await one(`SELECT * FROM "Contracts" WHERE "Id"=$1 AND "TenantId" IS NOT DISTINCT FROM $2::uuid AND NOT "IsDeleted"`,[input.contractId,tenantId],db);
+    if(input.contractId){
+      contract=await one(`SELECT * FROM "Contracts" WHERE "Id"=$1 AND NOT "IsDeleted" ${tenantId?'AND "TenantId"=$2':''}`,tenantId?[input.contractId,tenantId]:[input.contractId],db);
+      assert(contract,409,'Договор не найден');if(input.onBehalfOfUserId)assert(contract.TenantId===tenantId,400,'Договор и автор должны принадлежать одной организации');if(!s.tenantId)tenantId=contract.TenantId as string|null;
+    }
     else if(tenantId) contract=await one(`SELECT * FROM "Contracts" WHERE "TenantId"=$1 AND NOT "IsDeleted" ORDER BY "ContractFinishDate" DESC LIMIT 1`,[tenantId],db);
-    assert(contract || (!tenantId && s.tenantId===null),409,'Нет действующего договора');
+    assert(contract,409,'Нет действующего договора');
     if(contract && s.tenantId && !options.allowExpiredContract) assert(new Date(String(contract.ContractFinishDate))>=new Date(),409,'Нет действующего договора');
     const type=await one(`SELECT *,extract(epoch FROM "SLATime") AS "SLASeconds" FROM "TicketTypes" WHERE "Id"=$1`,[input.ticketTypeId],db);
     assert(type,400,'Неизвестный тип заявки');
     if(input.ticketSectionId) assert(await one(`SELECT "Id" FROM "TicketSections" WHERE "Id"=$1`,[input.ticketSectionId],db),400,'Неизвестный раздел');
-    const st=await status(db,input.draft?'Draft':'New');
-    return insert('Tickets',{Subject:input.subject,Description:input.description,TicketTypeId:input.ticketTypeId,TicketSectionId:input.ticketSectionId,TicketStatusId:st.Id,TenantId:tenantId,ContractId:contract?.Id??null,ResponsibleId:null,Rating:0,AttachmentsCount:0,DueDate:new Date(Date.now()+Number(type.SLASeconds)*1000)},db,s.userId);
+    if(input.statusId)assert(!s.tenantId,403,'Клиент не может назначать произвольный статус');
+    const st=input.statusId?await one(`SELECT * FROM "TicketStatuses" WHERE "Id"=$1`,[input.statusId],db):await status(db,input.draft?'Draft':'New');assert(st,400,'Неизвестный статус');
+    return insert('Tickets',{CreatorId:creatorId,Subject:input.subject,Description:input.description,TicketTypeId:input.ticketTypeId,TicketSectionId:input.ticketSectionId,TicketStatusId:st.Id,TenantId:tenantId,ContractId:contract.Id,ResponsibleId:null,Rating:0,AttachmentsCount:0,DueDate:new Date(Date.now()+Number(type.SLASeconds)*1000)},db,s.userId);
   });
 }
 export async function mutateTicket(s:Session,id:string,action:string,body:unknown) {
@@ -111,11 +126,16 @@ export async function mutateTicket(s:Session,id:string,action:string,body:unknow
         const current=await one(`SELECT "Name" FROM "TicketStatuses" WHERE "Id"=$1`,[ticket.TicketStatusId],db);
         if(current?.Name==='Answered')ticket=await changeStatus(db,s,ticket,String((await status(db,'Renewed')).Id));
       }
-      const history=await addHistory(db,s,ticket,description,input.internal?historyTypes.internal:s.tenantId?historyTypes.customer:historyTypes.specialist,input.internal);
+      const history=await addHistory(db,s,{...ticket,TicketStatusId:input.statusId??ticket.TicketStatusId},description,input.internal?historyTypes.internal:s.tenantId?historyTypes.customer:historyTypes.specialist,input.internal);
       if(input.statusId) ticket=await changeStatus(db,s,ticket,input.statusId);
       if(input.constraintTypeId) {
         assert(ticket.ContractId,409,'Нет действующего договора');
         await insert('TicketHoursSpentHistories',{ConstraintTypeId:input.constraintTypeId,TicketHistoryId:history.Id,Spent:input.spent},db,s.userId);
+      }
+      if(ticket.CreatorId && ticket.CreatorId!==s.userId){
+        const category=await one(`SELECT "Id" FROM "NotificationCategories" WHERE lower("Name") LIKE '%заявк%' ORDER BY "Id" LIMIT 1`,[],db);
+        const recipient=await one(`SELECT "TenantId" FROM "AbpUsers" WHERE "Id"=$1 AND NOT "IsDeleted"`,[ticket.CreatorId],db);
+        if(recipient)await insert('UserNotifications',{IdentityUserId:ticket.CreatorId,Title:`Ответ по заявке ${ticket.Id}`,Url:recipient.TenantId?`/client/ticket?id=${ticket.Id}`:`/tickets/${ticket.Id}`,NotificationCategoryId:category?.Id??null},db,s.userId);
       }
       return history;
     }
@@ -136,6 +156,7 @@ export async function mutateTicket(s:Session,id:string,action:string,body:unknow
     }
     if(action==='draft') {
       const input=createInput.omit({tenantId:true}).extend({retainedAttachmentIds:z.array(uuid).max(100).optional()}).parse(body);
+      assert(!input.statusId&&!input.onBehalfOfUserId,400,'Нельзя менять автора и произвольный статус черновика');
       const st=await status(db,'Draft'); assert(ticket.CreatorId===s.userId && ticket.TicketStatusId===st.Id,403,'Можно изменять только собственный черновик');
       // Reuse contract/type validation; preserve the existing ticket rather than inserting a second one.
       const type=await one(`SELECT extract(epoch FROM "SLATime") AS seconds FROM "TicketTypes" WHERE "Id"=$1`,[input.ticketTypeId],db); assert(type,400,'Неизвестный тип');
@@ -165,6 +186,24 @@ export async function mutateTicket(s:Session,id:string,action:string,body:unknow
       return update('Tickets',id,{ResponsibleId:specialistId},db,s.userId);
     }
     requirePermission(s,'Ticket.Edit');
+    if(action==='update'){
+      const input=z.object({subject:z.string().trim().min(1).max(10000).optional(),description:z.string().max(1_000_000).optional(),ticketTypeId:uuid.optional(),ticketSectionId:uuid.nullable().optional(),contractId:uuid.nullable().optional(),statusId:uuid.optional()}).strict().refine(v=>Object.keys(v).length>0,'Нет изменений').parse(body);
+      if(input.contractId)assert(await one(`SELECT "Id" FROM "Contracts" WHERE "Id"=$1 AND "TenantId" IS NOT DISTINCT FROM $2::uuid AND NOT "IsDeleted"`,[input.contractId,ticket.TenantId],db),400,'Договор не найден');
+      if(input.ticketSectionId)assert(await one(`SELECT "Id" FROM "TicketSections" WHERE "Id"=$1`,[input.ticketSectionId],db),400,'Раздел не найден');
+      if(input.ticketTypeId)await mutateTicket(s,id,'type',{typeId:input.ticketTypeId});
+      const mapping:Record<string,string>={subject:'Subject',description:'Description',ticketSectionId:'TicketSectionId',contractId:'ContractId'};
+      const fields=Object.fromEntries(Object.entries(input).filter(([key])=>key in mapping).map(([key,value])=>[mapping[key],value]));
+      if(Object.keys(fields).length)await update('Tickets',id,fields,db,s.userId);
+      if(input.statusId)await changeStatus(db,s,(await one(`SELECT * FROM "Tickets" WHERE "Id"=$1`,[id],db))!,input.statusId);
+      return one(`SELECT * FROM "Tickets" WHERE "Id"=$1`,[id],db);
+    }
+    if(action==='panel'){
+      const input=z.object({statusId:uuid.optional(),sectionId:uuid.nullable().optional(),specialistId:uuid.nullable().optional(),typeId:uuid.optional(),constraint:z.object({constraintTypeId:uuid,value:z.number().int().min(0).max(1_000_000)}).strict().optional(),event:z.object({title:z.string().trim().min(1).max(500),date:z.string().datetime({offset:true})}).strict().optional()}).strict().refine(v=>Object.keys(v).length>0,'Нет изменений').parse(body);
+      if(input.event){requirePermission(s,'Calendar.Create');await insert('Events',{Title:input.event.title,Description:input.event.title,EventDate:input.event.date,EventType:0,TicketId:ticket.Id,TenantId:ticket.TenantId},db,s.userId);}
+      for(const [key,operation] of [['statusId','status'],['sectionId','section'],['specialistId','assign'],['typeId','type']] as const)if(input[key]!==undefined)await mutateTicket(s,id,operation,{[key]:input[key]});
+      if(input.constraint)await mutateTicket(s,id,'constraint',input.constraint);
+      return one(`SELECT * FROM "Tickets" WHERE "Id"=$1`,[id],db);
+    }
     if(action==='status') return changeStatus(db,s,ticket,z.object({statusId:uuid}).strict().parse(body).statusId);
     if(action==='description') return update('Tickets',id,{Description:z.object({description:z.string().max(1_000_000)}).strict().parse(body).description},db,s.userId);
     if(action==='section') return update('Tickets',id,{TicketSectionId:z.object({sectionId:uuid.nullable()}).strict().parse(body).sectionId},db,s.userId);
@@ -202,4 +241,16 @@ export async function editHistory(s:Session,id:string,historyId:string,method:st
     assert(await one(`SELECT "Id" FROM "TicketHistory" WHERE "Id"=$1 AND "TicketId"=$2 AND NOT "IsDeleted"`,[historyId,id],db),404,'Запись не найдена');
     return update('TicketHistory',historyId,method==='DELETE'?{IsDeleted:true,DeletionTime:new Date(),DeleterId:s.userId}:{Description:z.object({description:z.string().max(1_000_000)}).strict().parse(body).description},db,s.userId);
   });
+}
+export async function historyPage(s:Session,id:string,query:URLSearchParams,historyId?:string){
+  await scopeTicket(s,id,pool());if(!s.tenantId)requirePermission(s,'TicketHistory.Get');
+  const values:unknown[]=[id],where=['h."TicketId"=$1','NOT h."IsDeleted"'];
+  if(s.tenantId)where.push('NOT h."IsInternal" AND h."Type"<>5');
+  if(historyId){uuid.parse(historyId);values.push(historyId);where.push(`h."Id"=$${values.length}`);}
+  if(query.get('type')){values.push(z.coerce.number().int().min(0).max(6).parse(query.get('type')));where.push(`h."Type"=$${values.length}`);}
+  const skip=z.coerce.number().int().min(0).parse(query.get('skip')??0),take=z.coerce.number().int().min(1).max(200).parse(query.get('take')??30);
+  const from=`FROM "TicketHistory" h LEFT JOIN "AbpUsers" u ON u."Id"=h."CreatorId" WHERE ${where.join(' AND ')}`;
+  const items=await rows(`SELECT h.*,u."Name" AS "CreatorName",u."Surname" AS "CreatorSurname" ${from} ORDER BY h."CreationTime" ${query.get('direction')==='desc'?'DESC':'ASC'},h."Id" LIMIT $${values.length+1} OFFSET $${values.length+2}`,[...values,historyId?1:take,historyId?0:skip]);
+  if(historyId){assert(items[0],404,'Запись не найдена');return items[0];}
+  return {items,totalCount:(await one(`SELECT count(*)::integer AS count ${from}`,values))!.count};
 }

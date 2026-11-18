@@ -25,6 +25,12 @@ export async function customers(s:Session,id:string|undefined,action:string|unde
   if(method==='GET') {
     if(id) {
       const customer=await scopeCustomer(s,id);
+      if(action==='packages'){
+        const assigned=z.enum(['true','false','all']).parse(query.get('assigned')??'true');
+        const exists=`EXISTS(SELECT 1 FROM "ContractServicePackages" link JOIN "Contracts" c ON c."Id"=link."ContractId" WHERE link."ServicePackageId"=p."Id" AND c."TenantId"=$1 AND NOT c."IsDeleted")`;
+        const items=await rows(`SELECT DISTINCT ON (p."Name") p.* FROM "ServicePackages" p ${assigned==='all'?'WHERE $1::uuid IS NOT NULL':'WHERE '+(assigned==='false'?'NOT ':'')+exists} ORDER BY p."Name",p."Id"`,[id]);
+        return {items,totalCount:items.length};
+      }
       if(action==='statistics') return {constraints:await rows(`SELECT m.* FROM "ContractConstraintsByMonths" m JOIN "Contracts" c ON c."Id"=m."ContractId" WHERE c."TenantId"=$1 AND NOT c."IsDeleted" ORDER BY m."Year" DESC,m."Month" DESC`,[id]),tickets:await rows(`SELECT st."Name",count(*)::integer AS count FROM "Tickets" t JOIN "TicketStatuses" st ON st."Id"=t."TicketStatusId" WHERE t."TenantId"=$1 AND NOT t."IsDeleted" GROUP BY st."Name"`,[id])};
       if(action==='users') return rows(`SELECT p."Id",p."IdentityUserId",p."FirstName",p."LastName",p."MiddleName",p."JobPost",p."Email",p."DateOfBirthDay",u."UserName",u."PhoneNumber",u."IsActive" FROM "CustomerUserProfiles" p JOIN "AbpUsers" u ON u."Id"=p."IdentityUserId" WHERE p."TenantId"=$1 AND NOT u."IsDeleted" ORDER BY p."LastName"`,[id]);
       if(action==='events') {

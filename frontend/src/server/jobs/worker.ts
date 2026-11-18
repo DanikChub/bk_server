@@ -3,11 +3,12 @@ import { pool, one, rows, transaction } from '../db';
 import { queueJob } from './queue';
 import { assert } from '../errors';
 import amqp from 'amqplib';
-import { deleteObject } from '../storage/s3';
+import { deleteObject, type Container } from '../storage/s3';
 import { applyTenantEvent } from './tenant-events';
 import { createHash } from 'node:crypto';
 import { ZodError } from 'zod';
 import { CronExpressionParser } from 'cron-parser';
+import { sendEmail } from '../integrations/email';
 
 let stopped=false;
 for(const signal of ['SIGTERM','SIGINT'] as const)process.on(signal,()=>{stopped=true;});
@@ -63,9 +64,16 @@ export async function runJob() {
     if(job.Kind==='customers.refresh-active') {
       await rows(`UPDATE "TenantProfiles" p SET "IsActive"=EXISTS(SELECT 1 FROM "Contracts" c WHERE c."TenantId"=p."Id" AND NOT c."IsDeleted" AND c."ContractFinishDate">=now()),"LastModificationTime"=now() WHERE NOT p."IsDeleted"`);
     }else if(job.Kind==='file.delete-if-unreferenced') {
-      const data=job.Payload as {id:string;tenantId:string|null};
+      const data=job.Payload as {id:string;tenantId:string|null;container?:Container};
+      assert(!data.container||['attachments','public','employee-avatar'].includes(data.container),400,'Неизвестный контейнер');
       const referenced=await one(`SELECT 1 WHERE EXISTS(SELECT 1 FROM "TicketAttachments" WHERE "UploadedFileId"=$1) OR EXISTS(SELECT 1 FROM "TicketHistoryAttachments" WHERE "UploadedFileId"=$1) OR EXISTS(SELECT 1 FROM "CustomerUserProfiles" WHERE "UserAvatarFileId"=$1) OR EXISTS(SELECT 1 FROM "EmployeeProfiles" WHERE "UserAvatarFileId"=$1)`,[data.id]);
-      if(!referenced)await deleteObject('attachments',data.tenantId,data.id);
+      if(!referenced)await deleteObject(data.container??'attachments',data.tenantId,data.id);
+    }else if(job.Kind==='email.send')await sendEmail(job.Payload);
+    else if(job.Kind==='story.delete-image'){
+      const data=job.Payload as {id:string};
+      assert(/^[0-9a-f-]{36}$/i.test(data.id),400,'Некорректный идентификатор изображения');
+      const referenced=await one(`SELECT 1 WHERE EXISTS(SELECT 1 FROM "Stories" WHERE "Id"=$1::uuid OR "CoverImageUrl"=$1::text OR split_part("CoverImageUrl",'?',1) LIKE $2) OR EXISTS(SELECT 1 FROM "Slides" WHERE "Id"=$1::uuid OR "ImageUrl"=$1::text OR split_part("ImageUrl",'?',1) LIKE $2)`,[data.id,'%/'+data.id]);
+      if(!referenced)await deleteObject('stories',null,data.id);
     }else if(job.Kind==='tenant.created'||job.Kind==='tenant.deleted')await publish(String(job.Kind),job.Payload as Record<string,unknown>,String(job.Id));
     else throw new Error('Unknown job kind');
     await rows(`UPDATE "NextJobs" SET "CompletedAt"=now(),"LockedUntil"=NULL,"LastError"=NULL WHERE "Id"=$1`,[job.Id]);
@@ -88,6 +96,7 @@ export async function worker() {
         await rows(`DELETE FROM "NextSessions" WHERE "ExpiresAt"<now()`);
         await rows(`DELETE FROM "NextLoginAttempts" WHERE "WindowStart"<now()-interval '1 day'`);
         await rows(`DELETE FROM "NextCache" WHERE "ExpiresAt"<now()`);
+        await rows(`DELETE FROM "NextRecoveryTokens" WHERE "ExpiresAt"<now()`);
         maintenanceAt=Date.now()+300_000;
       }
       await receiveTenantEvent();

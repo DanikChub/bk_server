@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "node scripts/generate-legacy-schema.mjs",
     "db:migrate": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/migrate-runtime.ts",
+    "db:statistics": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/rebuild-statistics.ts",
     "db:bootstrap": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/bootstrap.ts",
     "worker": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx src/server/jobs/worker.ts",
     "test:backend": "node --conditions=react-server --import tsx --test --test-concurrency=1 tests/backend-*.test.ts"
@@ -25,6 +26,7 @@
     "exceljs": "^4.4.0",
     "lucide-react": "^1.48.0",
     "next": "^16.4.6",
+    "nodemailer": "^10.6.0",
     "pdfkit": "^0.20.2",
     "pg": "^8.23.1",
     "react": "19.2.8",
@@ -37,6 +39,7 @@
     "@types/amqplib": "^0.10.8",
     "@types/archiver": "^8.0.0",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/pdfkit": "^0.17.7",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",

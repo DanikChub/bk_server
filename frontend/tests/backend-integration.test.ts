@@ -1,7 +1,7 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { bootstrap } from '../src/server/bootstrap';
-import { pool, one, rows, transaction, insert } from '../src/server/db';
+import { pool, one, rows, transaction, insert, update } from '../src/server/db';
 import { customers } from '../src/server/modules/customers';
 import { users } from '../src/server/modules/users';
 import { contracts } from '../src/server/modules/contracts';
@@ -16,6 +16,20 @@ import { queueJob } from '../src/server/jobs/queue';
 import { runJob } from '../src/server/jobs/worker';
 import { applyTenantEvent } from '../src/server/jobs/tenant-events';
 import { randomUUID } from 'node:crypto';
+import { stories } from '../src/server/modules/stories';
+import { putObject } from '../src/server/storage/s3';
+import { statusCounts } from '../src/server/modules/statistics';
+import { asset } from '../src/server/modules/assets';
+import { tags } from '../src/server/modules/tags';
+import { requestPasswordReset, resetPassword } from '../src/server/auth/recovery';
+import { sendEmail } from '../src/server/integrations/email';
+import { createServer as createTcpServer } from 'node:net';
+import { messages } from '../src/server/modules/messages';
+import { events } from '../src/server/modules/events';
+import { spreadsheet } from '../src/server/modules/reports';
+import ExcelJS from 'exceljs';
+import { Readable } from 'node:stream';
+import { productionCalendar } from '../src/server/integrations/calendar';
 
 const enabled=Boolean(process.env.BACKEND_TEST_DATABASE_URL);
 if(enabled)process.env.DATABASE_URL=process.env.BACKEND_TEST_DATABASE_URL;
@@ -37,7 +51,7 @@ before(async()=>{
   });
   await new Promise<void>(resolve=>s3Server.listen(0,'127.0.0.1',resolve));
   const port=(s3Server.address() as {port:number}).port;
-  Object.assign(process.env,{S3_ENDPOINT:`http://127.0.0.1:${port}`,S3_REGION:'us-east-1',S3_ACCESS_KEY_ID:'test-key',S3_SECRET_ACCESS_KEY:'test-secret',S3_FORCE_PATH_STYLE:'true',S3_ATTACHMENTS_BUCKET:'attachments'});
+  Object.assign(process.env,{S3_ENDPOINT:`http://127.0.0.1:${port}`,S3_REGION:'us-east-1',S3_ACCESS_KEY_ID:'test-key',S3_SECRET_ACCESS_KEY:'test-secret',S3_FORCE_PATH_STYLE:'true',S3_ATTACHMENTS_BUCKET:'attachments',S3_STORIES_BUCKET:'stories',S3_PUBLIC_BUCKET:'public'});
 });
 after(async()=>{if(enabled){await pool().end();if(s3Server)await new Promise<void>((resolve,reject)=>s3Server.close(error=>error?reject(error):resolve()));}});
 
@@ -149,6 +163,199 @@ test('ticket creation and reply roll back with failed attachment writes in the s
   }),/atomic failure/);
   assert.equal((await ticketDetails(admin,ticketId)).history.length,before.history.length);
   assert.equal(objects.size,count);
+});
+test('reply notifications are transactional, target the creator and contain no internal message text',{skip:!enabled},async()=>{
+  const count=async()=>Number((await one(`SELECT count(*)::integer AS n FROM "UserNotifications" WHERE "IdentityUserId"=$1`,[client.userId]))!.n);
+  const before=await count();await mutateTicket(admin,ticketId,'reply',{description:'Private secret',internal:true});
+  assert.equal(await count(),before+1);
+  const notification=await one(`SELECT * FROM "UserNotifications" WHERE "IdentityUserId"=$1 ORDER BY "CreationTime" DESC LIMIT 1`,[client.userId]);assert.equal(notification!.Title,`Ответ по заявке ${ticketId}`);assert.equal(notification!.Url,`/client/ticket?id=${ticketId}`);
+  await mutateTicket(client,ticketId,'reply',{description:'Self message'});assert.equal(await count(),before+1);
+  await assert.rejects(()=>mutateTicket(admin,ticketId,'reply',{description:'Must rollback notification',constraintTypeId:randomUUID(),spent:1}));assert.equal(await count(),before+1);
+});
+test('full ticket edit and compound panel validate input and roll back all effects',{skip:!enabled},async()=>{
+  const before=await ticketDetails(admin,ticketId);
+  await mutateTicket(admin,ticketId,'update',{subject:'Отредактированная тема'});assert.equal((await ticketDetails(admin,ticketId)).Subject,'Отредактированная тема');
+  await assert.rejects(()=>mutateTicket(admin,ticketId,'update',{subject:'forged',CreatorId:admin.userId}));
+  const eventCount=Number((await one(`SELECT count(*)::integer AS n FROM "Events" WHERE "TicketId"=$1`,[ticketId]))!.n);
+  await assert.rejects(()=>mutateTicket(admin,ticketId,'panel',{event:{title:'Rollback event',date:new Date().toISOString()},specialistId:randomUUID()}));
+  assert.equal(Number((await one(`SELECT count(*)::integer AS n FROM "Events" WHERE "TicketId"=$1`,[ticketId]))!.n),eventCount);
+  await mutateTicket(admin,ticketId,'update',{subject:before.Subject});
+});
+test('manager lists combine legacy additional managers and current responsible profiles',{skip:!enabled},async()=>{
+  const manager=await users(admin,undefined,undefined,'POST',{userName:'test-manager',password:'Manager-Password!',email:'manager@example.test'},q) as {id:string;profileId:string};
+  await rows(`INSERT INTO "TenantProfileManagers"("TenantProfileId","ManagerId") VALUES($1,$2)`,[customerId,manager.profileId]);
+  const s:Session={...admin,userId:manager.id,roles:['Менеджер Отдела Продаж'],permissions:['Ticket','Ticket.Get','Contract','Contract.Get'],specialistId:null};
+  const tickets=await listTickets(s,q);assert.ok(tickets.items.length);assert.ok(tickets.items.every(t=>t.TenantId===customerId));
+  const page=await contracts(s,undefined,undefined,'GET',undefined,q) as {items:{TenantId:string}[]};assert.ok(page.items.length);assert.ok(page.items.every(c=>c.TenantId===customerId));
+  const explicit=await listTickets(admin,new URLSearchParams({managerId:manager.profileId}));assert.equal(explicit.totalCount,tickets.totalCount);
+  const counts=await statusCounts(s,new URLSearchParams({favorite:'true'}));assert.equal(counts.reduce((sum,c)=>sum+Number(c.count),0),0);
+});
+test('history ZIP selection cannot expose internal or foreign history files',{skip:!enabled},async()=>{
+  const history=await mutateTicket(admin,ticketId,'reply',{description:'Hidden attachment',internal:true}) as {Id:string};
+  const form=new FormData();form.set('historyId',history.Id);form.append('files',new File(['Internal file'],'internal.txt'));
+  const files=await uploadFiles(admin,ticketId,form);
+  await assert.rejects(()=>downloadZip(client,ticketId,{kind:'history',historyId:history.Id}),/не найдено/);
+  await assert.rejects(()=>downloadZip(admin,ticketId,{kind:'history',historyId:randomUUID()}),/не найдено/);
+  const zip=Buffer.from(await (await downloadZip(admin,ticketId,{kind:'history',historyId:history.Id})).arrayBuffer());assert.ok(zip.includes(Buffer.from(String(files[0].Id))));
+  const ticketZip=Buffer.from(await (await downloadZip(admin,ticketId,{kind:'ticket'})).arrayBuffer());assert.equal(ticketZip.includes(Buffer.from(String(files[0].Id))),false);
+});
+test('stories paginate, isolate inactive content and garbage collection retains shared images',{skip:!enabled},async()=>{
+  const imageId=randomUUID(),url='/api/v1/assets/stories/'+imageId;
+  await putObject('stories',null,imageId,Buffer.from('image'),'image/png');
+  const create=async(name:string,Status=1)=>stories(admin,undefined,undefined,'POST',{Name:name,GroupName:'test',CoverImageUrl:url,OrderIndex:0,Status},q) as Promise<{Id:string}>;
+  const first=await create('first'),second=await create('second',0);
+  const page=await stories(admin,undefined,undefined,'GET',undefined,new URLSearchParams({group:'test',take:'1'})) as {items:unknown[];totalCount:number};assert.equal(page.items.length,1);assert.equal(page.totalCount,2);
+  await assert.rejects(()=>stories(client,second.Id,undefined,'GET',undefined,q),/не найдена/);
+  const slide=await stories(admin,first.Id,'new','POST',{ImageUrl:url,OrderIndex:1},q) as {Id:string};
+  const slides=await stories(admin,first.Id,'new','GET',undefined,q) as {totalCount:number};assert.equal(slides.totalCount,1);
+  await stories(admin,first.Id,slide.Id,'PATCH',{StoryId:second.Id},q);
+  await stories(admin,first.Id,undefined,'DELETE',undefined,q);
+  const collect=async()=>{const job=await one(`UPDATE "NextJobs" SET "AvailableAt"='1990-01-01' WHERE "Id"=(SELECT "Id" FROM "NextJobs" WHERE "Kind"='story.delete-image' AND "Payload"->>'id'=$1 AND "CompletedAt" IS NULL LIMIT 1) RETURNING "Id"`,[imageId]);assert.ok(job);await runJob();assert.ok((await one(`SELECT "CompletedAt" FROM "NextJobs" WHERE "Id"=$1`,[job.Id]))!.CompletedAt);};
+  await collect();assert.ok(objects.has('/stories/host/'+imageId));
+  await stories(admin,second.Id,undefined,'DELETE',undefined,q);await collect();assert.equal(objects.has('/stories/host/'+imageId),false);
+});
+test('administrative avatar operations check permissions and preserve public container tenant keys',{skip:!enabled},async()=>{
+  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a6K0AAAAASUVORK5CYII=','base64');
+  const form=new FormData();form.set('file',new File([png],'avatar.png',{type:'image/png'}));
+  await assert.rejects(()=>asset(client,'avatar','POST',new Request('http://localhost/upload',{method:'POST',body:form}),undefined,{userId:admin.userId,employee:true}),/сотрудникам/);
+  const uploaded=await asset(admin,'avatar','POST',new Request('http://localhost/upload',{method:'POST',body:form}),undefined,{userId:client.userId,employee:false}) as {id:string};
+  assert.ok(objects.has(`/public/tenants/${customerId}/${uploaded.id}`));
+  const downloaded=await asset(admin,'avatar','GET',new Request('http://localhost/avatar'),undefined,{userId:client.userId,employee:false}) as Response;
+  assert.equal(Buffer.compare(Buffer.from(await downloaded.arrayBuffer()),png),0);
+  const identity=await users(admin,undefined,undefined,'POST',{userName:'attach-profile',password:'Attach-Profile-Password!',email:'attach@example.test'},q,true) as {id:string};
+  await rows(`DELETE FROM "EmployeeProfiles" WHERE "IdentityUserId"=$1`,[identity.id]);
+  const attached=await users(admin,identity.id,'profile','POST',undefined,q,true) as {IdentityUserId:string};assert.equal(attached.IdentityUserId,identity.id);
+  await assert.rejects(()=>users(admin,identity.id,'profile','POST',undefined,q,true),/уже существует/);
+});
+test('package assignment semantics remain independent of public active contract eligibility',{skip:!enabled},async()=>{
+  const pkg=await transaction(db=>insert('ServicePackages',{Name:'Package test',Style:''},db,admin.userId));
+  await contracts(admin,contractId,'replace-package','POST',{servicePackageId:pkg.Id},q);
+  const assigned=await customers(admin,customerId,'packages','GET',undefined,q) as {items:{Id:string}[]};assert.ok(assigned.items.some(p=>p.Id===pkg.Id));
+  const unused=await customers(admin,customerId,'packages','GET',undefined,new URLSearchParams({assigned:'false'})) as {items:{Id:string}[]};assert.equal(unused.items.some(p=>p.Id===pkg.Id),false);
+  const st=await one(`SELECT "StatusId" FROM "Contracts" WHERE "Id"=$1`,[contractId]);
+  const future=await contracts(admin,undefined,undefined,'POST',{name:'Future public eligibility',tenantId:customerId,startsAt:'2090-01-01T00:00:00Z',endsAt:'2099-12-31T00:00:00Z',statusId:st!.StatusId},q) as {Id:string};
+  const active=await contracts(admin,undefined,undefined,'GET',undefined,new URLSearchParams({active:'true',tenantId:customerId})) as {items:{Id:string}[]};assert.equal(active.items.some(c=>c.Id===future.Id),false);
+  const expiry=await contracts(admin,undefined,undefined,'GET',undefined,new URLSearchParams({active:'true',activePolicy:'expiry',tenantId:customerId})) as {items:{Id:string}[]};assert.ok(expiry.items.some(c=>c.Id===future.Id));
+});
+test('tag permissions match separate legacy read, create and delete grants',{skip:!enabled},async()=>{
+  const reader:Session={...admin,roles:[],permissions:['Ticket','Ticket.Get']};
+  await tags(reader,'tickets',ticketId,'GET',undefined);
+  await assert.rejects(()=>tags(reader,'tickets',ticketId,'POST',{name:'Permission tag'}),/Недостаточно/);
+  await tags({...reader,permissions:[...reader.permissions,'Ticket.Create']},'tickets',ticketId,'POST',{name:'Permission tag'});
+  await assert.rejects(()=>tags(reader,'tickets',ticketId,'DELETE',{name:'Permission tag'}),/Недостаточно/);
+  await tags({...reader,permissions:[...reader.permissions,'Ticket.Delete']},'tickets',ticketId,'DELETE',{name:'Permission tag'});
+});
+test('notification status counts are personal and repeated reads preserve their timestamp',{skip:!enabled},async()=>{
+  const before=await notifications(client,undefined,'statuses','GET',q) as {Status:number;Count:number}[];
+  const notification=await transaction(db=>insert('UserNotifications',{IdentityUserId:client.userId,Title:'Status test',Url:'/'},db,admin.userId));
+  const current=await notifications(client,undefined,'statuses','GET',q) as {Status:number;Count:number}[];
+  const unread=(items:{Status:number;Count:number}[])=>items.find(s=>s.Status===0)?.Count??0;
+  if(current.some(s=>s.Status===0))assert.equal(unread(current),unread(before)+1);
+  await notifications(client,String(notification.Id),'read','POST',q);const read=await one(`SELECT "Seen" FROM "UserNotifications" WHERE "Id"=$1`,[notification.Id]);
+  await notifications(client,String(notification.Id),'read','POST',q);assert.equal(String((await one(`SELECT "Seen" FROM "UserNotifications" WHERE "Id"=$1`,[notification.Id]))!.Seen),String(read!.Seen));
+});
+test('monthly counters handle past years, moved groups, multiple settings and deleted history',{skip:!enabled},async()=>{
+  const types=await rows(`SELECT "Id" FROM "TicketTypes" LIMIT 2`),sections=await rows(`SELECT "Id" FROM "TicketSections" LIMIT 2`),constraint=await one(`SELECT "Id" FROM "ConstraintTypes" LIMIT 1`);
+  const ticket=await createTicket(client,{subject:'Monthly boundaries',description:'Test',ticketTypeId:types[0].Id,ticketSectionId:sections[0].Id,contractId});
+  await transaction(async db=>{
+    await db.query(`UPDATE "Tickets" SET "CreationTime"='2025-12-31 12:00:00' WHERE "Id"=$1`,[ticket.Id]);
+    await insert('ContractSettings',{ContractId:contractId,ConstraintTypeId:constraint!.Id,Max:11},db,admin.userId);
+    const history=await insert('TicketHistory',{TicketId:ticket.Id,TicketStatusId:ticket.TicketStatusId,Description:'Historical spend',Type:1,IsInternal:false},db,admin.userId);
+    await insert('TicketHoursSpentHistories',{TicketHistoryId:history.Id,ConstraintTypeId:constraint!.Id,Spent:4,CreationTime:new Date('2025-12-31T12:00:00Z')},db,admin.userId);
+    assert.equal((await one(`SELECT "Sum" FROM "ContractConstraintsByMonths" WHERE "ContractId"=$1 AND "ConstraintTypeId"=$2 AND "Year"=2025 AND "Month"=12`,[contractId,constraint!.Id],db))!.Sum,4);
+    await update('TicketHistory',history.Id,{IsDeleted:true},db,admin.userId);
+    assert.equal((await one(`SELECT "Sum" FROM "ContractConstraintsByMonths" WHERE "ContractId"=$1 AND "ConstraintTypeId"=$2 AND "Year"=2025 AND "Month"=12`,[contractId,constraint!.Id],db))!.Sum,0);
+  });
+  await rows(`UPDATE "Tickets" SET "TicketTypeId"=$2,"TicketSectionId"=$3,"CreationTime"='2026-01-01 12:00:00' WHERE "Id"=$1`,[ticket.Id,types[1].Id,sections[1].Id]);
+  assert.equal((await one(`SELECT "Count" FROM "ContractTicketsByTicketTypeByMonths" WHERE "ContractId"=$1 AND "TicketTypeId"=$2 AND "Year"=2025 AND "Month"=12`,[contractId,types[0].Id]))!.Count,0);
+  assert.equal((await one(`SELECT "Count" FROM "ContractTicketsByTicketTypeByMonths" WHERE "ContractId"=$1 AND "TicketTypeId"=$2 AND "Year"=2026 AND "Month"=1`,[contractId,types[1].Id]))!.Count,1);
+  await rows(`UPDATE "Tickets" SET "IsDeleted"=true WHERE "Id"=$1`,[ticket.Id]);
+  assert.equal((await one(`SELECT "Count" FROM "ContractTicketsByTicketTypeByMonths" WHERE "ContractId"=$1 AND "TicketTypeId"=$2 AND "Year"=2026 AND "Month"=1`,[contractId,types[1].Id]))!.Count,0);
+});
+test('serialization retry rolls back failed attempt before executing the command again',{skip:!enabled},async()=>{
+  let attempts=0;const name='Serialization test '+randomUUID();
+  await transaction(async db=>{await insert('Regions',{Name:name},db,admin.userId);attempts++;if(attempts===1)throw Object.assign(new Error('serialization fixture'),{code:'40001'});});
+  assert.equal(attempts,2);assert.equal((await rows(`SELECT "Id" FROM "Regions" WHERE "Name"=$1`,[name])).length,1);
+});
+
+test('concurrent contract updates serialize aggregate refresh without losing ticket counts',{skip:!enabled},async()=>{
+  const type=await one(`SELECT "Id" FROM "TicketTypes" LIMIT 1`);
+  const ids=await Promise.all(Array.from({length:6},(_,i)=>createTicket(admin,{subject:`Concurrent ${i}`,description:'Test',ticketTypeId:type!.Id,contractId})));
+  assert.equal(new Set(ids.map(t=>t.Id)).size,6);
+  const actual=await one(`SELECT count(*)::integer AS n FROM "Tickets" WHERE "ContractId"=$1 AND "TicketTypeId"=$2 AND NOT "IsDeleted" AND extract(year FROM "CreationTime")=extract(year FROM now()) AND extract(month FROM "CreationTime")=extract(month FROM now())`,[contractId,type!.Id]);
+  const aggregate=await one(`SELECT "Count" FROM "ContractTicketsByTicketTypeByMonths" WHERE "ContractId"=$1 AND "TicketTypeId"=$2 AND "Year"=extract(year FROM now()) AND "Month"=extract(month FROM now())`,[contractId,type!.Id]);
+  assert.equal(aggregate!.Count,actual!.n);
+});
+
+test('explicit open calendar validates full years, caches working dates and rejects malformed responses',{skip:!enabled},async()=>{
+  const previous=process.env.WORK_CALENDAR_PROVIDER,original=globalThis.fetch;
+  process.env.WORK_CALENDAR_PROVIDER='isdayoff';let calls=0;
+  globalThis.fetch=async()=>{calls++;return new Response('110'+'0'.repeat(362));};
+  try{
+    const result=await productionCalendar('2031-01-01','2031-01-03');assert.equal(result.countDays,3);assert.equal(result.countWorkdays,1);assert.deepEqual(result.holidays,['2031-01-01','2031-01-02']);
+    await productionCalendar('2031-02-01','2031-02-02');assert.equal(calls,1);
+    globalThis.fetch=async()=>new Response('100');await assert.rejects(()=>productionCalendar('2032-01-01','2032-01-03'),/Некорректный ответ/);
+  }finally{globalThis.fetch=original;if(previous===undefined)delete process.env.WORK_CALENDAR_PROVIDER;else process.env.WORK_CALENDAR_PROVIDER=previous;}
+});
+test('email recovery tokens are single-use, tenant-scoped and revoke existing sessions; SMTP sends through a real protocol connection',{skip:!enabled},async()=>{
+  const delivered:string[]=[];
+  const smtp=createTcpServer(socket=>{
+    socket.write('220 localhost ESMTP\r\n');let buffer='',data=false,message='';
+    socket.on('data',chunk=>{buffer+=chunk.toString();while(buffer.includes('\r\n')){const at=buffer.indexOf('\r\n'),line=buffer.slice(0,at);buffer=buffer.slice(at+2);
+      if(data){if(line==='.'){delivered.push(message);message='';data=false;socket.write('250 queued\r\n');}else message+=line+'\n';}
+      else if(line.startsWith('EHLO')||line.startsWith('HELO'))socket.write('250-localhost\r\n250 8BITMIME\r\n');
+      else if(line==='DATA'){data=true;socket.write('354 End with dot\r\n');}
+      else if(line==='QUIT'){socket.end('221 bye\r\n');}else socket.write('250 OK\r\n');
+    }});
+  });
+  await new Promise<void>(resolve=>smtp.listen(0,'127.0.0.1',resolve));
+  const previous={...process.env};Object.assign(process.env,{SMTP_HOST:'127.0.0.1',SMTP_PORT:String((smtp.address() as {port:number}).port),SMTP_FROM:'noreply@example.test',SMTP_REQUIRE_TLS:'false',APP_URL:'https://showcase.example.test'});delete process.env.SMTP_USER;
+  try{
+    const user=await users(admin,undefined,undefined,'POST',{userName:'recover-user',password:'Recovery-Original-Password!',email:'recover@example.test',tenantId:customerId},q) as {id:string};
+    await login('recover-user','Recovery-Original-Password!','Тест','recovery-test');
+    const known=await requestPasswordReset({userName:'recover-user',tenant:'Тест'}),unknown=await requestPasswordReset({userName:'absent-user',tenant:'Тест'});assert.deepEqual(known,unknown);
+    const mail=await one(`SELECT "Payload" FROM "NextJobs" WHERE "Kind"='email.send' AND "Payload"->>'to'='recover@example.test' ORDER BY "CreatedAt" DESC LIMIT 1`);
+    const payload=mail!.Payload as {to:string;subject:string;text:string};await sendEmail(payload);assert.equal(delivered.length,1);
+    const url=new URL(payload.text.match(/https:\/\/\S+/)![0]),token=new URLSearchParams(url.hash.slice(1)).get('token')!;assert.match(token,/^[a-f0-9]{64}$/);
+    assert.notEqual((await one(`SELECT "TokenHash" FROM "NextRecoveryTokens" WHERE "UserId"=$1`,[user.id]))!.TokenHash,token);
+    await resetPassword({token,newPassword:'Recovery-New-Password!'});
+    assert.equal((await rows(`SELECT "UserId" FROM "NextSessions" WHERE "UserId"=$1`,[user.id])).length,0);
+    await assert.rejects(()=>resetPassword({token,newPassword:'Replay-Password!'}),/недействительна/);
+    await assert.rejects(()=>login('recover-user','Recovery-Original-Password!','Тест','recovery-test'),/Неверные/);
+    await login('recover-user','Recovery-New-Password!','Тест','recovery-test');
+    await rows(`UPDATE "AbpUsers" SET "EmailConfirmed"=true,"TwoFactorEnabled"=true WHERE "Id"=$1`,[user.id]);
+    await assert.rejects(()=>login('recover-user','Recovery-New-Password!','Тест','mfa-test'),/Код входа отправлен/);
+    const otpMail=await one(`SELECT "Payload" FROM "NextJobs" WHERE "Kind"='email.send' AND "Payload"->>'to'='recover@example.test' ORDER BY "CreatedAt" DESC LIMIT 1`);
+    const code=(otpMail!.Payload as {text:string}).text.match(/\b\d{6}\b/)![0];
+    await assert.rejects(()=>login('recover-user','Recovery-New-Password!','Тест','mfa-test','000000'),/код/);
+    await login('recover-user','Recovery-New-Password!','Тест','mfa-test',code);
+    await assert.rejects(()=>login('recover-user','Recovery-New-Password!','Тест','mfa-test',code),/код/);
+  }finally{
+    for(const key of ['SMTP_HOST','SMTP_PORT','SMTP_FROM','SMTP_REQUIRE_TLS','SMTP_USER','APP_URL']){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}
+    await new Promise<void>(resolve=>smtp.close(()=>resolve()));
+  }
+});
+test('staff create on behalf of a customer validates organization and preserves the chosen author',{skip:!enabled},async()=>{
+  const type=await one(`SELECT "Id" FROM "TicketTypes" LIMIT 1`),status=await one(`SELECT "Id" FROM "TicketStatuses" WHERE "Name"='InProgress'`);
+  const ticket=await createTicket(admin,{subject:'Created on behalf',description:'Test',ticketTypeId:type!.Id,contractId,onBehalfOfUserId:client.userId,statusId:status!.Id});
+  assert.equal(ticket.CreatorId,client.userId);assert.equal(ticket.TenantId,customerId);assert.equal(ticket.TicketStatusId,status!.Id);
+  await assert.rejects(()=>createTicket(client,{subject:'forged',description:'Test',ticketTypeId:type!.Id,contractId,onBehalfOfUserId:admin.userId}),/сотрудникам/);
+  await assert.rejects(()=>createTicket(admin,{subject:'invalid',description:'Test',ticketTypeId:type!.Id,contractId:randomUUID()}),/не найден/);
+});
+test('legacy separate messages create a recipient notification and staff calendar includes their customer-ticket events',{skip:!enabled},async()=>{
+  const before=Number((await one(`SELECT count(*)::integer AS n FROM "UserNotifications" WHERE "IdentityUserId"=$1`,[client.userId]))!.n);
+  const message=await messages(admin,ticketId,'POST',{comment:'Separate conversation'},q) as {Comment:string};assert.equal(message.Comment,'Separate conversation');
+  assert.equal(Number((await one(`SELECT count(*)::integer AS n FROM "UserNotifications" WHERE "IdentityUserId"=$1`,[client.userId]))!.n),before+1);
+  const page=await messages(admin,ticketId,'GET',undefined,q) as {items:{Comment:string}[]};assert.ok(page.items.some(m=>m.Comment==='Separate conversation'));
+  const date=new Date(),event=await events(admin,undefined,'POST',{title:'Staff cross-tenant own event',date:date.toISOString(),ticketId},q) as {Id:string};
+  const own=await events(admin,undefined,'GET',undefined,new URLSearchParams({mine:'true',start:new Date(+date-60000).toISOString(),end:new Date(+date+60000).toISOString()})) as {Id:string}[];
+  assert.ok(own.some(e=>e.Id===event.Id));await events(admin,event.Id,'PATCH',{title:'Updated staff event'},q);
+});
+test('XLSX exports retain the legacy ticket columns and all three statistics groups',{skip:!enabled},async()=>{
+  const tickets=await spreadsheet(admin,'tickets',q),book=new ExcelJS.Workbook();await book.xlsx.read(Readable.from([Buffer.from(await tickets.arrayBuffer())]));
+  assert.deepEqual((book.worksheets[0].getRow(1).values as unknown[]).slice(1),['Номер заявки','Наименование клиента','Тэг','Тип','Раздел','Специалист','Дата создания']);
+  const stats=await spreadsheet(admin,'statistics',new URLSearchParams({customerId})),second=new ExcelJS.Workbook();await second.xlsx.read(Readable.from([Buffer.from(await stats.arrayBuffer())]));
+  assert.equal(second.worksheets[0].getRow(1).getCell(1).value,'Раздел Название');assert.equal(second.worksheets[0].getRow(1).getCell(3).value,'Тип Название');assert.equal(second.worksheets[0].getRow(1).getCell(5).value,'Ограничение Название');
 });
 test('worker refreshes organization activity and claims its job atomically',{skip:!enabled},async()=>{
   const id=await queueJob('customers.refresh-active',{});

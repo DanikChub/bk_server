@@ -34,9 +34,12 @@ async function targetUser(s:Session,id:string,db:Executor=pool()):Promise<Row> {
 }
 export async function users(s:Session,id:string|undefined,action:string|undefined,method:string,body:unknown,query:URLSearchParams,employees=false) {
   requireStaff(s);
-  const policy=employees?'EmployeeProfileManagement':'UserManagement';
-  requirePermission(s,policy+'.'+(method==='GET'?'Get':method==='POST'&&!id?'Create':method==='DELETE'?'Delete':'Edit'));
+  const policy=employees?'EmployeeProfileManagement':action==='profile'?'EmployeeManagement':'UserManagement';
+  requirePermission(s,policy+'.'+(method==='GET'?'Get':method==='POST'&&(!id||action==='profile')?'Create':method==='DELETE'?'Delete':'Edit'));
   if(method==='GET') {
+    if(id&&action==='profile'){
+      await targetUser(s,id);const p=await one(`SELECT * FROM "${employees?'EmployeeProfiles':'CustomerUserProfiles'}" WHERE "IdentityUserId"=$1`,[id]);assert(p,404,'Профиль не найден');delete p.ExtraProperties;return p;
+    }
     const tenant=query.get('tenantId');if(tenant)z.string().uuid().parse(tenant);
     const args:unknown[]=[],where=['NOT u."IsDeleted"'];
     const param=(value:unknown)=>{args.push(value);return '$'+args.length;};
@@ -52,7 +55,7 @@ export async function users(s:Session,id:string|undefined,action:string|undefine
     if(query.get('updatedOn'))where.push(`p."LastModificationTime"::date=${param(z.coerce.date().parse(query.get('updatedOn')))}`);
     if(query.get('managerId'))where.push(`tp."ResponsibleManagerId"=${param(z.string().uuid().parse(query.get('managerId')))}`);
     const from=`FROM "AbpUsers" u LEFT JOIN "${employees?'EmployeeProfiles':'CustomerUserProfiles'}" p ON p."IdentityUserId"=u."Id" LEFT JOIN "TenantProfiles" tp ON tp."Id"=u."TenantId" WHERE ${where.join(' AND ')}`;
-    const selected=`${userFields},p."JobPost",p."MiddleName",p."Id" AS "ProfileId",tp."ShortName" AS "CustomerName",coalesce(p."Email",u."Email") AS "Email"`;
+    const selected=`${userFields},p."JobPost",p."MiddleName",p."Id" AS "ProfileId",p."LastModificationTime" AS "ActualizationTime",tp."ShortName" AS "CustomerName",coalesce(p."Email",u."Email") AS "Email"`;
     const skip=z.coerce.number().int().min(0).parse(query.get('skip')??0),take=z.coerce.number().int().min(1).max(200).parse(query.get('take')??30);
     if(id) {
       const user=await one(`SELECT ${selected} ${from}`,args);assert(user,404,'Пользователь не найден');
@@ -62,6 +65,13 @@ export async function users(s:Session,id:string|undefined,action:string|undefine
     return {items:await rows(`SELECT ${selected} ${from} ORDER BY ${sort} ${direction},u."Id" LIMIT $${args.length+1} OFFSET $${args.length+2}`,[...args,take,skip]),totalCount:(await one(`SELECT count(*)::integer AS count ${from}`,args))!.count};
   }
   return transaction(async db=> {
+    if(id && action==='profile' && method==='POST'){
+      requirePermission(s,policy+'.Create');
+      const user=await targetUser(s,id,db);if(employees)assert(user.TenantId===null,400,'Сотрудник должен принадлежать головной организации');
+      const table=employees?'EmployeeProfiles':'CustomerUserProfiles';
+      assert(!await one(`SELECT "Id" FROM "${table}" WHERE "IdentityUserId"=$1`,[id],db),409,'Профиль уже существует');
+      return insert(table,{Id:employees?randomUUID():id,IdentityUserId:id,FirstName:user.Name??'',LastName:user.Surname??'',MiddleName:'',Email:user.Email,JobPost:'',...(employees?{Phone:user.PhoneNumber}:{TenantId:user.TenantId})},db,s.userId);
+    }
     if(!id) {
       const data=newUser.parse(body);
       if(employees) assert(data.tenantId===null,400,'Сотрудник должен принадлежать головной организации');
@@ -155,4 +165,13 @@ export async function changeOwnPassword(s:Session,body:unknown){
     assert(user && await verifyPassword(data.currentPassword,user.PasswordHash as string),400,'Текущий пароль указан неверно');
     await rotatePassword(db,s.userId,data.newPassword,s.userId);
   });return {reauthenticate:true};
+}
+export async function identityUsers(s:Session,query:URLSearchParams){
+  requireStaff(s);requirePermission(s,'UserManagement.Get');
+  const tenant=query.get('tenantId');if(tenant)z.string().uuid().parse(tenant);
+  const skip=z.coerce.number().int().min(0).parse(query.get('skip')??0),take=z.coerce.number().int().min(1).max(200).parse(query.get('take')??30);
+  const args:unknown[]=[tenant??null],where=['NOT u."IsDeleted"','u."TenantId" IS NOT DISTINCT FROM $1::uuid'];
+  if(query.get('search')){args.push('%'+query.get('search')!.trim()+'%');where.push(`(u."UserName" ILIKE $2 OR u."Email" ILIKE $2 OR concat_ws(' ',u."Surname",u."Name") ILIKE $2)`);}
+  const from=`FROM "AbpUsers" u WHERE ${where.join(' AND ')}`;
+  return {items:await rows(`SELECT ${userFields},EXISTS(SELECT 1 FROM "CustomerUserProfiles" p WHERE p."IdentityUserId"=u."Id") AS "HasCustomerProfile",EXISTS(SELECT 1 FROM "EmployeeProfiles" p WHERE p."IdentityUserId"=u."Id") AS "HasEmployeeProfile" ${from} ORDER BY u."UserName",u."Id" LIMIT $${args.length+1} OFFSET $${args.length+2}`,[...args,take,skip]),totalCount:(await one(`SELECT count(*)::integer AS count ${from}`,args))!.count};
 }

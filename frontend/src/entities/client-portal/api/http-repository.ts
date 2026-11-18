@@ -6,14 +6,22 @@ export async function backend<T>(path:string,method='GET',body?:unknown,signal?:
   return response.json();
 }
 let snapshot:PortalSnapshot|null=null;
+const materialCache=new Map<string,{expires:number;value:Promise<PromiseSettledResult<{data:Record<string,unknown>[]}>[]>}>();
 async function load(signal?:AbortSignal){
-  const results=await Promise.allSettled([backend<PortalSnapshot>('portal',undefined,undefined,signal),backend<{data:Record<string,unknown>[]}>('content/articles?take=50','GET',undefined,signal),backend<{data:Record<string,unknown>[]}>('content/news?take=50','GET',undefined,signal)]);
-  if(results[0].status==='rejected')throw results[0].reason;snapshot=results[0].value as PortalSnapshot;
-  const contentRows=(index:number)=>{const result=results[index];return result.status==='fulfilled'&&Array.isArray((result.value as {data?:unknown}).data)?(result.value as {data:Record<string,unknown>[]}).data:[];};
+  const value=await backend<PortalSnapshot>('portal','GET',undefined,signal);
+  let cached=materialCache.get(value.profile.id);
+  if(!cached||cached.expires<Date.now()){
+    const timeout=AbortSignal.timeout(5000);
+    cached={expires:Date.now()+300_000,value:Promise.allSettled(['articles','news'].map(kind=>backend<{data:Record<string,unknown>[]}>(`content/${kind}?take=50`,'GET',undefined,timeout)))};
+    materialCache.set(value.profile.id,cached);if(materialCache.size>10)materialCache.delete(materialCache.keys().next().value!);
+  }
+  const results=await cached.value;if(signal?.aborted)throw signal.reason;
+  if(results.some(r=>r.status==='rejected'))cached.expires=Math.min(cached.expires,Date.now()+30_000);
+  const contentRows=(index:number)=>{const result=results[index];return result.status==='fulfilled'&&Array.isArray(result.value.data)?result.value.data:[];};
   const map=(item:Record<string,unknown>,kind:string)=>{const attrs=(item.attributes??item) as Record<string,unknown>;return {id:kind+'-'+String(item.id),title:String(attrs.title??''),body:String(attrs.text??attrs.body??''),icon:'a9517.png'};};
-  snapshot.content={articles:contentRows(1).map(item=>map(item,'article')),news:contentRows(2).map(item=>map(item,'news'))};
-  if(results[1].status==='rejected'||results[2].status==='rejected')snapshot.contentError='Материалы библиотеки временно недоступны.';
-  return snapshot;
+  value.content={articles:contentRows(0).map(item=>map(item,'article')),news:contentRows(1).map(item=>map(item,'news'))};
+  if(results.some(r=>r.status==='rejected'))value.contentError='Материалы библиотеки временно недоступны.';
+  snapshot=value;return value;
 }
 async function ticket(id:string):Promise<PortalTicket>{const value=(await load()).tickets.find(t=>t.id===id);if(!value)throw new Error('Заявка не найдена');return value;}
 export async function command<T>(path:string,data:unknown,files:File[]):Promise<T>{

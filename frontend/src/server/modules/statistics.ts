@@ -5,6 +5,7 @@ import { requirePermission, requireStaff, scopeTicket } from '../auth/session';
 import { scopeCustomer } from './customers';
 import { z } from 'zod';
 import { assert } from '../errors';
+import { listTickets } from './tickets';
 export async function customerStatistics(s:Session,customerId:string) {
   await scopeCustomer(s,customerId);
   const sections=await rows(`SELECT m."Year",m."Month",t."Name",sum(m."Count")::integer AS "Count" FROM "ContractTicketsByTicketSectionByMonths" m JOIN "Contracts" c ON c."Id"=m."ContractId" JOIN "TicketSections" t ON t."Id"=m."TicketSectionId" WHERE c."TenantId"=$1 AND NOT c."IsDeleted" GROUP BY m."Year",m."Month",t."Name"`,[customerId]);
@@ -43,7 +44,8 @@ export async function readHistory(s:Session,ticketId:string,historyId:string) {
     return update('TicketHistory',historyId,{[s.tenantId?'ReadByClientDate':'ReadBySpecialistDate']:new Date()},db,s.userId);
   });
 }
-export async function statusCounts(s:Session) {
+export async function statusCounts(s:Session,query:URLSearchParams=new URLSearchParams()) {
   if(!s.tenantId){requireStaff(s);requirePermission(s,'Ticket.Get');}
-  return rows(`SELECT st."Id",st."Name",st."DisplayNameMany",count(t."Id")::integer AS count FROM "TicketStatuses" st LEFT JOIN "Tickets" t ON t."TicketStatusId"=st."Id" AND NOT t."IsDeleted" ${s.tenantId?'AND t."TenantId"=$1 AND ((st."IsPublic" AND st."Name"<>\'Draft\') OR t."CreatorId"=$2)':''} GROUP BY st."Id" ORDER BY st."Name"`,s.tenantId?[s.tenantId,s.userId]:[]);
+  const statuses=await rows(`SELECT "Id","Name","DisplayNameMany" FROM "TicketStatuses" ORDER BY "Name"`);
+  return Promise.all(statuses.map(async status=>{const filter=new URLSearchParams(query);filter.delete('status');filter.set('statusId',String(status.Id));filter.set('skip','0');filter.set('take','1');return {...status,count:(await listTickets(s,filter)).totalCount};}));
 }

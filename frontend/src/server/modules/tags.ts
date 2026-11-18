@@ -6,7 +6,7 @@ import { scopeContract } from './contracts';
 import { assert } from '../errors';
 export async function tags(s:Session,kind:'tickets'|'contracts',id:string,method:string,body:unknown) {
   const scope=()=>kind==='tickets'?scopeTicket(s,id,pool()):scopeContract(s,id);
-  await scope();requireStaff(s);requirePermission(s,kind==='tickets'?'Ticket.Edit':'Contract.Edit');
+  await scope();requireStaff(s);requirePermission(s,kind==='tickets'?'Ticket.'+(method==='GET'?'Get':method==='DELETE'?'Delete':'Create'):method==='GET'?'Contract.Get':'Contract.Edit');
   const table=kind==='tickets'?'TicketTags':'ContractTags',column=kind==='tickets'?'TicketId':'ContractId';
   if(method==='GET')return rows(`SELECT t.* FROM "Tags" t JOIN "${table}" l ON l."TagId"=t."Id" WHERE l."${column}"=$1`,[id]);
   const data=z.object({tagId:z.string().uuid().optional(),name:z.string().trim().min(1).max(1000).optional()}).strict().parse(body);assert(data.tagId||data.name,400,'Укажите тег');

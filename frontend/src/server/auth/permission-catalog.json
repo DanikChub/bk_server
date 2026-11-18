@@ -1,0 +1,215 @@
+[
+  {
+    "group": "AnswerTemplate",
+    "permissions": [
+      "AnswerTemplate",
+      "AnswerTemplate.Create",
+      "AnswerTemplate.Edit",
+      "AnswerTemplate.Delete",
+      "AnswerTemplate.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Template/AnswerTemplatePermissions.cs"
+  },
+  {
+    "group": "Calendar",
+    "permissions": [
+      "Calendar",
+      "Calendar.Create",
+      "Calendar.Edit",
+      "Calendar.Delete",
+      "Calendar.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Calendars/CalendarPermissions.cs"
+  },
+  {
+    "group": "Contract",
+    "permissions": [
+      "Contract",
+      "Contract.Create",
+      "Contract.Edit",
+      "Contract.Delete",
+      "Contract.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Contracts/ContractPermissions.cs"
+  },
+  {
+    "group": "ContractStatus",
+    "permissions": [
+      "ContractStatus",
+      "ContractStatus.Create",
+      "ContractStatus.Edit",
+      "ContractStatus.Delete",
+      "ContractStatus.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Contracts/ContractStatusesPermissions.cs"
+  },
+  {
+    "group": "CustomerManagement",
+    "permissions": [
+      "CustomerManagement",
+      "CustomerManagement.Create",
+      "CustomerManagement.Edit",
+      "CustomerManagement.Delete",
+      "CustomerManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Customers/CustomerPermissions.cs"
+  },
+  {
+    "group": "EmployeeManagement",
+    "permissions": [
+      "EmployeeManagement",
+      "EmployeeManagement.Create",
+      "EmployeeManagement.Edit",
+      "EmployeeManagement.Delete",
+      "EmployeeManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Customers/CustomerUserPermissions.cs"
+  },
+  {
+    "group": "EmployeeProfileManagement",
+    "permissions": [
+      "EmployeeProfileManagement",
+      "EmployeeProfileManagement.Create",
+      "EmployeeProfileManagement.Edit",
+      "EmployeeProfileManagement.Delete",
+      "EmployeeProfileManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Employees/EmployeeProfilePermissions.cs"
+  },
+  {
+    "group": "Event",
+    "permissions": [
+      "Event",
+      "Event.Create",
+      "Event.Edit",
+      "Event.Delete",
+      "Event.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Events/EventPermissions.cs"
+  },
+  {
+    "group": "ManagerManagement",
+    "permissions": [
+      "ManagerManagement",
+      "ManagerManagement.Create",
+      "ManagerManagement.Edit",
+      "ManagerManagement.Delete",
+      "ManagerManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Employees/ManagerPermissions.cs"
+  },
+  {
+    "group": "Server",
+    "permissions": [
+      "Server.MyPermission1"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/ServerPermissions.cs"
+  },
+  {
+    "group": "SpecialistManagement",
+    "permissions": [
+      "SpecialistManagement",
+      "SpecialistManagement.Create",
+      "SpecialistManagement.Edit",
+      "SpecialistManagement.Delete",
+      "SpecialistManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Employees/SpecialistPermissions.cs"
+  },
+  {
+    "group": "StoriesManagement",
+    "permissions": [
+      "StoriesManagement",
+      "StoriesManagement.Create",
+      "StoriesManagement.Edit",
+      "StoriesManagement.Delete",
+      "StoriesManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Stories/StoriesPermissions.cs"
+  },
+  {
+    "group": "TenantProfileManagement",
+    "permissions": [
+      "TenantProfileManagement",
+      "TenantProfileManagement.Create",
+      "TenantProfileManagement.Edit",
+      "TenantProfileManagement.Delete",
+      "TenantProfileManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/TenantManagement/TenantProfilePermissions.cs"
+  },
+  {
+    "group": "Ticket",
+    "permissions": [
+      "Ticket",
+      "Ticket.Create",
+      "Ticket.Edit",
+      "Ticket.Delete",
+      "Ticket.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Tickets/TicketPermissions.cs"
+  },
+  {
+    "group": "TicketAttachments",
+    "permissions": [
+      "TicketAttachments",
+      "TicketAttachments.Create",
+      "TicketAttachments.Edit",
+      "TicketAttachments.Delete",
+      "TicketAttachments.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Tickets/TicketAttachmentsPermissions.cs"
+  },
+  {
+    "group": "TicketHistory",
+    "permissions": [
+      "TicketHistory",
+      "TicketHistory.Edit",
+      "TicketHistory.Delete",
+      "TicketHistory.Get",
+      "TicketHistory.Create"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/TicketHistory/TicketHistoryPermissions.cs"
+  },
+  {
+    "group": "TicketHoursSpentHistory",
+    "permissions": [
+      "TicketHoursSpentHistory",
+      "TicketHoursSpentHistory.Create"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/TicketHoursSpentHistory/TicketHoursSpentHistoryPermissions.cs"
+  },
+  {
+    "group": "TicketMessage",
+    "permissions": [
+      "TicketMessage",
+      "TicketMessage.Create",
+      "TicketMessage.Edit",
+      "TicketMessage.Delete",
+      "TicketMessage.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/TicketMessages/TicketMessagePermissions.cs"
+  },
+  {
+    "group": "TicketSection",
+    "permissions": [
+      "TicketSection",
+      "TicketSection.Create",
+      "TicketSection.Edit",
+      "TicketSection.Delete",
+      "TicketSection.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/TicketSections/TicketSectionPermissions.cs"
+  },
+  {
+    "group": "UserManagement",
+    "permissions": [
+      "UserManagement",
+      "UserManagement.Create",
+      "UserManagement.Edit",
+      "UserManagement.Delete",
+      "UserManagement.Get"
+    ],
+    "source": "KV.Server/src/KV.Server.Application.Contracts/Permissions/Users/UserPermissions.cs"
+  }
+]

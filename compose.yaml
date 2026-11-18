@@ -10,6 +10,8 @@ services:
       - consulting_pg:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/001-legacy.sql:ro
       - ./database/migrations/004_next_runtime.sql:/docker-entrypoint-initdb.d/004-runtime.sql:ro
+      - ./database/migrations/005_runtime_statistics.sql:/docker-entrypoint-initdb.d/005-statistics.sql:ro
+      - ./database/migrations/006_account_recovery.sql:/docker-entrypoint-initdb.d/006-recovery.sql:ro
     healthcheck:
       test: [CMD-SHELL, pg_isready -U consulting -d consulting_lk]
       interval: 5s

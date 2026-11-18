@@ -6,6 +6,7 @@ import { requirePermission, scopeTicket, type Session } from '../auth/session';
 import { assert } from '../errors';
 import { putObject, getObject, deleteObject } from '../storage/s3';
 import { ZipArchive } from 'archiver';
+import { queueJob } from '../jobs/queue';
 
 const maxBytes=50*1024*1024;
 function disposition(name:string) {return `attachment; filename="download"; filename*=UTF-8''${encodeURIComponent(name.replace(/[\r\n\x00]/g,''))}`;}
@@ -22,9 +23,22 @@ export async function downloadFile(s:Session,ticketId:string,fileId:string) {
   const stream=await getObject('attachments',ticket.TenantId as string|null,fileId);
   return new Response(Readable.toWeb(stream) as ReadableStream,{headers:{'Content-Type':String(file.ContentType??'application/octet-stream'),'Content-Disposition':disposition(String(file.FileName??'download')),'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
 }
-export async function listFiles(s:Session,ticketId:string) {return visibleFiles(s,ticketId);}
-export async function downloadZip(s:Session,ticketId:string) {
-  const ticket=await scopeTicket(s,ticketId,pool()),files=await visibleFiles(s,ticketId);
+export type FileSelection={kind:'all'|'ticket'|'history';historyId?:string};
+async function selectedFiles(s:Session,ticketId:string,selection:FileSelection){
+  const files=await visibleFiles(s,ticketId);
+  if(selection.kind==='all')return files;
+  if(selection.kind==='history'){
+    const historyId=z.string().uuid().parse(selection.historyId);
+    assert(await one(`SELECT "Id" FROM "TicketHistory" WHERE "Id"=$1 AND "TicketId"=$2 AND NOT "IsDeleted" ${s.tenantId?'AND NOT "IsInternal" AND "Type"<>5':''}`,[historyId,ticketId]),404,'Сообщение не найдено');
+    const links=await rows(`SELECT "UploadedFileId" FROM "TicketHistoryAttachments" WHERE "TicketHistoryId"=$1`,[historyId]);
+    return files.filter(f=>links.some(link=>link.UploadedFileId===f.Id));
+  }
+  const links=await rows(`SELECT "UploadedFileId" FROM "TicketAttachments" WHERE "TicketId"=$1`,[ticketId]);
+  return files.filter(f=>links.some(link=>link.UploadedFileId===f.Id));
+}
+export async function listFiles(s:Session,ticketId:string,selection:FileSelection={kind:'all'}) {return selectedFiles(s,ticketId,selection);}
+export async function downloadZip(s:Session,ticketId:string,selection:FileSelection={kind:'all'}) {
+  const ticket=await scopeTicket(s,ticketId,pool()),files=await selectedFiles(s,ticketId,selection);
   const archive=new ZipArchive({zlib:{level:5}});
   // Start production after a reader can consume the stream; errors abort the HTTP stream.
   void (async()=>{try {for(const file of files) {
@@ -63,7 +77,7 @@ export async function uploadFiles(s:Session,ticketId:string,request:Request|Form
       const id=String(metadata.Id),tenantId=ticket.TenantId as string|null;
       onRollback(async()=>{
         // A failed COMMIT can have an uncertain outcome. Keep objects whose metadata committed.
-        if(!await one(`SELECT "Id" FROM "UploadedFiles" WHERE "Id"=$1`,[id]))await deleteObject('attachments',tenantId,id);
+        if(!await one(`SELECT "Id" FROM "UploadedFiles" WHERE "Id"=$1`,[id]))try{await deleteObject('attachments',tenantId,id);}catch{await queueJob('file.delete-if-unreferenced',{id,tenantId},'rollback-file:'+id);}
       });
       await putObject('attachments',tenantId,id,Buffer.from(await file.arrayBuffer()),String(metadata.ContentType));
       if(historyId)await db.query(`INSERT INTO "TicketHistoryAttachments"("TicketHistoryId","UploadedFileId") VALUES($1,$2)`,[historyId,id]);

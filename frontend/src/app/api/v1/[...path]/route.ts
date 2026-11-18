@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { api } from '@/server/http';
 import { assert } from '@/server/errors';
-import { listTickets, ticketDetails, createTicket, mutateTicket, deleteTicket, editHistory } from '@/server/modules/tickets';
+import { listTickets, ticketDetails, createTicket, mutateTicket, deleteTicket, editHistory, historyPage } from '@/server/modules/tickets';
 import { contracts } from '@/server/modules/contracts';
 import { customers } from '@/server/modules/customers';
-import { users, profile, revealPassword, birthdays, changeOwnPassword } from '@/server/modules/users';
+import { users, profile, revealPassword, birthdays, changeOwnPassword, identityUsers } from '@/server/modules/users';
 import { resource } from '@/server/modules/resources';
 import { events } from '@/server/modules/events';
 import { notifications } from '@/server/modules/notifications';
@@ -25,6 +25,8 @@ import { requireStaff } from '@/server/auth/session';
 import { legacyContent } from '@/server/integrations/legacy-content';
 import { customerStatistics, workload, spentTime, readHistory, statusCounts } from '@/server/modules/statistics';
 import { jobs } from '@/server/modules/jobs';
+import permissionCatalog from '@/server/auth/permission-catalog.json';
+import { isHostAdmin } from '@/server/auth/session';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 
@@ -39,9 +41,9 @@ const handler=api(async(req,s)=>{
     else if(!action)permitted(['GET','PATCH','DELETE']);
     else {
       const operations:Record<string,Record<string,string[]>>={
-        contracts:{statistics:['GET'],packages:['POST','DELETE'],limits:['POST'],tags:['GET','POST','DELETE']},
-        customers:{statistics:['GET'],users:['GET'],events:['GET'],managers:['GET'],manager:['POST','DELETE'],contacts:['POST']},
-        users:{password:['POST'],roles:['POST'],active:['POST'],'reveal-password':['POST']},employees:{password:['POST'],roles:['POST'],active:['POST'],'reveal-password':['POST']},roles:{permissions:['POST']},
+        contracts:{statistics:['GET'],packages:['GET','POST','DELETE'],'replace-package':['POST'],limits:['POST'],tags:['GET','POST','DELETE']},
+        customers:{statistics:['GET'],users:['GET'],events:['GET'],packages:['GET'],managers:['GET'],manager:['POST','DELETE'],contacts:['POST']},
+        users:{profile:['GET','POST','PATCH'],password:['POST'],roles:['POST'],active:['POST'],avatar:['GET','POST'],'reveal-password':['POST']},employees:{profile:['GET','POST','PATCH'],password:['POST'],roles:['POST'],active:['POST'],avatar:['GET','POST'],'reveal-password':['POST']},roles:{permissions:['POST']},
       };
       const methods=operations[module]?.[action];assert(methods,404,'Операция не найдена');permitted(methods);
     }
@@ -51,6 +53,7 @@ const handler=api(async(req,s)=>{
   if(module==='events'){assert(!action,404,'Маршрут не найден');permitted(id?['GET','PATCH','DELETE']:['GET','POST']);}
   if(module==='stories'){assert(!action||action==='slides',404,'Маршрут не найден');permitted(action==='slides'?(child?['PATCH','DELETE']:['POST']):id?['GET','PATCH','DELETE']:['GET','POST']);}
   if(module==='profile' && id==='avatar' && ['GET','POST'].includes(method))return asset(s,'avatar',method,req);
+  if((module==='users'||module==='employees') && id && action==='avatar')return asset(s,'avatar',method,req,undefined,{userId:id,employee:module==='employees'});
   if(module==='assets' && id==='stories' && ['GET','POST'].includes(method))return asset(s,'stories',method,req,action);
   const multipart=req.headers.get('content-type')?.startsWith('multipart/form-data');
   if(method==='POST' && multipart && !child && ((module==='tickets'&&(!id||action==='reply'||action==='draft'))||(module==='portal'&&id==='renewals'))){
@@ -65,9 +68,10 @@ const handler=api(async(req,s)=>{
     });
   }
   if(module==='tickets' && action==='files') {
-    if(child==='zip' && method==='GET')return downloadZip(s,id);
+    const selection={kind:z.enum(['all','ticket','history']).parse(q.get('scope')??'all'),historyId:q.get('historyId')??undefined};
+    if(child==='zip' && method==='GET')return downloadZip(s,id,selection);
     if(child && method==='GET')return downloadFile(s,id,child);
-    if(!child && method==='GET')return listFiles(s,id);
+    if(!child && method==='GET')return listFiles(s,id,selection);
     if(!child && method==='POST')return uploadFiles(s,id,req);
     assert(false,405,'Метод не поддерживается');
   }
@@ -80,16 +84,19 @@ const handler=api(async(req,s)=>{
     if(size)try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{assert(false,400,'Некорректный JSON');}
   } else if(method==='DELETE' && ['packages','manager','tags'].includes(action)) body=Object.fromEntries(q);
   if(module==='me' && method==='GET' && !id)return s;
+  if(module==='permissions' && method==='GET' && !id){assert(isHostAdmin(s),403,'Требуется администратор');return permissionCatalog;}
+  if(module==='identities' && method==='GET' && !id)return identityUsers(s,q);
   if(module==='profile' && id==='password' && !action && method==='POST')return changeOwnPassword(s,body);
   if(module==='jobs' && ((!id&&method==='GET')||(id&&action==='retry'&&method==='POST')))return jobs(s,id,method,q);
   if(module==='specialists' && id==='workload' && method==='GET')return workload(s,q);
   if(module==='specialists' && method==='GET' && !id){requireStaff(s);requirePermission(s,'SpecialistManagement.Get');return rows(`SELECT e."Id",e."FirstName",e."LastName",e."MiddleName",e."JobPost" FROM "EmployeeProfiles" e JOIN "AbpUsers" u ON u."Id"=e."IdentityUserId" WHERE u."IsActive" AND NOT u."IsDeleted" ORDER BY e."LastName"`);}
   if((module==='tickets'||module==='contracts') && id && action==='tags')return tags(s,module,id,method,body);
   if(module==='tickets') {
-    if(id==='status-counts' && !action && method==='GET')return statusCounts(s);
+    if(id==='status-counts' && !action && method==='GET')return statusCounts(s,q);
     if(!id){assert(!action,404,'Маршрут не найден');if(method==='GET')return listTickets(s,q);if(method==='POST')return createTicket(s,body);}
-    else if(!action){if(method==='GET')return ticketDetails(s,id);if(method==='DELETE')return deleteTicket(s,id);}
+    else if(!action){if(method==='GET')return ticketDetails(s,id);if(method==='PATCH')return mutateTicket(s,id,'update',body);if(method==='DELETE')return deleteTicket(s,id);}
     else if(action==='messages' && ['GET','POST'].includes(method))return messages(s,id,method,body,q);
+    else if(action==='history' && method==='GET')return historyPage(s,id,q,child);
     else if(action==='history' && child && ['PATCH','DELETE'].includes(method))return editHistory(s,id,child,method,body);
     else if(action==='read-history' && child && method==='POST')return readHistory(s,id,child);
     else if(action==='spent' && method==='POST')return spentTime(s,id,body);
@@ -103,6 +110,10 @@ const handler=api(async(req,s)=>{
     if(id==='renewals' && method==='POST')return renewal(s,body);
     if(id==='events' && action && method==='POST')return completeEvent(s,action,body);
     assert(false,405,'Метод не поддерживается');
+  }
+  if(module==='contracts' && ['active','first-active'].includes(id) && !action && method==='GET'){
+    const filter=new URLSearchParams(q);filter.set('active','true');filter.set('activePolicy','public');filter.set('sort','start');filter.set('direction','desc');if(id==='first-active')filter.set('take','1');
+    const result=await contracts(s,undefined,undefined,'GET',undefined,filter) as {items:unknown[]};return id==='first-active'?result.items[0]??null:result;
   }
   if(module==='contracts')return contracts(s,id,action,method,body,q);
   if(module==='roles')return roles(s,id,action,method,body,q);
