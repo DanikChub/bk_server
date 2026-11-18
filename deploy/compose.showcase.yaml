@@ -1,0 +1,34 @@
+services:
+  app:
+    mem_limit: 384m
+    environment:
+      NODE_OPTIONS: --max-old-space-size=256
+  postgres:
+    mem_limit: 256m
+    command: [postgres, -c, timezone=Europe/Moscow, -c, shared_buffers=32MB, -c, max_connections=40]
+  rabbitmq:
+    mem_limit: 256m
+    environment:
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: '+S 1:1 +A 4'
+  worker:
+    mem_limit: 192m
+    environment:
+      NODE_OPTIONS: --max-old-space-size=128
+  proxy:
+    image: caddy:2-alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      DEMO_HOST: ${DEMO_HOST:?Set DEMO_HOST}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+    mem_limit: 128m
+volumes:
+  caddy_data:
+  caddy_config:
