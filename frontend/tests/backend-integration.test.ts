@@ -18,7 +18,7 @@ import { applyTenantEvent } from '../src/server/jobs/tenant-events';
 import { randomUUID } from 'node:crypto';
 import { stories } from '../src/server/modules/stories';
 import { putObject } from '../src/server/storage/s3';
-import { statusCounts } from '../src/server/modules/statistics';
+import { statusCounts, spentTime, ticketSpent } from '../src/server/modules/statistics';
 import { asset } from '../src/server/modules/assets';
 import { tags } from '../src/server/modules/tags';
 import { requestPasswordReset, resetPassword } from '../src/server/auth/recovery';
@@ -30,6 +30,8 @@ import { spreadsheet } from '../src/server/modules/reports';
 import ExcelJS from 'exceljs';
 import { Readable } from 'node:stream';
 import { productionCalendar } from '../src/server/integrations/calendar';
+import { content } from '../src/server/integrations/content';
+import { legacyContent } from '../src/server/integrations/legacy-content';
 
 const enabled=Boolean(process.env.BACKEND_TEST_DATABASE_URL);
 if(enabled)process.env.DATABASE_URL=process.env.BACKEND_TEST_DATABASE_URL;
@@ -356,6 +358,27 @@ test('XLSX exports retain the legacy ticket columns and all three statistics gro
   assert.deepEqual((book.worksheets[0].getRow(1).values as unknown[]).slice(1),['Номер заявки','Наименование клиента','Тэг','Тип','Раздел','Специалист','Дата создания']);
   const stats=await spreadsheet(admin,'statistics',new URLSearchParams({customerId})),second=new ExcelJS.Workbook();await second.xlsx.read(Readable.from([Buffer.from(await stats.arrayBuffer())]));
   assert.equal(second.worksheets[0].getRow(1).getCell(1).value,'Раздел Название');assert.equal(second.worksheets[0].getRow(1).getCell(3).value,'Тип Название');assert.equal(second.worksheets[0].getRow(1).getCell(5).value,'Ограничение Название');
+});
+
+test('ticket spend totals use the matching constraint and never reveal internal or foreign history',{skip:!enabled},async()=>{
+  const type=await one(`SELECT "Id" FROM "TicketTypes" LIMIT 1`),constraint=await one(`SELECT "Id","Name" FROM "ConstraintTypes" LIMIT 1`);
+  const ticket=await createTicket(client,{subject:'Spend summary',description:'Test',ticketTypeId:type!.Id,contractId});
+  const visible=await mutateTicket(admin,String(ticket.Id),'reply',{description:'Visible response'}),hidden=await mutateTicket(admin,String(ticket.Id),'reply',{description:'Internal response',internal:true});
+  const result=await spentTime(admin,String(ticket.Id),{historyId:visible.Id,constraintTypeId:constraint!.Id,spent:3});assert.equal(result.ConstraintTypeName,constraint!.Name);
+  await spentTime(admin,String(ticket.Id),{historyId:hidden.Id,constraintTypeId:constraint!.Id,spent:9});
+  assert.equal((await ticketSpent(client,String(ticket.Id)))[0].NowCount,3);assert.equal((await ticketSpent(admin,String(ticket.Id)))[0].NowCount,12);
+  await assert.rejects(()=>ticketSpent(other,String(ticket.Id)),/не найдена/);
+});
+
+test('content adapters preserve legacy DTO fields, cover images and provider pagination without exposing keys',{skip:!enabled},async()=>{
+  const original=globalThis.fetch,previous={...process.env};
+  Object.assign(process.env,{CONTENT_API_URL:'https://content.example.test/api/',CONTENT_API_AUTHORIZATION:'Bearer fixture-only',BK_NEWS_KEY:'fixture-only'});
+  try{
+    globalThis.fetch=async input=>{const url=new URL(String(input));assert.equal(url.searchParams.get('pagination[page]'),'2');return Response.json({data:[{id:5,attributes:{title:'Article',text:'Body',slug:'article',createdAt:'2026-01-01',seo:[]}}],meta:{pagination:{total:12}}});};
+    const articles=await content('articles',new URLSearchParams({page:'2',take:'5'}));assert.equal(articles.totalCount,12);assert.equal(articles.items[0].Title,'Article');assert.equal(articles.data[0].attributes.title,'Article');assert.equal(articles.items[0].CreationTime,'2026-01-01');
+    globalThis.fetch=async input=>{const url=new URL(String(input));assert.equal(url.searchParams.get('page'),'3');return Response.json({total:51,results:[{title:'News',_url:'/news/1',publishedAt:'2026-01-01',_purpose:[{title:'Accounting'}],thumbnail:{items:[{_pieces:[{item:{attachment:{_urls:{full:'https://images.example.test/news.jpg'}}}}]}]}}]});};
+    const news=await legacyContent('news',new URLSearchParams({take:'20',skip:'40'}));assert.equal(news.items[0].CoverUrls,'https://images.example.test/news.jpg');assert.deepEqual(news.items[0].Purpose,['Accounting']);assert.equal(news.totalCount,51);
+  }finally{globalThis.fetch=original;for(const key of ['CONTENT_API_URL','CONTENT_API_AUTHORIZATION','BK_NEWS_KEY']){if(previous[key]===undefined)delete process.env[key];else process.env[key]=previous[key];}}
 });
 test('worker refreshes organization activity and claims its job atomically',{skip:!enabled},async()=>{
   const id=await queueJob('customers.refresh-active',{});

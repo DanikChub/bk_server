@@ -1,5 +1,5 @@
 import 'server-only';
-import { rows, one, insert, transaction, update } from '../db';
+import { rows, one, insert, transaction, update, executor } from '../db';
 import type { Session } from '../auth/session';
 import { requirePermission, requireStaff, scopeTicket } from '../auth/session';
 import { scopeCustomer } from './customers';
@@ -32,8 +32,18 @@ export async function spentTime(s:Session,ticketId:string,body:unknown) {
   const data=z.object({historyId:z.string().uuid(),constraintTypeId:z.string().uuid(),spent:z.number().int().min(0).max(1_000_000)}).strict().parse(body);
   return transaction(async db=>{
     await scopeTicket(s,ticketId,db,true);assert(await one(`SELECT "Id" FROM "TicketHistory" WHERE "Id"=$1 AND "TicketId"=$2 AND NOT "IsDeleted"`,[data.historyId,ticketId],db),404,'Запись истории не найдена');
-    return insert('TicketHoursSpentHistories',{TicketHistoryId:data.historyId,ConstraintTypeId:data.constraintTypeId,Spent:data.spent},db,s.userId);
+    const constraint=await one(`SELECT "Name" FROM "ConstraintTypes" WHERE "Id"=$1`,[data.constraintTypeId],db);assert(constraint,400,'Ограничение не найдено');
+    return {...await insert('TicketHoursSpentHistories',{TicketHistoryId:data.historyId,ConstraintTypeId:data.constraintTypeId,Spent:data.spent},db,s.userId),ConstraintTypeName:constraint.Name};
   });
+}
+export async function ticketSpent(s:Session,ticketId:string){
+  const ticket=await scopeTicket(s,ticketId,executor());
+  if(!s.tenantId)requirePermission(s,'TicketHistory.Get');
+  return rows(`SELECT c."Id",c."Name",sum(x."Spent")::integer AS "NowCount",coalesce(setting."Max",10) AS "MaxCount"
+    FROM "TicketHoursSpentHistories" x JOIN "TicketHistory" h ON h."Id"=x."TicketHistoryId" JOIN "ConstraintTypes" c ON c."Id"=x."ConstraintTypeId"
+    LEFT JOIN LATERAL (SELECT s."Max" FROM "ContractSettings" s WHERE s."ContractId"=$2 AND s."ConstraintTypeId"=c."Id" ORDER BY s."CreationTime" DESC,s."Id" DESC LIMIT 1) setting ON true
+    WHERE h."TicketId"=$1 AND NOT h."IsDeleted" ${s.tenantId?'AND NOT h."IsInternal" AND h."Type"<>5':''}
+    GROUP BY c."Id",c."Name",setting."Max" ORDER BY c."Name",c."Id"`,[ticketId,ticket.ContractId]);
 }
 export async function readHistory(s:Session,ticketId:string,historyId:string) {
   z.string().uuid().parse(historyId);

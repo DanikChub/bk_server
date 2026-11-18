@@ -23,7 +23,7 @@ import { tags } from '@/server/modules/tags';
 import { rows, transaction } from '@/server/db';
 import { requireStaff } from '@/server/auth/session';
 import { legacyContent } from '@/server/integrations/legacy-content';
-import { customerStatistics, workload, spentTime, readHistory, statusCounts } from '@/server/modules/statistics';
+import { customerStatistics, workload, spentTime, ticketSpent, readHistory, statusCounts } from '@/server/modules/statistics';
 import { jobs } from '@/server/modules/jobs';
 import permissionCatalog from '@/server/auth/permission-catalog.json';
 import { isHostAdmin } from '@/server/auth/session';
@@ -100,6 +100,7 @@ const handler=api(async(req,s)=>{
     else if(action==='history' && child && ['PATCH','DELETE'].includes(method))return editHistory(s,id,child,method,body);
     else if(action==='read-history' && child && method==='POST')return readHistory(s,id,child);
     else if(action==='spent' && method==='POST')return spentTime(s,id,body);
+    else if(action==='spent' && method==='GET')return ticketSpent(s,id);
     else if(action==='pdf' && method==='GET')return ticketPdf(s,id);
     else if(!child && method==='POST')return mutateTicket(s,id,action,body);
     assert(false,405,'Метод не поддерживается');
