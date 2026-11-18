@@ -28,6 +28,8 @@ const staffDetails=await json('/api/v1/tickets/'+id,specialist),clientDetails=aw
 const permissions=await json('/api/v1/permissions',admin);assert.ok(permissions);
 assert.equal((await request('/api/v1/permissions',client)).status,403);
 const history=await json(`/api/v1/tickets/${id}/history?take=1`,client);assert.equal(history.items.length,1);assert.ok(history.totalCount>=1);
+const spent=await json(`/api/v1/tickets/${id}/spent`,client);assert.ok(Array.isArray(spent));assert.ok(spent.every(r=>Number.isInteger(r.NowCount)));
+assert.equal((await request(`/api/v1/tickets/${id}/spent`,'demo.other')).status,404);
 await json(`/api/v1/tickets/${id}`,admin,'PATCH',{subject:staffDetails.Subject+' [проверка]'});
 await json(`/api/v1/tickets/${id}`,admin,'PATCH',{subject:staffDetails.Subject});
 assert.ok(staffDetails.history.some(h=>h.IsInternal));assert.ok(clientDetails.history.every(h=>!h.IsInternal&&h.Type!==5));
