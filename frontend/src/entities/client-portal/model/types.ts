@@ -13,6 +13,7 @@ export type PortalTicket = {
 };
 export type PortalContract = {
   id: string; number: string; package: string; startsAt: string; endsAt: string; progress: number; active: boolean;
+  packages?: string[];
   months: { month: string; limits: { title: string; total: number; used: number }[] }[];
 };
 export type PortalEvent = { id: string; date: string; title: string; completed: boolean; important: boolean };

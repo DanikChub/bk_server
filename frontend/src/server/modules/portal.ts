@@ -34,7 +34,7 @@ export async function portalSnapshot(s:Session):Promise<PortalSnapshot> {
     contracts:allContracts.map(c=>{
       const contractLimits=limits.filter(l=>l.ContractId===c.Id),months=[...new Set(contractLimits.map(l=>`${l.Year}-${String(l.Month).padStart(2,'0')}`))];
       const start=+new Date(text(c.ContractStartDate)),end=+new Date(text(c.ContractFinishDate));
-      return {id:text(c.Id),number:text(c.Name),package:packages.filter(p=>p.ContractId===c.Id).map(p=>p.Name).join(', '),startsAt:iso(c.ContractStartDate),endsAt:iso(c.ContractFinishDate),active:end>=Date.now(),progress:end>start?Math.max(0,Math.min(100,Math.round((Date.now()-start)/(end-start)*100))):100,months:months.map(month=>({month,limits:contractLimits.filter(l=>`${l.Year}-${String(l.Month).padStart(2,'0')}`===month).map(l=>({title:text(l.Name),total:Number(l.MaxCount),used:Number(l.Sum)}))}))};
+      return {id:text(c.Id),number:text(c.Name),package:packages.filter(p=>p.ContractId===c.Id).map(p=>p.Name).join(', '),packages:packages.filter(p=>p.ContractId===c.Id).map(p=>text(p.Name)),startsAt:iso(c.ContractStartDate),endsAt:iso(c.ContractFinishDate),active:end>=Date.now(),progress:end>start?Math.max(0,Math.min(100,Math.round((Date.now()-start)/(end-start)*100))):100,months:months.map(month=>({month,limits:contractLimits.filter(l=>`${l.Year}-${String(l.Month).padStart(2,'0')}`===month).map(l=>({title:text(l.Name),total:Number(l.MaxCount),used:Number(l.Sum)}))}))};
     }),
     events:events.map(e=>{let extra:Record<string,unknown>={};try{extra=JSON.parse(text(e.ExtraProperties)||'{}');}catch{}return {id:text(e.Id),title:text(e.Title),date:iso(e.EventDate),completed:Boolean(extra.completed),important:e.EventType===1};}),
     content:{news:[],articles:[]},
