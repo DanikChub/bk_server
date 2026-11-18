@@ -16,6 +16,9 @@ previous=$(cat backend-revision 2>/dev/null || true)
 printf '%s\n' "$previous" > "$backup/previous-revision"
 docker tag consulting-lk-app:latest consulting-lk-app:rollback
 docker tag consulting-lk-worker:latest consulting-lk-worker:rollback
+# Keep current and rollback tags, but bound disposable build data on the small VM.
+docker image prune --force
+docker builder prune --force --keep-storage 512MB
 switched=false
 rollback() {
   status=$?
